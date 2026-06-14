@@ -18,7 +18,7 @@ Players spawn in outer safe bases, choose a combat class, run into the Trashland
 8. Player abilities can damage other players only when both attacker and target are outside safe zones.
 9. The player can enter the subway under the arena to fight mobs.
 10. A boss appears periodically in the central arena.
-11. Players who damage and defeat the boss receive placeholder currency.
+11. Players who damage and defeat mobs or the boss receive placeholder currency.
 12. When a player dies, they respawn back at their assigned home base.
 
 ## Map
@@ -155,6 +155,8 @@ Subway mobs are managed by `MobService`.
 - Mobs can be damaged by player abilities.
 - Mobs respawn after death.
 - Mobs have overhead health bars.
+- Players who contributed damage to a defeated mob receive `TrashCoins`.
+- Mob rewards are placeholder tuning and currently use a flat configured amount per contributor.
 
 ## Boss
 

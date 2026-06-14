@@ -65,6 +65,13 @@ function PlayerLifecycleService:SetupStats(player)
 		deaths.Value = 0
 		deaths.Parent = leaderstats
 	end
+
+	if not leaderstats:FindFirstChild("TrashCoins") then
+		local currency = Instance.new("IntValue")
+		currency.Name = "TrashCoins"
+		currency.Value = 0
+		currency.Parent = leaderstats
+	end
 end
 
 function PlayerLifecycleService:AssignHomeBase(player)

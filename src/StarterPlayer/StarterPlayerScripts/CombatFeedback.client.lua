@@ -49,6 +49,21 @@ castFlashStroke.Thickness = 2
 castFlashStroke.Transparency = 1
 castFlashStroke.Parent = castFlash
 
+local rewardLabel = Instance.new("TextLabel")
+rewardLabel.Name = "RewardLabel"
+rewardLabel.AnchorPoint = Vector2.new(0.5, 1)
+rewardLabel.BackgroundTransparency = 1
+rewardLabel.Position = UDim2.fromScale(0.5, 0.82)
+rewardLabel.Size = UDim2.fromOffset(240, 30)
+rewardLabel.Font = Enum.Font.GothamBold
+rewardLabel.Text = ""
+rewardLabel.TextColor3 = Color3.fromRGB(255, 225, 95)
+rewardLabel.TextSize = 20
+rewardLabel.TextStrokeColor3 = Color3.fromRGB(35, 25, 10)
+rewardLabel.TextStrokeTransparency = 1
+rewardLabel.TextTransparency = 1
+rewardLabel.Parent = screenGui
+
 local function getAdornee(targetCharacter)
 	if not targetCharacter then
 		return nil
@@ -204,6 +219,26 @@ local function playCastFeedback(abilityName)
 	showCastFlash(abilityName)
 end
 
+local function showReward(amount, reason)
+	rewardLabel.Text = ("+%d TrashCoins"):format(amount or 0)
+	if reason and reason ~= "" then
+		rewardLabel.Text = rewardLabel.Text .. "  " .. reason
+	end
+
+	rewardLabel.Position = UDim2.fromScale(0.5, 0.82)
+	rewardLabel.TextTransparency = 0
+	rewardLabel.TextStrokeTransparency = 0.35
+
+	TweenService:Create(rewardLabel, TweenInfo.new(0.65, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Position = UDim2.fromScale(0.5, 0.78),
+	}):Play()
+
+	TweenService:Create(rewardLabel, TweenInfo.new(0.65, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+		TextTransparency = 1,
+		TextStrokeTransparency = 1,
+	}):Play()
+end
+
 local function showHitConfirm()
 	hitMarker.TextTransparency = 0
 	hitMarker.TextStrokeTransparency = 0.25
@@ -228,5 +263,7 @@ combatFeedback.OnClientEvent:Connect(function(feedbackType, targetCharacter, amo
 		showHitConfirm()
 	elseif feedbackType == "AbilityCast" then
 		playCastFeedback(targetCharacter)
+	elseif feedbackType == "Reward" then
+		showReward(targetCharacter, amount)
 	end
 end)

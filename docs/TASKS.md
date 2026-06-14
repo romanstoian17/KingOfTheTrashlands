@@ -38,7 +38,8 @@ Status key:
 - [x] Add server-published safe-zone state for UI feedback.
 - [x] Add visual safe-zone enter/exit feedback.
 - [x] Add `SAFE ZONE` / `PVP ENABLED` client status badge.
-- [ ] Add automated tests or Studio test checklist for safe-zone damage rules.
+- [x] Add Studio test checklist for safe-zone damage rules.
+- [ ] Add automated tests for safe-zone damage rules.
 
 ## Combat Feedback
 
@@ -148,9 +149,10 @@ Status key:
 - [x] Make mobs damage nearby players.
 - [x] Allow players to damage mobs.
 - [x] Respawn mobs after death.
+- [x] Add mob rewards.
+- [x] Add mob reward feedback popup.
 - [ ] Add better mob models.
 - [ ] Add mob patrol points.
-- [ ] Add mob rewards.
 - [ ] Add multiple mob types.
 
 ## Boss
@@ -176,6 +178,7 @@ Status key:
 
 - [x] Add gameplay documentation.
 - [x] Add living task list.
+- [x] Add Studio test checklist.
 - [ ] Validate project in Roblox Studio.
 - [ ] Add Rojo serve instructions after local tooling is confirmed.
 - [ ] Add formatting/linting setup.

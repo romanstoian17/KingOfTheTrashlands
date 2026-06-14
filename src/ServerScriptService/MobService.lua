@@ -10,9 +10,13 @@ local SafeZoneService = require(ServerScriptService.SafeZoneService)
 
 local MobService = {
 	MobsFolder = nil,
+	CombatFeedback = nil,
 }
 
 function MobService:Init()
+	local remotes = ReplicatedStorage:WaitForChild("Remotes")
+	self.CombatFeedback = remotes:WaitForChild("CombatFeedback")
+
 	self.MobsFolder = Workspace:FindFirstChild("Mobs") or Instance.new("Folder")
 	self.MobsFolder.Name = "Mobs"
 	self.MobsFolder.Parent = Workspace
@@ -36,6 +40,7 @@ function MobService:SpawnMob(index, spawnPart)
 
 	humanoid.Died:Connect(function()
 		alive = false
+		self:RewardContributors(model)
 		CombatService:ClearDamageLedger(model)
 		task.delay(Config.Mobs.RespawnSeconds, function()
 			if spawnPart.Parent then
@@ -70,6 +75,28 @@ function MobService:SpawnMob(index, spawnPart)
 			task.wait(0.35)
 		end
 	end)
+end
+
+function MobService:RewardContributors(mobModel)
+	local ledger = CombatService:GetDamageLedger(mobModel)
+	local reward = Config.Mobs.RewardCurrency or 0
+	if reward <= 0 then
+		return
+	end
+
+	for userId, damage in pairs(ledger) do
+		if damage > 0 then
+			local player = Players:GetPlayerByUserId(userId)
+			local leaderstats = player and player:FindFirstChild("leaderstats")
+			local currency = leaderstats and leaderstats:FindFirstChild("TrashCoins")
+			if currency then
+				currency.Value += reward
+				if self.CombatFeedback then
+					self.CombatFeedback:FireClient(player, "Reward", reward, "Mob defeated")
+				end
+			end
+		end
+	end
 end
 
 function MobService:FindTarget(position)

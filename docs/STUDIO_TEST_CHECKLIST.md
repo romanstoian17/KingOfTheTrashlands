@@ -1,0 +1,103 @@
+# Studio Test Checklist
+
+Use this checklist when testing the current Roblox build in Studio. Mark each item as pass, fail, or blocked, and add notes for any bug we need to fix.
+
+Status key:
+
+- `[ ]` Not tested
+- `[x]` Passed
+- `[!]` Failed
+- `[-]` Blocked
+
+## Setup
+
+- [ ] Open the project through Rojo sync or the current Studio place.
+- [ ] Start a local server with at least two players when testing PvP.
+- [ ] Confirm the Output window has no startup errors.
+- [ ] Confirm `Workspace` contains generated folders: `Bases`, `Arena`, `Subway`, `SafeZones`, `MobSpawns`, and `BossSpawns`.
+
+## Join And Class Selection
+
+- [ ] Player spawns at one of the 16 outer bases.
+- [ ] First-time player sees class selection before normal combat use.
+- [ ] Clicking outside the class selection does not auto-select a class.
+- [ ] Selecting Fire Caster grants Fireball, Flame Burst, and Ignite.
+- [ ] Selecting Ice Mage grants Ice Shard, Frost Bolt, Glacier Spike, and Ice Armor.
+- [ ] Selecting Lightning Mage grants Lightning Bolt, Spark Shot, Storm Lance, and Blink Surge.
+- [ ] Player can change class while inside a safe zone.
+- [ ] Player cannot change class outside a safe zone.
+
+## Hotbar And Ability Input
+
+- [ ] Default Roblox backpack UI is hidden.
+- [ ] Custom hotbar appears after selecting a class.
+- [ ] Pressing `1`, `2`, or `3` selects an ability but does not cast it.
+- [ ] Clicking/tapping a hotbar slot selects an ability but does not cast it.
+- [ ] Selected hotbar slot has a visible selected marker.
+- [ ] Left click casts the selected ability on desktop.
+- [ ] World tap casts the selected ability on mobile or touch emulation.
+- [ ] Ability cooldown overlay appears after a valid cast.
+- [ ] Cast sound and cast flash appear after a valid cast.
+
+## Aiming Preview
+
+- [ ] Forward-ray abilities show a preview line from the player toward the aim point.
+- [ ] Self-area abilities show a radius preview around the player.
+- [ ] Self-buff abilities do not show a world targeting preview.
+- [ ] Preview does not block raycasts or movement.
+- [ ] Preview disappears or updates correctly after class changes.
+
+## Safe Zones And PvP
+
+- [ ] Safe-zone UI shows `SAFE ZONE` while inside a base.
+- [ ] Safe-zone UI shows `PVP ENABLED` outside bases.
+- [ ] Player inside a base cannot damage another player.
+- [ ] Player outside a base cannot damage a target inside a base.
+- [ ] Players outside bases can damage each other in the central arena.
+- [ ] Respawn-protected players cannot deal damage.
+- [ ] Respawn-protected players cannot receive damage.
+
+## Combat Feedback
+
+- [ ] Validated damage shows floating damage numbers.
+- [ ] Attacker sees hit marker after damaging a target.
+- [ ] Impact pulse appears on damaged targets.
+- [ ] Impact sound plays for nearby validated damage.
+- [ ] No combat feedback appears for blocked safe-zone damage.
+
+## Mobs
+
+- [ ] Subway arena is reachable from the central arena.
+- [ ] Subway mobs spawn at underground spawn points.
+- [ ] Mobs chase nearby players outside safe zones.
+- [ ] Mobs damage nearby players outside safe zones.
+- [ ] Mobs do not chase players into bases.
+- [ ] Player abilities damage mobs.
+- [ ] Mobs respawn after death.
+- [ ] Mob contributors receive `TrashCoins` after mob death.
+
+## Boss
+
+- [ ] Boss warning appears before the first boss spawn.
+- [ ] Boss spawns in the center arena.
+- [ ] Boss has an overhead health bar.
+- [ ] Player abilities damage the boss.
+- [ ] Boss attacks nearby players outside safe zones.
+- [ ] Boss does not damage players inside bases.
+- [ ] Boss contributors receive `TrashCoins` after boss death.
+- [ ] Boss defeated banner appears after death.
+
+## Respawn And Stats
+
+- [ ] Player death increments `Deaths`.
+- [ ] PvP kill credit increments attacker's `Kills`.
+- [ ] Player respawns at assigned home base.
+- [ ] Ability cooldowns reset after respawn.
+- [ ] `TrashCoins` exists in `leaderstats`.
+
+## Notes
+
+- Date:
+- Tester:
+- Studio version:
+- Known issues:
