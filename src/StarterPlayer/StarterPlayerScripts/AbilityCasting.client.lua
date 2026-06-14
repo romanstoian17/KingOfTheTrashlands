@@ -1,0 +1,3 @@
+-- Ability casting is handled by AbilityHotbar.client.lua.
+-- This compatibility script intentionally does not bind Tool.Activated, so
+-- number keys and hotbar buttons can select abilities without casting them.
