@@ -58,6 +58,8 @@ Safe zones are server-authoritative.
 - Players see floating damage numbers when damage lands.
 - Attackers see a hit marker when their spell successfully damages a target.
 - Ability casts show simple cooldown bars near the bottom of the screen.
+- Ability casts trigger lightweight local cast sound and flash feedback.
+- Validated damage triggers lightweight impact pulse and nearby impact sound feedback.
 - Damage validation should stay on the server even after client UI and aiming improve.
 
 ## Player Lifecycle
@@ -115,6 +117,7 @@ Abilities are data-driven through `AbilityDefinitions`.
 - `Effects` is a data table reserved for future burn, slow, bleed, shield, knockback, stun, and other effects.
 - `Tags` describe themes and mechanics, such as magic, fire, ranged, tech, melee, or defensive.
 - `Visual` describes the temporary server-created cast effect, including shape, width, lifetime, material, and secondary color.
+- `Audio` describes simple client-side cast and impact sounds for ability feedback.
 - `CastAbility` is the new remote/service path. `CastSpell` remains for compatibility.
 
 Current Fire Caster abilities:
@@ -186,7 +189,7 @@ Planned expansion:
 - `ServerScriptService/MobService.lua`: subway mob spawning, chase, attack, and respawn.
 - `ServerScriptService/BossService.lua`: timed boss spawning, boss AI, and rewards.
 - `StarterPlayer/StarterPlayerScripts/SafeZoneFeedback.client.lua`: client status badge for safe-zone and PvP state.
-- `StarterPlayer/StarterPlayerScripts/CombatFeedback.client.lua`: floating damage numbers, hit marker, and spell cooldown feedback.
+- `StarterPlayer/StarterPlayerScripts/CombatFeedback.client.lua`: floating damage numbers, hit marker, cast flashes, cast sounds, impact pulses, impact sounds, and spell cooldown feedback.
 - `StarterPlayer/StarterPlayerScripts/AbilityCasting.client.lua`: compatibility placeholder; direct tool activation is disabled.
 - `StarterPlayer/StarterPlayerScripts/AbilityHotbar.client.lua`: custom ability slots, keyboard/touch selection, selected-ability casting, aiming previews, and cooldown overlays.
 - `StarterPlayer/StarterPlayerScripts/BossAlert.client.lua`: boss warning, spawn, and defeated banners.

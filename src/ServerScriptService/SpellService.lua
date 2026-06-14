@@ -89,6 +89,7 @@ function SpellService:CastAbility(player, abilityName, aimPosition)
 
 	if self.CombatFeedback then
 		self.CombatFeedback:FireClient(player, "SpellCooldown", abilityName, definition.Cooldown)
+		self.CombatFeedback:FireClient(player, "AbilityCast", abilityName)
 	end
 
 	local targeting = definition.Targeting or "ForwardRay"

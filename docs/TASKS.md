@@ -48,7 +48,11 @@ Status key:
 - [x] Add spell cooldown feedback.
 - [x] Add overhead mob health bars.
 - [x] Add overhead boss health bar.
-- [ ] Add stronger hit sounds and impact effects.
+- [x] Add basic ability cast sounds.
+- [x] Add basic local cast flash feedback.
+- [x] Add basic hit impact sounds.
+- [x] Add basic hit impact pulse effects.
+- [ ] Add stronger custom hit sounds and impact effects.
 - [ ] Add player health bars or nameplate polish.
 - [ ] Add dedicated boss health UI.
 
