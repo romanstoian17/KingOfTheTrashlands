@@ -10,9 +10,13 @@ local SpellService = require(ServerScriptService.SpellService)
 local PlayerLifecycleService = {
 	AssignedBases = {},
 	NextBaseIndex = 1,
+	CombatFeedback = nil,
 }
 
 function PlayerLifecycleService:Init()
+	local remotes = ReplicatedStorage:WaitForChild("Remotes")
+	self.CombatFeedback = remotes:WaitForChild("CombatFeedback")
+
 	Players.PlayerAdded:Connect(function(player)
 		self:SetupPlayer(player)
 	end)
@@ -188,7 +192,18 @@ function PlayerLifecycleService:OnCharacterDied(player, character)
 		end
 	end
 
+	self:PublishDeathFeedback(player, killer, character)
 	SpellService:ResetPlayerCooldowns(player)
+end
+
+function PlayerLifecycleService:PublishDeathFeedback(player, killer, character)
+	if not self.CombatFeedback then
+		return
+	end
+
+	local killerName = killer and killer.DisplayName or nil
+	local sourceName = character and character:GetAttribute("LastHitSource") or nil
+	self.CombatFeedback:FireClient(player, "Death", killerName, sourceName or "", Config.Combat.DeathMessageSeconds)
 end
 
 function PlayerLifecycleService:ReleaseBase(player)

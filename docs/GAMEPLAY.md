@@ -75,6 +75,8 @@ Player death and respawn behavior is managed by `PlayerLifecycleService`.
 - Players have `Kills`, `Deaths`, and `TrashCoins` in `leaderstats`.
 - Deaths are counted when the character dies.
 - Kills are awarded to the recent player attacker when applicable.
+- On death, the player sees a short defeated message with killer/source details when available.
+- The death message includes a simple respawn countdown display.
 
 ## Classes And Abilities
 
@@ -194,7 +196,7 @@ Planned expansion:
 - `ServerScriptService/MobService.lua`: subway mob spawning, chase, attack, and respawn.
 - `ServerScriptService/BossService.lua`: timed boss spawning, boss AI, and rewards.
 - `StarterPlayer/StarterPlayerScripts/SafeZoneFeedback.client.lua`: client status badge for safe-zone and PvP state.
-- `StarterPlayer/StarterPlayerScripts/CombatFeedback.client.lua`: floating damage numbers, hit marker, cast flashes, cast sounds, impact pulses, impact sounds, reward popups, boss health UI, and spell cooldown feedback.
+- `StarterPlayer/StarterPlayerScripts/CombatFeedback.client.lua`: floating damage numbers, hit marker, death messages, respawn countdown display, cast flashes, cast sounds, impact pulses, impact sounds, reward popups, boss health UI, and spell cooldown feedback.
 - `StarterPlayer/StarterPlayerScripts/AbilityCasting.client.lua`: compatibility placeholder; direct tool activation is disabled.
 - `StarterPlayer/StarterPlayerScripts/AbilityHotbar.client.lua`: custom ability slots, keyboard/touch selection, selected-ability casting, aiming previews, and cooldown overlays.
 - `StarterPlayer/StarterPlayerScripts/BossAlert.client.lua`: boss warning, spawn, and defeated banners.

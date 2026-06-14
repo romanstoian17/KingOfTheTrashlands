@@ -91,6 +91,9 @@ Status key:
 
 - [ ] Player death increments `Deaths`.
 - [ ] PvP kill credit increments attacker's `Kills`.
+- [ ] Death message appears after player death.
+- [ ] Death message includes killer/source details when available.
+- [ ] Respawn countdown display appears after player death.
 - [ ] Player respawns at assigned home base.
 - [ ] Ability cooldowns reset after respawn.
 - [ ] `TrashCoins` exists in `leaderstats`.

@@ -70,8 +70,8 @@ Status key:
 - [x] Add player death stat.
 - [x] Add player kill stat.
 - [x] Add recent attacker kill credit for PvP deaths.
-- [ ] Add death message.
-- [ ] Add respawn countdown UI.
+- [x] Add death message.
+- [x] Add respawn countdown UI.
 - [ ] Add anti-spawn-camping rules outside base exits.
 
 ## Classes And Abilities

@@ -19,6 +19,7 @@ Config.Combat = {
 	PlayerMaxHealth = 100,
 	RespawnProtectionSeconds = 5,
 	KillCreditSeconds = 12,
+	DeathMessageSeconds = 4,
 }
 
 Config.Boss = {

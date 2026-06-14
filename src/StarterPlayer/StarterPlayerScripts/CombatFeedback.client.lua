@@ -134,6 +134,62 @@ bossBarFillCorner.Parent = bossBarFill
 
 local bossHideToken = 0
 
+local deathFrame = Instance.new("Frame")
+deathFrame.Name = "DeathMessage"
+deathFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+deathFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
+deathFrame.BackgroundTransparency = 0.15
+deathFrame.BorderSizePixel = 0
+deathFrame.Position = UDim2.fromScale(0.5, 0.38)
+deathFrame.Size = UDim2.fromOffset(360, 116)
+deathFrame.Visible = false
+deathFrame.Parent = screenGui
+
+local deathFrameCorner = Instance.new("UICorner")
+deathFrameCorner.CornerRadius = UDim.new(0, 6)
+deathFrameCorner.Parent = deathFrame
+
+local deathFrameStroke = Instance.new("UIStroke")
+deathFrameStroke.Color = Color3.fromRGB(255, 80, 70)
+deathFrameStroke.Thickness = 1
+deathFrameStroke.Transparency = 0.25
+deathFrameStroke.Parent = deathFrame
+
+local deathTitle = Instance.new("TextLabel")
+deathTitle.Name = "Title"
+deathTitle.BackgroundTransparency = 1
+deathTitle.Position = UDim2.fromOffset(14, 12)
+deathTitle.Size = UDim2.new(1, -28, 0, 30)
+deathTitle.Font = Enum.Font.GothamBlack
+deathTitle.Text = "You were defeated"
+deathTitle.TextColor3 = Color3.fromRGB(255, 235, 230)
+deathTitle.TextSize = 24
+deathTitle.Parent = deathFrame
+
+local deathDetail = Instance.new("TextLabel")
+deathDetail.Name = "Detail"
+deathDetail.BackgroundTransparency = 1
+deathDetail.Position = UDim2.fromOffset(14, 48)
+deathDetail.Size = UDim2.new(1, -28, 0, 22)
+deathDetail.Font = Enum.Font.Gotham
+deathDetail.Text = ""
+deathDetail.TextColor3 = Color3.fromRGB(230, 220, 215)
+deathDetail.TextSize = 15
+deathDetail.Parent = deathFrame
+
+local deathCountdown = Instance.new("TextLabel")
+deathCountdown.Name = "Countdown"
+deathCountdown.BackgroundTransparency = 1
+deathCountdown.Position = UDim2.fromOffset(14, 76)
+deathCountdown.Size = UDim2.new(1, -28, 0, 22)
+deathCountdown.Font = Enum.Font.GothamBold
+deathCountdown.Text = ""
+deathCountdown.TextColor3 = Color3.fromRGB(255, 205, 95)
+deathCountdown.TextSize = 16
+deathCountdown.Parent = deathFrame
+
+local deathToken = 0
+
 local function getAdornee(targetCharacter)
 	if not targetCharacter then
 		return nil
@@ -339,6 +395,67 @@ local function updateBossHealth(bossName, health, maxHealth, isActive)
 	}):Play()
 end
 
+local function showDeathMessage(killerName, sourceName, duration)
+	deathToken += 1
+	local token = deathToken
+	duration = math.max(duration or 3, 1)
+
+	if killerName and killerName ~= "" then
+		if sourceName and sourceName ~= "" then
+			deathDetail.Text = ("Defeated by %s with %s"):format(killerName, sourceName)
+		else
+			deathDetail.Text = ("Defeated by %s"):format(killerName)
+		end
+	else
+		deathDetail.Text = "Defeated by the Trashlands"
+	end
+
+	deathFrame.Visible = true
+	deathFrame.BackgroundTransparency = 0.15
+	deathFrameStroke.Transparency = 0.25
+	deathTitle.TextTransparency = 0
+	deathDetail.TextTransparency = 0
+	deathCountdown.TextTransparency = 0
+
+	task.spawn(function()
+		for remaining = math.ceil(duration), 1, -1 do
+			if deathToken ~= token then
+				return
+			end
+
+			deathCountdown.Text = ("Respawning in %d"):format(remaining)
+			task.wait(1)
+		end
+
+		if deathToken ~= token then
+			return
+		end
+
+		deathCountdown.Text = "Respawning..."
+		TweenService:Create(deathFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+			BackgroundTransparency = 1,
+		}):Play()
+		TweenService:Create(deathFrameStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+			Transparency = 1,
+		}):Play()
+		TweenService:Create(deathTitle, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+			TextTransparency = 1,
+		}):Play()
+		TweenService:Create(deathDetail, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+			TextTransparency = 1,
+		}):Play()
+		TweenService:Create(deathCountdown, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+			TextTransparency = 1,
+		}):Play()
+
+		task.delay(0.32, function()
+			if deathToken == token then
+				deathFrame.Visible = false
+			end
+		end)
+	end)
+end
+
 local function showHitConfirm()
 	hitMarker.TextTransparency = 0
 	hitMarker.TextStrokeTransparency = 0.25
@@ -367,5 +484,7 @@ combatFeedback.OnClientEvent:Connect(function(feedbackType, targetCharacter, amo
 		showReward(targetCharacter, amount)
 	elseif feedbackType == "BossHealth" then
 		updateBossHealth(targetCharacter, amount, sourceName, extra)
+	elseif feedbackType == "Death" then
+		showDeathMessage(targetCharacter, amount, sourceName)
 	end
 end)
