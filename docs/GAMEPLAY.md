@@ -95,6 +95,7 @@ The game currently has three selectable combat classes.
 - Mouse users cast the selected ability with left click.
 - Mobile users tap a hotbar slot to select an ability, then tap the world to cast it.
 - Controller users can select through supported UI navigation and cast the selected ability with right trigger.
+- The selected ability shows a client-side aiming preview where useful.
 
 ## Ability Framework
 
@@ -105,6 +106,9 @@ Abilities are data-driven through `AbilityDefinitions`.
 - `ForwardRay` uses the player's pointer/camera aim position when available, then the server clamps the ray to the ability range.
 - Desktop mouse aiming uses the cursor position.
 - Touch and gamepad aiming use the center of the camera view.
+- Selected `ForwardRay` abilities show a local preview line from the player toward the current aim point.
+- Selected `SelfArea` abilities show a local radius preview around the player.
+- Selected `SelfBuff` abilities do not show a world target preview.
 - `SelfArea` damages valid targets around the caster through server-side combat validation.
 - `SelfBuff` applies temporary self-only buffs such as health shield or speed.
 - `Damage`, `Range`, and `Cooldown` tune the current direct-hit abilities.
@@ -184,7 +188,7 @@ Planned expansion:
 - `StarterPlayer/StarterPlayerScripts/SafeZoneFeedback.client.lua`: client status badge for safe-zone and PvP state.
 - `StarterPlayer/StarterPlayerScripts/CombatFeedback.client.lua`: floating damage numbers, hit marker, and spell cooldown feedback.
 - `StarterPlayer/StarterPlayerScripts/AbilityCasting.client.lua`: compatibility placeholder; direct tool activation is disabled.
-- `StarterPlayer/StarterPlayerScripts/AbilityHotbar.client.lua`: custom ability slots, keyboard/touch selection, selected-ability casting, and cooldown overlays.
+- `StarterPlayer/StarterPlayerScripts/AbilityHotbar.client.lua`: custom ability slots, keyboard/touch selection, selected-ability casting, aiming previews, and cooldown overlays.
 - `StarterPlayer/StarterPlayerScripts/BossAlert.client.lua`: boss warning, spawn, and defeated banners.
 - `StarterPlayer/StarterPlayerScripts/ClassSelection.client.lua`: first-time class selection and safe-zone class changing.
 - `ReplicatedStorage/Modules/Config.lua`: shared tuning values.

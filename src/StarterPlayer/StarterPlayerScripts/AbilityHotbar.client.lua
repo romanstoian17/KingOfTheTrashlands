@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -57,6 +58,35 @@ local selectedSlotIndex = nil
 local selectedAbilityName = nil
 local selectSlot
 
+local previewFolder = Instance.new("Folder")
+previewFolder.Name = "LocalAbilityPreview"
+previewFolder.Parent = Workspace
+
+local previewLine = Instance.new("Part")
+previewLine.Name = "AimLine"
+previewLine.Anchored = true
+previewLine.CanCollide = false
+previewLine.CanQuery = false
+previewLine.CanTouch = false
+previewLine.CastShadow = false
+previewLine.Material = Enum.Material.Neon
+previewLine.Transparency = 1
+previewLine.Size = Vector3.new(0.25, 0.25, 1)
+previewLine.Parent = previewFolder
+
+local previewArea = Instance.new("Part")
+previewArea.Name = "AreaRadius"
+previewArea.Anchored = true
+previewArea.CanCollide = false
+previewArea.CanQuery = false
+previewArea.CanTouch = false
+previewArea.CastShadow = false
+previewArea.Material = Enum.Material.Neon
+previewArea.Shape = Enum.PartType.Cylinder
+previewArea.Transparency = 1
+previewArea.Size = Vector3.new(1, 0.14, 1)
+previewArea.Parent = previewFolder
+
 local function getAimScreenPosition(camera)
 	if UserInputService.TouchEnabled and not UserInputService.MouseEnabled then
 		return camera.ViewportSize * 0.5
@@ -82,7 +112,9 @@ local function getAimPosition()
 
 	local character = player.Character
 	if character then
-		params.FilterDescendantsInstances = { character }
+		params.FilterDescendantsInstances = { character, previewFolder }
+	else
+		params.FilterDescendantsInstances = { previewFolder }
 	end
 
 	local result = Workspace:Raycast(ray.Origin, ray.Direction * 1000, params)
@@ -109,6 +141,75 @@ local function isPointInsideHotbar(point)
 		and point.X <= position.X + size.X
 		and point.Y >= position.Y
 		and point.Y <= position.Y + size.Y
+end
+
+local function setPreviewVisible(showLine, showArea)
+	previewLine.Transparency = showLine and 0.35 or 1
+	previewArea.Transparency = showArea and 0.72 or 1
+end
+
+local function updateForwardRayPreview(character, definition)
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	if not rootPart then
+		setPreviewVisible(false, false)
+		return
+	end
+
+	local aimPosition = getAimPosition()
+	if not aimPosition then
+		setPreviewVisible(false, false)
+		return
+	end
+
+	local startPosition = rootPart.Position + Vector3.new(0, 1.4, 0)
+	local rawDirection = aimPosition - startPosition
+	if rawDirection.Magnitude <= 0.1 then
+		setPreviewVisible(false, false)
+		return
+	end
+
+	local range = definition.Range or 80
+	local direction = rawDirection.Unit
+	local endPosition = startPosition + direction * math.min(rawDirection.Magnitude, range)
+	local midpoint = (startPosition + endPosition) * 0.5
+	local length = (endPosition - startPosition).Magnitude
+	local width = math.max((definition.Visual and definition.Visual.Width or 0.4) * 0.35, 0.16)
+
+	previewLine.Color = definition.Color or Color3.fromRGB(245, 245, 235)
+	previewLine.Size = Vector3.new(width, width, length)
+	previewLine.CFrame = CFrame.lookAt(midpoint, endPosition)
+	setPreviewVisible(true, false)
+end
+
+local function updateSelfAreaPreview(character, definition)
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	if not rootPart then
+		setPreviewVisible(false, false)
+		return
+	end
+
+	local radius = definition.Radius or definition.Range or 16
+	previewArea.Color = definition.Color or Color3.fromRGB(245, 245, 235)
+	previewArea.Size = Vector3.new(radius * 2, 0.14, radius * 2)
+	previewArea.CFrame = CFrame.new(rootPart.Position - Vector3.new(0, 2.75, 0))
+	setPreviewVisible(false, true)
+end
+
+local function updateAbilityPreview()
+	local definition = selectedAbilityName and AbilityDefinitions[selectedAbilityName]
+	local character = player.Character
+	if not definition or not character then
+		setPreviewVisible(false, false)
+		return
+	end
+
+	if definition.Targeting == "ForwardRay" then
+		updateForwardRayPreview(character, definition)
+	elseif definition.Targeting == "SelfArea" then
+		updateSelfAreaPreview(character, definition)
+	else
+		setPreviewVisible(false, false)
+	end
 end
 
 local function getSlotIndex(slotValue)
@@ -408,5 +509,7 @@ player.ChildAdded:Connect(function(child)
 		bindAbilityList(child)
 	end
 end)
+
+RunService.RenderStepped:Connect(updateAbilityPreview)
 
 refreshHotbar()

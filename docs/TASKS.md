@@ -130,7 +130,10 @@ Status key:
 - [x] Disable direct tool activation so selection does not instantly cast.
 - [x] Hide default Roblox backpack UI.
 - [x] Add cooldown overlays on ability slots.
-- [ ] Add spell aiming preview.
+- [x] Add client-side aiming preview.
+- [x] Add forward-ray ability preview line.
+- [x] Add self-area ability radius preview.
+- [x] Hide world aiming preview for self-buff abilities.
 - [ ] Add spell tree data structure.
 - [ ] Add first unlockable spell upgrade.
 
