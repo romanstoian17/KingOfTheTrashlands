@@ -64,6 +64,76 @@ rewardLabel.TextStrokeTransparency = 1
 rewardLabel.TextTransparency = 1
 rewardLabel.Parent = screenGui
 
+local bossFrame = Instance.new("Frame")
+bossFrame.Name = "BossHealth"
+bossFrame.AnchorPoint = Vector2.new(0.5, 0)
+bossFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 20)
+bossFrame.BackgroundTransparency = 0.08
+bossFrame.BorderSizePixel = 0
+bossFrame.Position = UDim2.fromScale(0.5, 0.075)
+bossFrame.Size = UDim2.fromOffset(430, 52)
+bossFrame.Visible = false
+bossFrame.Parent = screenGui
+
+local bossFrameCorner = Instance.new("UICorner")
+bossFrameCorner.CornerRadius = UDim.new(0, 6)
+bossFrameCorner.Parent = bossFrame
+
+local bossFrameStroke = Instance.new("UIStroke")
+bossFrameStroke.Color = Color3.fromRGB(255, 90, 65)
+bossFrameStroke.Thickness = 1
+bossFrameStroke.Transparency = 0.2
+bossFrameStroke.Parent = bossFrame
+
+local bossNameLabel = Instance.new("TextLabel")
+bossNameLabel.Name = "BossName"
+bossNameLabel.BackgroundTransparency = 1
+bossNameLabel.Position = UDim2.fromOffset(12, 4)
+bossNameLabel.Size = UDim2.new(1, -24, 0, 18)
+bossNameLabel.Font = Enum.Font.GothamBold
+bossNameLabel.Text = "Boss"
+bossNameLabel.TextColor3 = Color3.fromRGB(255, 235, 220)
+bossNameLabel.TextSize = 14
+bossNameLabel.TextXAlignment = Enum.TextXAlignment.Left
+bossNameLabel.Parent = bossFrame
+
+local bossHealthText = Instance.new("TextLabel")
+bossHealthText.Name = "HealthText"
+bossHealthText.BackgroundTransparency = 1
+bossHealthText.Position = UDim2.fromOffset(12, 4)
+bossHealthText.Size = UDim2.new(1, -24, 0, 18)
+bossHealthText.Font = Enum.Font.Gotham
+bossHealthText.Text = ""
+bossHealthText.TextColor3 = Color3.fromRGB(230, 230, 230)
+bossHealthText.TextSize = 13
+bossHealthText.TextXAlignment = Enum.TextXAlignment.Right
+bossHealthText.Parent = bossFrame
+
+local bossBarBack = Instance.new("Frame")
+bossBarBack.Name = "BarBack"
+bossBarBack.BackgroundColor3 = Color3.fromRGB(45, 28, 28)
+bossBarBack.BorderSizePixel = 0
+bossBarBack.Position = UDim2.fromOffset(12, 28)
+bossBarBack.Size = UDim2.new(1, -24, 0, 14)
+bossBarBack.Parent = bossFrame
+
+local bossBarBackCorner = Instance.new("UICorner")
+bossBarBackCorner.CornerRadius = UDim.new(0, 4)
+bossBarBackCorner.Parent = bossBarBack
+
+local bossBarFill = Instance.new("Frame")
+bossBarFill.Name = "Fill"
+bossBarFill.BackgroundColor3 = Color3.fromRGB(255, 78, 52)
+bossBarFill.BorderSizePixel = 0
+bossBarFill.Size = UDim2.fromScale(1, 1)
+bossBarFill.Parent = bossBarBack
+
+local bossBarFillCorner = Instance.new("UICorner")
+bossBarFillCorner.CornerRadius = UDim.new(0, 4)
+bossBarFillCorner.Parent = bossBarFill
+
+local bossHideToken = 0
+
 local function getAdornee(targetCharacter)
 	if not targetCharacter then
 		return nil
@@ -239,6 +309,36 @@ local function showReward(amount, reason)
 	}):Play()
 end
 
+local function updateBossHealth(bossName, health, maxHealth, isActive)
+	maxHealth = math.max(maxHealth or 0, 0)
+	health = math.clamp(health or 0, 0, maxHealth)
+
+	if not isActive or maxHealth <= 0 then
+		bossHideToken += 1
+		local token = bossHideToken
+		task.delay(0.65, function()
+			if bossHideToken == token then
+				bossFrame.Visible = false
+			end
+		end)
+	else
+		bossHideToken += 1
+		bossFrame.Visible = true
+	end
+
+	local ratio = 0
+	if maxHealth > 0 then
+		ratio = math.clamp(health / maxHealth, 0, 1)
+	end
+
+	bossNameLabel.Text = bossName or "Boss"
+	bossHealthText.Text = ("%d / %d"):format(math.floor(health + 0.5), math.floor(maxHealth + 0.5))
+
+	TweenService:Create(bossBarFill, TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = UDim2.fromScale(ratio, 1),
+	}):Play()
+end
+
 local function showHitConfirm()
 	hitMarker.TextTransparency = 0
 	hitMarker.TextStrokeTransparency = 0.25
@@ -254,7 +354,7 @@ local function showHitConfirm()
 	}):Play()
 end
 
-combatFeedback.OnClientEvent:Connect(function(feedbackType, targetCharacter, amount, sourceName)
+combatFeedback.OnClientEvent:Connect(function(feedbackType, targetCharacter, amount, sourceName, extra)
 	if feedbackType == "DamageNumber" then
 		showDamageNumber(targetCharacter, amount)
 		showImpactPulse(targetCharacter, sourceName)
@@ -265,5 +365,7 @@ combatFeedback.OnClientEvent:Connect(function(feedbackType, targetCharacter, amo
 		playCastFeedback(targetCharacter)
 	elseif feedbackType == "Reward" then
 		showReward(targetCharacter, amount)
+	elseif feedbackType == "BossHealth" then
+		updateBossHealth(targetCharacter, amount, sourceName, extra)
 	end
 end)

@@ -53,9 +53,9 @@ Status key:
 - [x] Add basic local cast flash feedback.
 - [x] Add basic hit impact sounds.
 - [x] Add basic hit impact pulse effects.
+- [x] Add dedicated boss health UI.
 - [ ] Add stronger custom hit sounds and impact effects.
 - [ ] Add player health bars or nameplate polish.
-- [ ] Add dedicated boss health UI.
 
 ## Player Lifecycle
 
@@ -169,7 +169,8 @@ Status key:
 - [x] Make boss attack nearby players.
 - [x] Prevent boss damage against players inside safe zones.
 - [x] Reward boss contributors with placeholder currency.
-- [ ] Add boss health UI.
+- [x] Publish boss health updates to clients.
+- [x] Add boss health UI.
 - [ ] Add underground boss spawn option.
 - [ ] Add multiple boss types.
 - [ ] Add real loot/reward table.

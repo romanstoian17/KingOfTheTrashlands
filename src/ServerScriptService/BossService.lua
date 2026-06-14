@@ -11,11 +11,13 @@ local SafeZoneService = require(ServerScriptService.SafeZoneService)
 local BossService = {
 	CurrentBoss = nil,
 	BossAlert = nil,
+	CombatFeedback = nil,
 }
 
 function BossService:Init()
 	local remotes = ReplicatedStorage:WaitForChild("Remotes")
 	self.BossAlert = remotes:WaitForChild("BossAlert")
+	self.CombatFeedback = remotes:WaitForChild("CombatFeedback")
 
 	task.spawn(function()
 		self:WaitWithWarning(Config.Boss.InitialSpawnSeconds)
@@ -67,15 +69,23 @@ function BossService:SpawnBoss(locationName)
 	model.Parent = Workspace
 	self.CurrentBoss = model
 	self:PublishBossAlert("Spawned", "Trash Titan has spawned", locationName or "Center Arena", 0)
+	self:PublishBossHealth(model.Name, humanoid.Health, humanoid.MaxHealth, true)
 
 	local alive = true
 	local lastAttack = 0
+
+	humanoid.HealthChanged:Connect(function(health)
+		if alive then
+			self:PublishBossHealth(model.Name, health, humanoid.MaxHealth, true)
+		end
+	end)
 
 	humanoid.Died:Connect(function()
 		alive = false
 		self:RewardContributors(model)
 		CombatService:ClearDamageLedger(model)
 		self:PublishBossAlert("Defeated", "Trash Titan defeated", locationName or "Center Arena", 0)
+		self:PublishBossHealth(model.Name, 0, humanoid.MaxHealth, false)
 		task.delay(5, function()
 			if model.Parent then
 				model:Destroy()
@@ -102,6 +112,12 @@ function BossService:SpawnBoss(locationName)
 			task.wait(0.4)
 		end
 	end)
+end
+
+function BossService:PublishBossHealth(bossName, health, maxHealth, isActive)
+	if self.CombatFeedback then
+		self.CombatFeedback:FireAllClients("BossHealth", bossName, math.max(health or 0, 0), maxHealth or 0, isActive == true)
+	end
 end
 
 function BossService:FindTarget(position)
@@ -135,6 +151,9 @@ function BossService:RewardContributors(bossModel)
 			local currency = leaderstats and leaderstats:FindFirstChild("TrashCoins")
 			if currency then
 				currency.Value += Config.Boss.RewardCurrency
+				if self.CombatFeedback then
+					self.CombatFeedback:FireClient(player, "Reward", Config.Boss.RewardCurrency, "Boss defeated")
+				end
 			end
 		end
 	end

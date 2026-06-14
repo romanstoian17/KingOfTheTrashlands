@@ -60,6 +60,7 @@ Safe zones are server-authoritative.
 - Ability casts show simple cooldown bars near the bottom of the screen.
 - Ability casts trigger lightweight local cast sound and flash feedback.
 - Validated damage triggers lightweight impact pulse and nearby impact sound feedback.
+- Boss spawns show a top-screen boss health bar while the boss is active.
 - Damage validation should stay on the server even after client UI and aiming improve.
 
 ## Player Lifecycle
@@ -168,7 +169,9 @@ The boss is managed by `BossService`.
 - The current boss spawns at the center arena.
 - The boss has health, chases nearby players, and attacks players outside safe zones.
 - Players who contributed damage receive placeholder `TrashCoins` when the boss dies.
+- Boss contributors receive a reward popup when the boss dies.
 - The boss has an overhead health bar.
+- The boss also has a top-screen health UI while active.
 
 Planned expansion:
 
@@ -191,7 +194,7 @@ Planned expansion:
 - `ServerScriptService/MobService.lua`: subway mob spawning, chase, attack, and respawn.
 - `ServerScriptService/BossService.lua`: timed boss spawning, boss AI, and rewards.
 - `StarterPlayer/StarterPlayerScripts/SafeZoneFeedback.client.lua`: client status badge for safe-zone and PvP state.
-- `StarterPlayer/StarterPlayerScripts/CombatFeedback.client.lua`: floating damage numbers, hit marker, cast flashes, cast sounds, impact pulses, impact sounds, and spell cooldown feedback.
+- `StarterPlayer/StarterPlayerScripts/CombatFeedback.client.lua`: floating damage numbers, hit marker, cast flashes, cast sounds, impact pulses, impact sounds, reward popups, boss health UI, and spell cooldown feedback.
 - `StarterPlayer/StarterPlayerScripts/AbilityCasting.client.lua`: compatibility placeholder; direct tool activation is disabled.
 - `StarterPlayer/StarterPlayerScripts/AbilityHotbar.client.lua`: custom ability slots, keyboard/touch selection, selected-ability casting, aiming previews, and cooldown overlays.
 - `StarterPlayer/StarterPlayerScripts/BossAlert.client.lua`: boss warning, spawn, and defeated banners.
