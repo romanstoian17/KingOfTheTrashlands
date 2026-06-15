@@ -104,6 +104,19 @@ function ClassService:SelectClass(player, className)
 		return false
 	end
 
+	local currentClass = player:GetAttribute("CombatClass")
+	local isSwitchingClass = player:GetAttribute("CombatClassSelected") == true and currentClass ~= className
+	local cooldownEndsAt = player:GetAttribute("ClassSwitchCooldownEndsAt")
+	if isSwitchingClass and typeof(cooldownEndsAt) == "number" and os.clock() < cooldownEndsAt then
+		self:SendSelectionStatus(player, false, ("Class switch ready in %ds."):format(math.ceil(cooldownEndsAt - os.clock())))
+		return false
+	end
+
+	if isSwitchingClass then
+		self:CleanupClassState(player)
+		player:SetAttribute("ClassSwitchCooldownEndsAt", os.clock() + Config.ClassSwitchCooldownSeconds)
+	end
+
 	player:SetAttribute("CombatClass", className)
 	player:SetAttribute("MageType", className)
 	player:SetAttribute("CombatClassSelected", true)
@@ -112,6 +125,25 @@ function ClassService:SelectClass(player, className)
 	self:GiveAbilityTools(player)
 	self:SendSelectionStatus(player, true, "Selected " .. classDefinition.DisplayName .. ".")
 	return true
+end
+
+function ClassService:CleanupClassState(player)
+	local character = player.Character
+	if character then
+		character:SetAttribute("ActiveSelfBuff", nil)
+		character:SetAttribute("ActiveSelfBuffExpiresAt", nil)
+
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			humanoid.WalkSpeed = Config.Combat.DefaultWalkSpeed
+			humanoid.MaxHealth = Config.Combat.PlayerMaxHealth
+			humanoid.Health = math.min(humanoid.Health, humanoid.MaxHealth)
+		end
+	end
+
+	if AbilityService.DestroyPlayerSummons then
+		AbilityService:DestroyPlayerSummons(player)
+	end
 end
 
 function ClassService:SelectMage(player, mageType)

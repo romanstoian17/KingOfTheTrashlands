@@ -5,13 +5,13 @@ local AbilityDefinitions = {
 		Targeting = "ProjectileExplode",
 		Damage = 18,
 		Range = 115,
-		ExplosionRadius = 14,
+		ExplosionRadius = 17,
 		Cooldown = 1.5,
 		Color = Color3.fromRGB(255, 95, 42),
 		ProjectileSpeed = 90,
 		Visual = {
 			Shape = "Fireball",
-			ProjectileSize = Vector3.new(3, 3, 3),
+			ProjectileSize = Vector3.new(4.6, 4.6, 4.6),
 			ExplosionLifetime = 0.34,
 			ExplosionTransparency = 0.38,
 			Material = Enum.Material.Neon,
@@ -80,9 +80,12 @@ local AbilityDefinitions = {
 	},
 	["Ice Shard"] = {
 		DisplayName = "Ice Shard",
-		AbilityType = "Raycast",
-		Targeting = "Raycast",
+		AbilityType = "MultiRaycast",
+		Targeting = "MultiRaycast",
 		Damage = 18,
+		DamagePerRay = 6,
+		RayCount = 3,
+		SpreadDegrees = 7,
 		Range = 120,
 		Cooldown = 0.9,
 		Color = Color3.fromRGB(135, 225, 255),
@@ -101,7 +104,7 @@ local AbilityDefinitions = {
 			Pitch = 1.25,
 		},
 		Effects = {},
-		Tags = { "Magic", "Ice", "Raycast" },
+		Tags = { "Magic", "Ice", "Raycast", "Spread" },
 	},
 	["Frost Bolt"] = {
 		DisplayName = "Frost Bolt",
@@ -396,7 +399,7 @@ local AbilityDefinitions = {
 }
 
 -- Current reusable targeting/behavior types:
--- Raycast, ProjectileExplode, SelfArea, DelayedSelfArea, LineWave,
+-- Raycast, MultiRaycast, ProjectileExplode, SelfArea, DelayedSelfArea, LineWave,
 -- TargetedArea, Summon, and SelfBuff. Future types can add Dash, Trap,
 -- Deployable, Channel, Chain, Cone, or Aura without changing class data shape.
 

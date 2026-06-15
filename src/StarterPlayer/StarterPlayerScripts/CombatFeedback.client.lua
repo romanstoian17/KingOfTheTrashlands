@@ -64,6 +64,21 @@ rewardLabel.TextStrokeTransparency = 1
 rewardLabel.TextTransparency = 1
 rewardLabel.Parent = screenGui
 
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Name = "CombatStatusLabel"
+statusLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Position = UDim2.fromScale(0.5, 0.58)
+statusLabel.Size = UDim2.fromOffset(320, 28)
+statusLabel.Font = Enum.Font.GothamBold
+statusLabel.Text = ""
+statusLabel.TextColor3 = Color3.fromRGB(180, 225, 255)
+statusLabel.TextSize = 18
+statusLabel.TextStrokeColor3 = Color3.fromRGB(10, 18, 24)
+statusLabel.TextStrokeTransparency = 1
+statusLabel.TextTransparency = 1
+statusLabel.Parent = screenGui
+
 local bossFrame = Instance.new("Frame")
 bossFrame.Name = "BossHealth"
 bossFrame.AnchorPoint = Vector2.new(0.5, 0)
@@ -189,6 +204,7 @@ deathCountdown.TextSize = 16
 deathCountdown.Parent = deathFrame
 
 local deathToken = 0
+local lowHealthWarningReady = true
 
 local function getAdornee(targetCharacter)
 	if not targetCharacter then
@@ -365,6 +381,47 @@ local function showReward(amount, reason)
 	}):Play()
 end
 
+local function showCombatStatus(message, color)
+	statusLabel.Text = message
+	statusLabel.TextColor3 = color or Color3.fromRGB(180, 225, 255)
+	statusLabel.Position = UDim2.fromScale(0.5, 0.58)
+	statusLabel.TextTransparency = 0
+	statusLabel.TextStrokeTransparency = 0.35
+
+	TweenService:Create(statusLabel, TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Position = UDim2.fromScale(0.5, 0.55),
+	}):Play()
+
+	TweenService:Create(statusLabel, TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+		TextTransparency = 1,
+		TextStrokeTransparency = 1,
+	}):Play()
+end
+
+local function bindLowHealthWarning(character)
+	local humanoid = character:WaitForChild("Humanoid", 5)
+	if not humanoid then
+		return
+	end
+
+	lowHealthWarningReady = true
+	humanoid.HealthChanged:Connect(function(health)
+		if humanoid.MaxHealth <= 0 then
+			return
+		end
+
+		if health > humanoid.MaxHealth * 0.35 then
+			lowHealthWarningReady = true
+			return
+		end
+
+		if health > 0 and lowHealthWarningReady then
+			lowHealthWarningReady = false
+			showCombatStatus("Low health - return to base", Color3.fromRGB(255, 120, 85))
+		end
+	end)
+end
+
 local function updateBossHealth(bossName, health, maxHealth, isActive)
 	maxHealth = math.max(maxHealth or 0, 0)
 	health = math.clamp(health or 0, 0, maxHealth)
@@ -482,9 +539,17 @@ combatFeedback.OnClientEvent:Connect(function(feedbackType, targetCharacter, amo
 		playCastFeedback(targetCharacter)
 	elseif feedbackType == "Reward" then
 		showReward(targetCharacter, amount)
+	elseif feedbackType == "DamageBlocked" then
+		showCombatStatus("Damage blocked by safe zone", Color3.fromRGB(145, 220, 255))
 	elseif feedbackType == "BossHealth" then
 		updateBossHealth(targetCharacter, amount, sourceName, extra)
 	elseif feedbackType == "Death" then
 		showDeathMessage(targetCharacter, amount, sourceName)
 	end
 end)
+
+if player.Character then
+	bindLowHealthWarning(player.Character)
+end
+
+player.CharacterAdded:Connect(bindLowHealthWarning)

@@ -1,3 +1,4 @@
+local Debris = game:GetService("Debris")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -37,6 +38,7 @@ function MobService:SpawnMob(index, spawnPart)
 
 	local lastAttack = 0
 	local alive = true
+	local attackWindingUp = false
 
 	humanoid.Died:Connect(function()
 		alive = false
@@ -56,16 +58,34 @@ function MobService:SpawnMob(index, spawnPart)
 
 	task.spawn(function()
 		while alive and model.Parent do
-			local targetPlayer = self:FindTarget(model.PrimaryPart.Position)
+			local mobRoot = model.PrimaryPart
+			if not mobRoot then
+				return
+			end
+
+			local distanceFromSpawn = (mobRoot.Position - spawnPart.Position).Magnitude
+			local targetPlayer = distanceFromSpawn <= Config.Mobs.LeashRadius and self:FindTarget(mobRoot.Position) or nil
 			if targetPlayer and targetPlayer.Character then
 				local targetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
 				if targetRoot then
 					humanoid:MoveTo(targetRoot.Position)
 
-					local distance = (targetRoot.Position - model.PrimaryPart.Position).Magnitude
-					if distance <= Config.Mobs.AttackRadius and os.clock() - lastAttack >= Config.Mobs.AttackCooldown then
+					local distance = (targetRoot.Position - mobRoot.Position).Magnitude
+					if distance <= Config.Mobs.AttackRadius and not attackWindingUp and os.clock() - lastAttack >= Config.Mobs.AttackCooldown then
 						lastAttack = os.clock()
-						CombatService:DamagePlayerFromNPC(targetPlayer, Config.Mobs.ContactDamage)
+						attackWindingUp = true
+						self:ShowAttackWindup(model)
+						task.delay(Config.Mobs.AttackWindupSeconds, function()
+							attackWindingUp = false
+							if not alive or not model.Parent or not targetPlayer.Character or not model.PrimaryPart then
+								return
+							end
+
+							local currentTargetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+							if currentTargetRoot and (currentTargetRoot.Position - model.PrimaryPart.Position).Magnitude <= Config.Mobs.AttackRadius + 1 then
+								CombatService:DamagePlayerFromNPC(targetPlayer, Config.Mobs.ContactDamage)
+							end
+						end)
 					end
 				end
 			else
@@ -75,6 +95,26 @@ function MobService:SpawnMob(index, spawnPart)
 			task.wait(0.35)
 		end
 	end)
+end
+
+function MobService:ShowAttackWindup(model)
+	local root = model.PrimaryPart
+	if not root then
+		return
+	end
+
+	local warning = Instance.new("Part")
+	warning.Name = "Mob Attack Windup"
+	warning.Anchored = true
+	warning.CanCollide = false
+	warning.Shape = Enum.PartType.Ball
+	warning.Material = Enum.Material.Neon
+	warning.Color = Color3.fromRGB(255, 120, 70)
+	warning.Transparency = 0.45
+	warning.Size = Vector3.new(5, 5, 5)
+	warning.CFrame = root.CFrame
+	warning.Parent = Workspace
+	Debris:AddItem(warning, Config.Mobs.AttackWindupSeconds)
 end
 
 function MobService:RewardContributors(mobModel)

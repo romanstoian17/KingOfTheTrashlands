@@ -197,6 +197,7 @@ local function updateAbilityPreview()
 
 	if definition.Targeting == "ForwardRay"
 		or definition.Targeting == "Raycast"
+		or definition.Targeting == "MultiRaycast"
 		or definition.Targeting == "ProjectileExplode"
 		or definition.Targeting == "LineWave"
 		or definition.Targeting == "TargetedArea"
@@ -459,6 +460,11 @@ local function startCooldown(abilityName, duration)
 	task.delay(duration, function()
 		if slot.Parent and slot:GetAttribute("CooldownToken") == token then
 			cooldown.Visible = false
+			local originalColor = slot.BackgroundColor3
+			slot.BackgroundColor3 = Color3.fromRGB(56, 70, 58)
+			TweenService:Create(slot, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				BackgroundColor3 = originalColor,
+			}):Play()
 		end
 	end)
 end

@@ -98,6 +98,8 @@ function SpellService:CastAbility(player, abilityName, aimPosition)
 	local targeting = definition.Targeting or "Raycast"
 	if targeting == "ForwardRay" or targeting == "Raycast" then
 		return self:CastRaycast(player, character, root, abilityName, definition, aimPosition)
+	elseif targeting == "MultiRaycast" then
+		return self:CastMultiRaycast(player, character, root, abilityName, definition, aimPosition)
 	elseif targeting == "ProjectileExplode" then
 		return self:CastProjectileExplode(player, character, root, abilityName, definition, aimPosition)
 	elseif targeting == "SelfArea" then
@@ -357,6 +359,58 @@ function SpellService:GetSummonsFolder()
 	end
 
 	return folder
+end
+
+function SpellService:CastMultiRaycast(player, character, root, abilityName, definition, aimPosition)
+	local origin = root.Position + Vector3.new(0, 2.5, 0)
+	local _, direction = self:GetClampedAimPoint(root, origin, aimPosition, definition.Range)
+	local spreadDegrees = definition.SpreadDegrees or 8
+	local rayCount = definition.RayCount or 3
+	local damagePerRay = definition.DamagePerRay or ((definition.Damage or 0) / rayCount)
+	local startIndex = -(rayCount - 1) / 2
+	local hitCharacters = {}
+
+	for index = 0, rayCount - 1 do
+		local yaw = math.rad((startIndex + index) * spreadDegrees)
+		local spreadDirection = (CFrame.lookAt(Vector3.zero, direction) * CFrame.Angles(0, yaw, 0)).LookVector
+		local result = Workspace:Raycast(origin, spreadDirection * (definition.Range or 80), self:MakeRaycastParams(character))
+		local endPoint = result and result.Position or origin + spreadDirection * (definition.Range or 80)
+
+		self:ShowRayEffect(origin, endPoint, definition)
+
+		if result and result.Instance then
+			local targetCharacter = CombatService:GetHumanoidModelFromPart(result.Instance)
+			if targetCharacter and not hitCharacters[targetCharacter] then
+				hitCharacters[targetCharacter] = true
+				local damaged = CombatService:DamageCharacter(player, targetCharacter, damagePerRay, abilityName)
+				if damaged then
+					self:ApplyAbilityEffects(player, targetCharacter, definition)
+				end
+			end
+		end
+	end
+
+	return true
+end
+
+function SpellService:DestroyPlayerSummons(player)
+	if not player then
+		return
+	end
+
+	local summonsFolder = Workspace:FindFirstChild("Summons")
+	if not summonsFolder then
+		return
+	end
+
+	for _, summon in ipairs(summonsFolder:GetChildren()) do
+		if summon:GetAttribute("SummonOwnerUserId") == player.UserId then
+			if summon.PrimaryPart then
+				self:ShowSummonVanishEffect(summon.PrimaryPart.Position, { DisplayName = summon.Name })
+			end
+			summon:Destroy()
+		end
+	end
 end
 
 function SpellService:GetGroundedPosition(position)
@@ -767,6 +821,7 @@ end
 
 Players.PlayerRemoving:Connect(function(player)
 	SpellService.Cooldowns[player.UserId] = nil
+	SpellService:DestroyPlayerSummons(player)
 end)
 
 return SpellService

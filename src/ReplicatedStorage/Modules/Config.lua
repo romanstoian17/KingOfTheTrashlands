@@ -4,6 +4,7 @@ Config.ActiveAbilitySlots = 10
 Config.ActiveSpellSlots = Config.ActiveAbilitySlots
 Config.DefaultClass = "Fire Caster"
 Config.DefaultMageType = Config.DefaultClass
+Config.ClassSwitchCooldownSeconds = 15
 
 Config.Map = {
 	BaseCount = 16,
@@ -40,11 +41,13 @@ Config.Mobs = {
 	Count = 8,
 	MaxHealth = 90,
 	ContactDamage = 10,
-	DetectRadius = 85,
+	DetectRadius = 75,
 	AttackRadius = 7,
-	AttackCooldown = 1.4,
+	AttackCooldown = 1.8,
+	AttackWindupSeconds = 0.45,
+	LeashRadius = 95,
 	RespawnSeconds = 8,
-	WalkSpeed = 9,
+	WalkSpeed = 7,
 	RewardCurrency = 8,
 }
 

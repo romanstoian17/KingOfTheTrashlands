@@ -8,6 +8,135 @@ Status key:
 - `[~]` In progress
 - `[x]` Done
 
+## Implementation Order
+
+Use this section to decide what to build next. The detailed category backlog below remains the full checklist.
+
+### Phase 1 - Make The Current Build Testable And Comfortable
+
+- [ ] Validate project in Roblox Studio.
+- [x] Add Studio playtest checklist sections for mobile and controller.
+- [x] Add performance test checklist for low-end devices.
+- [x] Add playtest notes template for testers.
+- [x] Implement full class switching flow.
+- [x] Add server-side class switch cooldown.
+- [x] Clear old temporary buffs when switching class.
+- [x] Destroy old class summons when switching class.
+- [x] Reset ability cooldowns when switching class.
+- [x] Ensure every current class is available for now.
+- [x] Make mobs slower and easier for young players to escape.
+- [x] Add mob leash radius so mobs return to their spawn area.
+- [x] Add mob attack windup so players can react.
+- [x] Add blocked-damage feedback when safe zones prevent a hit.
+- [x] Add clear ability-ready feedback when cooldown ends.
+
+### Phase 2 - Make Combat Easier And More Fun For Kids
+
+- [ ] Add kid-friendly combat tuning pass so abilities are easier to hit with.
+- [x] Make Fireball visually and mechanically bigger while keeping balanced damage.
+- [x] Change Ice Shard into a multi-shard cast with total damage similar to the current single shard.
+- [ ] Widen narrow raycast/projectile abilities where needed.
+- [ ] Review all area, wave, and summon abilities for friendly hit reliability.
+- [ ] Add per-ability difficulty rating for aiming and kid-friendly tuning.
+- [ ] Add per-ability device notes for mouse, touch, and controller.
+- [ ] Make ability special effects feel cool, impressive, and readable.
+- [ ] Add richer projectile, area, summon, and impact VFX.
+- [ ] Add stronger cast animations or motion beats for major abilities.
+- [x] Add low-health warning feedback.
+- [ ] Add target hit readability pass for mobile screens.
+
+### Phase 3 - Make The World Easier To Understand
+
+- [ ] Add simple objective prompts after class selection.
+- [ ] Add first-session tutorial prompts for class selection, safe zones, arena, subway, and boss.
+- [ ] Add a short practice area or training dummy inside/near bases.
+- [ ] Add clear signs, arrows, lights, or paths from bases to the center arena.
+- [ ] Add clear signs, arrows, lights, or paths from the center arena to subway entrances.
+- [ ] Add a first-time arrow/path from player base to central arena.
+- [ ] Add a first-time arrow/path from central arena to subway entrance.
+- [ ] Add visual landmarks so players can quickly understand where they are.
+- [ ] Add boss spawn map indicator.
+- [ ] Add minimap or simple world direction indicators for base, arena, subway, and boss.
+- [ ] Add a help panel that explains controls, safe zones, class switching, and rewards.
+
+### Phase 4 - Rebuild The Map Into A City
+
+- [ ] Rebuild the city map layout around a large central fighting space.
+- [ ] Add buildings and structures around the central arena.
+- [ ] Redesign how the 16 bases are located around the city.
+- [ ] Explore better base placement than the current simple outer ring.
+- [ ] Keep the current outer base ring if no better layout is ready yet.
+- [ ] Add underground boss spawn option.
+
+### Phase 5 - Expand Classes And Abilities
+
+- [ ] Design 7 additional available classes.
+- [ ] Add definitions for 7 additional classes.
+- [ ] Design at least 8 abilities for each class.
+- [ ] Document each new ability's behavior, damage, cooldown, range, visuals, and animation idea.
+- [ ] Add ability category tags for projectile, area, summon, movement, defense, and utility.
+- [ ] Add class role tags such as easy, tanky, mobile, ranged, support, and builder.
+- [ ] Implement ability definitions for the new classes.
+- [ ] Add placeholder visuals and animations for the new class abilities.
+- [ ] Add class preview/demo moments in class selection.
+- [ ] Add class switch confirmation when changing away from the current class.
+
+### Phase 6 - Improve Enemies And Bosses
+
+- [ ] Add mob hit reaction and clear attack animation.
+- [ ] Add easier beginner mob type.
+- [ ] Add better mob models.
+- [ ] Add mob patrol points.
+- [ ] Add multiple mob types.
+- [ ] Add stronger elite mob type for later subway depth.
+- [ ] Add boss attack windups and telegraphs.
+- [ ] Add boss arena danger markers before large attacks.
+- [ ] Add boss participation reward rules that are clear and fair.
+- [ ] Add boss scaling by server player count.
+- [ ] Add multiple boss types.
+
+### Phase 7 - Progression, Economy, And Retention
+
+- [ ] Define core currencies: common, uncommon, and rare.
+- [ ] Add reward tuning table for mobs, bosses, PvP, quests, and daily play.
+- [ ] Add beginner goals that reward trying arena, subway, and boss content.
+- [ ] Add simple daily reward or first-win bonus.
+- [ ] Add economy balance spreadsheet or data table.
+- [ ] Add anti-grind tuning review so rewards feel good without becoming too fast.
+- [ ] Add passive ability framework later.
+- [ ] Add class unlock framework later, while keeping all classes available for now.
+- [ ] Add spell tree data structure.
+- [ ] Add first unlockable spell upgrade.
+- [ ] Add real loot/reward table.
+
+### Phase 8 - Analytics, Performance, And Polish
+
+- [ ] Add lightweight server analytics counters for class choice, deaths, kills, mob defeats, boss participation, and class switching.
+- [ ] Add funnel events for join, class selected, first arena entry, first damage dealt, first death, first mob defeated, and first boss encounter.
+- [ ] Track ability hit rate, average damage, and casts per ability during tests.
+- [ ] Track where players die most often.
+- [ ] Track if players fail to find the subway or boss.
+- [ ] Add combat balance debug logging that can be toggled off.
+- [ ] Add VFX performance budget for particles, lights, tweens, and temporary parts.
+- [ ] Pool or throttle short-lived effect parts if performance drops.
+- [ ] Add shared VFX helper module if ability effects keep growing.
+- [ ] Add shared AI helper module if mobs, bosses, and summons duplicate logic.
+- [ ] Add network ownership and replication review for projectiles, summons, mobs, and bosses.
+- [ ] Add server performance profiling pass.
+- [ ] Add client performance profiling pass.
+- [ ] Add mobile-first ability button sizing review.
+- [ ] Add controller/gamepad navigation review for class selection and hotbar.
+- [ ] Add readable UI text sizing pass for small screens.
+- [ ] Add colorblind/readability pass for safe, danger, class, and ability colors.
+- [ ] Add localization-ready text keys for UI strings.
+- [ ] Add simple settings for music, SFX, camera shake, and visual intensity.
+- [ ] Add stronger custom hit sounds and impact effects.
+- [ ] Add player health bars or nameplate polish.
+- [ ] Add basic camera shake only for major abilities, with an option to reduce it.
+- [ ] Add automated tests for safe-zone damage rules.
+- [ ] Add formatting/linting setup.
+- [ ] Add script organization review after class count grows.
+
 ## Foundation
 
 - [x] Create Rojo project structure.
@@ -19,6 +148,15 @@ Status key:
 - [x] Add central PvP arena.
 - [x] Add visual boundary markers for the arena.
 - [x] Add simple arena obstacles and cover.
+- [ ] Rebuild the city map layout around a large central fighting space.
+- [ ] Add buildings and structures around the central arena.
+- [ ] Redesign how the 16 bases are located around the city.
+- [ ] Explore better base placement than the current simple outer ring.
+- [ ] Keep the current outer base ring if no better layout is ready yet.
+- [ ] Add clear signs, arrows, lights, or paths from bases to the center arena.
+- [ ] Add clear signs, arrows, lights, or paths from the center arena to subway entrances.
+- [ ] Add minimap or simple world direction indicators for base, arena, subway, and boss.
+- [ ] Add visual landmarks so players can quickly understand where they are.
 - [x] Add underground subway arena.
 - [x] Add subway entrance ramp.
 - [x] Add two clear subway entrance teleport pads.
@@ -65,7 +203,31 @@ Status key:
 - [x] Add basic hit impact pulse effects.
 - [x] Add dedicated boss health UI.
 - [ ] Add stronger custom hit sounds and impact effects.
+- [ ] Make ability special effects feel cool, impressive, and readable.
+- [ ] Add stronger cast animations or motion beats for major abilities.
+- [ ] Add richer projectile, area, summon, and impact VFX.
 - [ ] Add player health bars or nameplate polish.
+- [x] Add low-health warning feedback.
+- [x] Add clear ability-ready feedback when cooldown ends.
+- [x] Add blocked-damage feedback when safe zones prevent a hit.
+- [ ] Add target hit readability pass for mobile screens.
+- [ ] Add VFX performance budget for particles, lights, tweens, and temporary parts.
+- [ ] Pool or throttle short-lived effect parts if performance drops.
+
+## Onboarding And UX
+
+- [ ] Add first-session tutorial prompts for class selection, safe zones, arena, subway, and boss.
+- [ ] Add a short practice area or training dummy inside/near bases.
+- [ ] Add simple objective prompts after class selection.
+- [ ] Add a first-time arrow/path from player base to central arena.
+- [ ] Add a first-time arrow/path from central arena to subway entrance.
+- [ ] Add a help panel that explains controls, safe zones, class switching, and rewards.
+- [ ] Add mobile-first ability button sizing review.
+- [ ] Add controller/gamepad navigation review for class selection and hotbar.
+- [ ] Add readable UI text sizing pass for small screens.
+- [ ] Add colorblind/readability pass for safe, danger, class, and ability colors.
+- [ ] Add localization-ready text keys for UI strings.
+- [ ] Add simple settings for music, SFX, camera shake, and visual intensity.
 
 ## Player Lifecycle
 
@@ -101,6 +263,7 @@ Status key:
 - [x] Add ability metadata fields: `AbilityType`, `Targeting`, `Effects`, and `Tags`.
 - [x] Add data-driven ability visual metadata.
 - [x] Add reusable `Raycast` ability behavior.
+- [x] Add reusable `MultiRaycast` ability behavior.
 - [x] Add reusable `ProjectileExplode` ability behavior.
 - [x] Add reusable `DelayedSelfArea` ability behavior.
 - [x] Add reusable `LineWave` ability behavior.
@@ -161,8 +324,43 @@ Status key:
 - [x] Replace forward-ray preview line with destination marker.
 - [x] Hide world aiming preview for self-area abilities.
 - [x] Hide world aiming preview for self-buff abilities.
+- [x] Implement full class switching flow.
+- [x] Add server-side class switch cooldown.
+- [x] Clear old temporary buffs when switching class.
+- [x] Destroy old class summons when switching class.
+- [x] Reset ability cooldowns when switching class.
+- [x] Ensure every current class is available for now.
+- [ ] Add kid-friendly combat tuning pass so abilities are easier to hit with.
+- [x] Make Fireball visually and mechanically bigger while keeping balanced damage.
+- [x] Change Ice Shard into a multi-shard cast with total damage similar to the current single shard.
+- [ ] Widen narrow raycast/projectile abilities where needed.
+- [ ] Review all area, wave, and summon abilities for friendly hit reliability.
+- [ ] Design 7 additional available classes.
+- [ ] Add definitions for 7 additional classes.
+- [ ] Design at least 8 abilities for each class.
+- [ ] Document each new ability's behavior, damage, cooldown, range, visuals, and animation idea.
+- [ ] Implement ability definitions for the new classes.
+- [ ] Add placeholder visuals and animations for the new class abilities.
+- [ ] Add per-ability difficulty rating for aiming and kid-friendly tuning.
+- [ ] Add per-ability device notes for mouse, touch, and controller.
+- [ ] Add basic camera shake only for major abilities, with an option to reduce it.
+- [ ] Add ability category tags for projectile, area, summon, movement, defense, and utility.
+- [ ] Add class role tags such as easy, tanky, mobile, ranged, support, and builder.
+- [ ] Add class preview/demo moments in class selection.
+- [ ] Add class switch confirmation when changing away from the current class.
 - [ ] Add spell tree data structure.
 - [ ] Add first unlockable spell upgrade.
+
+## Progression And Economy
+
+- [ ] Define core currencies: common, uncommon, and rare.
+- [ ] Add reward tuning table for mobs, bosses, PvP, quests, and daily play.
+- [ ] Add simple daily reward or first-win bonus.
+- [ ] Add beginner goals that reward trying arena, subway, and boss content.
+- [ ] Add passive ability framework later.
+- [ ] Add class unlock framework later, while keeping all classes available for now.
+- [ ] Add economy balance spreadsheet or data table.
+- [ ] Add anti-grind tuning review so rewards feel good without becoming too fast.
 
 ## Mobs
 
@@ -173,6 +371,12 @@ Status key:
 - [x] Respawn mobs after death.
 - [x] Add mob rewards.
 - [x] Add mob reward feedback popup.
+- [x] Make mobs slower and easier for young players to escape.
+- [x] Add mob leash radius so mobs return to their spawn area.
+- [x] Add mob attack windup so players can react.
+- [ ] Add mob hit reaction and clear attack animation.
+- [ ] Add easier beginner mob type.
+- [ ] Add stronger elite mob type for later subway depth.
 - [ ] Add better mob models.
 - [ ] Add mob patrol points.
 - [ ] Add multiple mob types.
@@ -195,7 +399,24 @@ Status key:
 - [x] Add boss health UI.
 - [ ] Add underground boss spawn option.
 - [ ] Add multiple boss types.
+- [ ] Add boss attack windups and telegraphs.
+- [ ] Add boss arena danger markers before large attacks.
+- [ ] Add boss spawn map indicator.
+- [ ] Add boss participation reward rules that are clear and fair.
+- [ ] Add boss scaling by server player count.
 - [ ] Add real loot/reward table.
+
+## Analytics And Playtesting
+
+- [ ] Add lightweight server analytics counters for class choice, deaths, kills, mob defeats, boss participation, and class switching.
+- [ ] Add funnel events for join, class selected, first arena entry, first damage dealt, first death, first mob defeated, and first boss encounter.
+- [ ] Add combat balance debug logging that can be toggled off.
+- [ ] Track ability hit rate, average damage, and casts per ability during tests.
+- [ ] Track where players die most often.
+- [ ] Track if players fail to find the subway or boss.
+- [x] Add Studio playtest checklist sections for mobile and controller.
+- [x] Add performance test checklist for low-end devices.
+- [x] Add playtest notes template for testers.
 
 ## Project Hygiene
 
@@ -205,3 +426,9 @@ Status key:
 - [ ] Validate project in Roblox Studio.
 - [x] Add Rojo serve instructions.
 - [ ] Add formatting/linting setup.
+- [ ] Add script organization review after class count grows.
+- [ ] Add shared VFX helper module if ability effects keep growing.
+- [ ] Add shared AI helper module if mobs, bosses, and summons duplicate logic.
+- [ ] Add server performance profiling pass.
+- [ ] Add client performance profiling pass.
+- [ ] Add network ownership and replication review for projectiles, summons, mobs, and bosses.

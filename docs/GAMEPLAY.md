@@ -35,6 +35,14 @@ The current map is generated at runtime by `MapService`.
 - Two marked subway exit pads in the underground layer teleport players back to the central arena.
 - The subway contains walls, cover, a broken train car, a larger monster layer floor, and mob spawn points.
 
+Planned map direction:
+
+- Rebuild the test map into a trash-city layout with a large open central fighting space.
+- Place buildings, scrap structures, alleys, and cover around the central space so the world feels more like a city than an empty arena.
+- Keep bases around the outside, but explore a better base layout than the current simple circle.
+- If a better base layout is not ready, keep the outer ring and improve it later.
+- Add strong navigation language: visible landmarks, signs, lights, arrows, and route clarity from bases to arena and subway.
+
 ## Safe Zones
 
 Safe zones are server-authoritative.
@@ -92,6 +100,8 @@ The game currently has three selectable combat classes.
 - Available mage classes: Fire Caster, Ice Mage, and Lightning Mage.
 - Class selection is icon-first: each card shows a large element icon and the class name.
 - Players can change class later while inside a base safe zone.
+- Class switching has a short server-side cooldown.
+- Switching class resets ability cooldowns, removes old temporary self buffs, and destroys old class summons.
 - The server validates class selections against `ClassDefinitions`.
 - Configurable active ability slots: 10.
 - The older spell/mage names are kept as compatibility aliases while the game moves toward combat classes and abilities.
@@ -113,8 +123,9 @@ The game currently has three selectable combat classes.
 Abilities are data-driven through `AbilityDefinitions`.
 
 - `AbilityType` describes the broad behavior category, such as projectile, raycast, wave, targeted area, melee, dash, trap, summon, or shield.
-- `Targeting` describes how the ability finds targets. Current supported targeting modes are `Raycast`, `ProjectileExplode`, `SelfArea`, `DelayedSelfArea`, `LineWave`, `TargetedArea`, `Summon`, and `SelfBuff`.
+- `Targeting` describes how the ability finds targets. Current supported targeting modes are `Raycast`, `MultiRaycast`, `ProjectileExplode`, `SelfArea`, `DelayedSelfArea`, `LineWave`, `TargetedArea`, `Summon`, and `SelfBuff`.
 - `Raycast` uses the player's pointer/camera aim position when available, then the server clamps the ray to the ability range.
+- `MultiRaycast` fires several server-validated rays in a small spread, making narrow attacks easier to land while keeping total damage controlled.
 - `ProjectileExplode` creates a server-owned projectile that travels forward, collides with the world, then damages valid targets in an explosion radius.
 - `DelayedSelfArea` spreads outward from the caster over time instead of damaging the full radius instantly.
 - `LineWave` grows forward from the caster toward the aimed direction, applying damage along the path as the wave advances.
@@ -137,13 +148,13 @@ Abilities are data-driven through `AbilityDefinitions`.
 
 Current Fire Caster abilities:
 
-- Fireball: moving projectile that explodes on impact.
+- Fireball: large moving projectile that explodes on impact.
 - Flame Burst: area burst around the caster.
 - Ignite
 
 Current Ice Mage abilities:
 
-- Ice Shard: instant raycast shard.
+- Ice Shard: three instant raycast shards in a small spread with similar total damage to the old single shard.
 - Frost Bolt: moving projectile that bursts on impact.
 - Ice Nova: delayed spreading area around the caster with growing ice spikes.
 - Glacier Spike: heavier instant raycast spike.
@@ -164,6 +175,27 @@ Planned expansion:
 - Ability trees with unlockable abilities and upgrades.
 - Ability-specific status effects and passives.
 - Non-mage combat classes such as Scrap Knight, Tech Warrior, Toxic Scavenger, and Junk Engineer.
+- For now, all implemented classes should be available to every player.
+- Class switching should be allowed through a clear safe-zone flow, with server-side validation, switch cooldowns, cooldown resets, old buff cleanup, and old summon cleanup.
+- Combat should be tuned for young players: abilities should be generous enough to hit with through bigger projectiles, multi-projectile spreads, wider waves, forgiving areas, or helpful summons while keeping total damage balanced.
+- Ability effects should feel cool, impressive, and readable, with stronger projectile trails, impact bursts, area buildup, summon moments, and cast animations as the game grows.
+- New systems should be checked on mouse, touch, and controller before we consider them finished.
+- Ability VFX should have a performance budget so the game still runs well when multiple players fight at once.
+
+Planned class roster expansion:
+
+- Add 7 more available classes beyond Fire Caster, Ice Mage, and Lightning Mage.
+- Each class should have at least 8 planned abilities.
+- Each planned ability should document behavior, damage, cooldown, range, visual effect, and animation idea before or during implementation.
+- Example tuning direction: Fireball can become a larger single projectile; Ice Shard can become three smaller shards with total damage close to the current single shard.
+
+Research-informed priorities:
+
+- Improve first-session onboarding so players quickly understand class selection, safe zones, the arena, subway entrances, mobs, bosses, and rewards.
+- Make controls and UI comfortable on mobile and controller, not only keyboard and mouse.
+- Add analytics and playtest counters for class choices, deaths, first arena entry, first damage, mob defeats, boss participation, ability hit rate, and player drop-off points.
+- Add performance review tasks for VFX, AI, projectiles, summons, temporary parts, and network replication.
+- Keep UI text and feedback localization-ready and readable on small screens.
 
 ## Mobs
 
@@ -171,6 +203,9 @@ Subway mobs are managed by `MobService`.
 
 - Mobs spawn from `Workspace.MobSpawns` in the underground monster layer.
 - Mobs chase nearby players outside safe zones.
+- Mobs are intentionally slow enough for younger players to escape.
+- Mobs have a leash radius and return toward their spawn area instead of chasing forever.
+- Mobs show a short attack windup before contact damage lands.
 - Mobs attack nearby players with simple contact-range damage.
 - Mobs can be damaged by player abilities.
 - Mobs respawn after death.

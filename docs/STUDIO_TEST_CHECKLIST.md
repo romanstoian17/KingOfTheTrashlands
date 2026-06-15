@@ -37,14 +37,26 @@ Status key:
 - [ ] Left click casts the selected ability on desktop.
 - [ ] World tap casts the selected ability on mobile or touch emulation.
 - [ ] Ability cooldown overlay appears after a valid cast.
+- [ ] Ability slot gives clear ready feedback when cooldown ends.
 - [ ] Cast sound and cast flash appear after a valid cast.
+
+## Mobile And Controller
+
+- [ ] Touch player can select a class.
+- [ ] Touch player can select an ability from the hotbar.
+- [ ] Touch player can cast by tapping the world.
+- [ ] Touch aiming uses the center/camera fallback when needed.
+- [ ] Controller player can navigate class selection.
+- [ ] Controller player can select an ability.
+- [ ] Controller player can cast the selected ability.
+- [ ] Hotbar buttons are large enough to read on a small screen.
 
 ## Aiming Preview
 
 - [ ] Aimed abilities show a destination marker at the aimed point.
 - [ ] Self-area abilities do not show a world targeting preview.
 - [ ] Self-buff abilities do not show a world targeting preview.
-- [ ] Projectile, raycast, line-wave, targeted-area, and summon abilities show a destination marker.
+- [ ] Projectile, raycast, multi-raycast, line-wave, targeted-area, and summon abilities show a destination marker.
 - [ ] Preview does not block raycasts or movement.
 - [ ] Preview disappears or updates correctly after class changes.
 
@@ -65,10 +77,14 @@ Status key:
 ## Combat Feedback
 
 - [ ] Validated damage shows floating damage numbers.
+- [ ] Fireball is large and easy to read while flying.
+- [ ] Ice Shard fires three readable shards in a small spread.
+- [ ] Low-health warning appears when the local player is badly hurt.
 - [ ] Attacker sees hit marker after damaging a target.
 - [ ] Impact pulse appears on damaged targets.
 - [ ] Impact sound plays for nearby validated damage.
 - [ ] No combat feedback appears for blocked safe-zone damage.
+- [ ] Attacker sees blocked-damage feedback when safe-zone rules prevent damage.
 
 ## Mobs
 
@@ -78,6 +94,9 @@ Status key:
 - [ ] Underground monster layer has enough visible floor space to fight mobs.
 - [ ] Subway mobs spawn at underground spawn points.
 - [ ] Mobs chase nearby players outside safe zones.
+- [ ] Mobs move slowly enough for young players to escape.
+- [ ] Mobs return toward their spawn area instead of chasing forever.
+- [ ] Mobs show attack windup before damage lands.
 - [ ] Mobs damage nearby players outside safe zones.
 - [ ] Mobs do not chase players into bases.
 - [ ] Player abilities damage mobs.
@@ -113,3 +132,12 @@ Status key:
 - Tester:
 - Studio version:
 - Known issues:
+
+## Performance
+
+- [ ] Test with at least two players using abilities at the same time.
+- [ ] Test several Ice Warden summons over time.
+- [ ] Test subway mobs while abilities are being cast.
+- [ ] Confirm temporary VFX parts disappear after their effect.
+- [ ] Confirm no obvious frame drops on a lower-end device or emulator.
+- [ ] Confirm Output has no repeated warnings/errors during combat.

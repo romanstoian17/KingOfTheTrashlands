@@ -78,6 +78,7 @@ function CombatService:DamageCharacter(attackerPlayer, targetCharacter, amount, 
 
 	local allowed = self:CanPlayerDamageCharacter(attackerPlayer, targetCharacter)
 	if not allowed then
+		self:PublishBlockedFeedback(attackerPlayer, sourceName)
 		return false
 	end
 
@@ -87,6 +88,12 @@ function CombatService:DamageCharacter(attackerPlayer, targetCharacter, amount, 
 	humanoid:TakeDamage(amount)
 	self:PublishDamageFeedback(attackerPlayer, targetCharacter, damageAmount, sourceName)
 	return true
+end
+
+function CombatService:PublishBlockedFeedback(attackerPlayer, sourceName)
+	if self.CombatFeedback and attackerPlayer then
+		self.CombatFeedback:FireClient(attackerPlayer, "DamageBlocked", sourceName or "Damage")
+	end
 end
 
 function CombatService:DamagePlayerFromNPC(targetPlayer, amount)
