@@ -74,6 +74,9 @@ Status key:
 - [ ] Safe-zone UI shows `PVP ENABLED` outside bases.
 - [ ] Player inside a base cannot damage another player.
 - [ ] Player outside a base cannot damage a target inside a base.
+- [ ] Player cannot damage themselves with their own abilities.
+- [ ] Player cannot damage their own summon.
+- [ ] Players on the same Roblox Team cannot damage each other if teams are enabled.
 - [ ] Exit-protected player cannot damage another player.
 - [ ] Exit-protected player cannot be damaged by another player.
 - [ ] Exit protection clears after moving beyond the home base exit buffer.

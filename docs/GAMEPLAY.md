@@ -71,6 +71,7 @@ Safe zones are server-authoritative.
 - Boss and mob damage ledgers are tracked for reward and cleanup logic.
 - Player-versus-player kill credit is tracked from recent player damage.
 - Respawn-protected players cannot deal or receive combat damage.
+- Friendly damage is blocked server-side: players cannot damage themselves, their own summons, or same-team players if Roblox Teams are used later.
 - Validated damage publishes combat feedback to clients.
 - Players see floating damage numbers when damage lands.
 - Attackers see a hit marker when their spell successfully damages a target.

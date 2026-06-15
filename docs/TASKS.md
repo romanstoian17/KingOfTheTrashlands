@@ -171,6 +171,9 @@ Use this section to decide what to build next. The detailed category backlog bel
 - [x] Create server-side `CombatService`.
 - [x] Ignore PvP spell damage when attacker is inside a safe zone.
 - [x] Ignore PvP spell damage when target is inside a safe zone.
+- [x] Ignore self damage from player abilities.
+- [x] Ignore player damage against owned summons.
+- [x] Ignore same-team player damage if Roblox Teams are enabled.
 - [x] Ignore PvP spell damage when attacker has respawn protection.
 - [x] Ignore PvP spell damage when target has respawn protection.
 - [x] Ignore mob and boss damage when target player is inside a safe zone.

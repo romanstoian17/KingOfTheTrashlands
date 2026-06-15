@@ -23,6 +23,9 @@ Config.Combat = {
 	ExitProtectionSeconds = 14,
 	KillCreditSeconds = 12,
 	DeathMessageSeconds = 4,
+	AllowSelfDamage = false,
+	AllowSameTeamDamage = false,
+	AllowOwnerSummonDamage = false,
 }
 
 Config.Boss = {

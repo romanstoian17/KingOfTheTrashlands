@@ -478,7 +478,11 @@ function SpellService:FindSummonTarget(ownerPlayer, position, detectRadius)
 	local bestDistance = detectRadius
 
 	for _, player in ipairs(Players:GetPlayers()) do
-		if player ~= ownerPlayer and player.Character and not SafeZoneService:IsPlayerInSafeZone(player) and not SafeZoneService:IsPlayerExitProtected(player) then
+		if player ~= ownerPlayer
+			and player.Character
+			and not CombatService:IsFriendlyTarget(ownerPlayer, player.Character)
+			and not SafeZoneService:IsPlayerInSafeZone(player)
+			and not SafeZoneService:IsPlayerExitProtected(player) then
 			local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
 			local root = player.Character:FindFirstChild("HumanoidRootPart")
 			if humanoid and humanoid.Health > 0 and root then

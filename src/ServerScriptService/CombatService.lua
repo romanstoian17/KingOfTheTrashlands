@@ -25,6 +25,40 @@ function CombatService:IsPlayerExitProtected(player)
 	return SafeZoneService:IsPlayerExitProtected(player)
 end
 
+function CombatService:ArePlayersFriendly(attackerPlayer, targetPlayer)
+	if not attackerPlayer or not targetPlayer then
+		return false
+	end
+
+	if attackerPlayer == targetPlayer then
+		return Config.Combat.AllowSelfDamage ~= true
+	end
+
+	if Config.Combat.AllowSameTeamDamage == true then
+		return false
+	end
+
+	return attackerPlayer.Team ~= nil and targetPlayer.Team == attackerPlayer.Team and not attackerPlayer.Neutral and not targetPlayer.Neutral
+end
+
+function CombatService:IsFriendlyTarget(attackerPlayer, targetCharacter)
+	if not attackerPlayer or not targetCharacter then
+		return false
+	end
+
+	local targetPlayer = Players:GetPlayerFromCharacter(targetCharacter)
+	if targetPlayer and self:ArePlayersFriendly(attackerPlayer, targetPlayer) then
+		return true, "Target is friendly"
+	end
+
+	local summonOwnerUserId = targetCharacter:GetAttribute("SummonOwnerUserId")
+	if Config.Combat.AllowOwnerSummonDamage ~= true and typeof(summonOwnerUserId) == "number" and summonOwnerUserId == attackerPlayer.UserId then
+		return true, "Target is your summon"
+	end
+
+	return false
+end
+
 function CombatService:GetHumanoidModelFromPart(part)
 	local current = part
 	while current and current ~= workspace do
@@ -53,6 +87,11 @@ function CombatService:CanPlayerDamageCharacter(attackerPlayer, targetCharacter)
 
 	if self:IsPlayerExitProtected(attackerPlayer) then
 		return false, "Attacker has exit protection"
+	end
+
+	local friendly, friendlyReason = self:IsFriendlyTarget(attackerPlayer, targetCharacter)
+	if friendly then
+		return false, friendlyReason
 	end
 
 	local targetPlayer = Players:GetPlayerFromCharacter(targetCharacter)
