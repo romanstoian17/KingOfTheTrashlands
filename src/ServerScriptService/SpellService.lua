@@ -2,6 +2,7 @@ local Debris = game:GetService("Debris")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 
 local AbilityDefinitions = require(ReplicatedStorage.Modules.AbilityDefinitions)
@@ -76,7 +77,7 @@ function SpellService:CastAbility(player, abilityName, aimPosition)
 		return false
 	end
 
-	if not self:IsReady(player, abilityName, definition.Cooldown) then
+	if not self:IsReady(player, abilityName, definition.Cooldown or 1) then
 		return false
 	end
 
@@ -88,15 +89,23 @@ function SpellService:CastAbility(player, abilityName, aimPosition)
 	end
 
 	if self.CombatFeedback then
-		self.CombatFeedback:FireClient(player, "SpellCooldown", abilityName, definition.Cooldown)
+		self.CombatFeedback:FireClient(player, "SpellCooldown", abilityName, definition.Cooldown or 1)
 		self.CombatFeedback:FireClient(player, "AbilityCast", abilityName)
 	end
 
-	local targeting = definition.Targeting or "ForwardRay"
-	if targeting == "ForwardRay" then
-		return self:CastForwardRay(player, character, root, abilityName, definition, aimPosition)
+	local targeting = definition.Targeting or "Raycast"
+	if targeting == "ForwardRay" or targeting == "Raycast" then
+		return self:CastRaycast(player, character, root, abilityName, definition, aimPosition)
+	elseif targeting == "ProjectileExplode" then
+		return self:CastProjectileExplode(player, character, root, abilityName, definition, aimPosition)
 	elseif targeting == "SelfArea" then
 		return self:CastSelfArea(player, character, root, abilityName, definition)
+	elseif targeting == "DelayedSelfArea" then
+		return self:CastDelayedSelfArea(player, character, root, abilityName, definition)
+	elseif targeting == "LineWave" then
+		return self:CastLineWave(player, character, root, abilityName, definition, aimPosition)
+	elseif targeting == "TargetedArea" then
+		return self:CastTargetedArea(player, character, root, abilityName, definition, aimPosition)
 	elseif targeting == "SelfBuff" then
 		return self:CastSelfBuff(player, character, abilityName, definition)
 	end
@@ -104,25 +113,47 @@ function SpellService:CastAbility(player, abilityName, aimPosition)
 	return self:CastUnsupportedAbility(player, abilityName, definition)
 end
 
-function SpellService:CastForwardRay(player, character, root, abilityName, definition, aimPosition)
-	local origin = root.Position + Vector3.new(0, 2.5, 0)
-	local direction = self:GetAimDirection(root, origin, aimPosition) * definition.Range
+function SpellService:MakeRaycastParams(character, extraExclude)
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Exclude
-	params.FilterDescendantsInstances = { character }
+	local excluded = { character }
+	if extraExclude then
+		table.insert(excluded, extraExclude)
+	end
+	params.FilterDescendantsInstances = excluded
+	return params
+end
 
-	local result = Workspace:Raycast(origin, direction, params)
-	local endPosition = origin + direction
-	if result then
-		endPosition = result.Position
+function SpellService:GetAimDirection(root, origin, aimPosition)
+	if typeof(aimPosition) == "Vector3" then
+		local aimOffset = aimPosition - origin
+		if aimOffset.Magnitude > 0.01 then
+			return aimOffset.Unit
+		end
 	end
 
-	self:ShowSpellEffect(origin, endPosition, definition)
+	return root.CFrame.LookVector
+end
+
+function SpellService:GetClampedAimPoint(root, origin, aimPosition, range)
+	local direction = self:GetAimDirection(root, origin, aimPosition)
+	return origin + direction * (range or 80), direction
+end
+
+function SpellService:CastRaycast(player, character, root, abilityName, definition, aimPosition)
+	local origin = root.Position + Vector3.new(0, 2.5, 0)
+	local endPoint, direction = self:GetClampedAimPoint(root, origin, aimPosition, definition.Range)
+	local result = Workspace:Raycast(origin, direction * (definition.Range or 80), self:MakeRaycastParams(character))
+	if result then
+		endPoint = result.Position
+	end
+
+	self:ShowRayEffect(origin, endPoint, definition)
 
 	if result and result.Instance then
 		local targetCharacter = CombatService:GetHumanoidModelFromPart(result.Instance)
 		if targetCharacter then
-			local damaged = CombatService:DamageCharacter(player, targetCharacter, definition.Damage, abilityName)
+			local damaged = CombatService:DamageCharacter(player, targetCharacter, definition.Damage or 0, abilityName)
 			if damaged then
 				self:ApplyAbilityEffects(player, targetCharacter, definition)
 			end
@@ -133,29 +164,113 @@ function SpellService:CastForwardRay(player, character, root, abilityName, defin
 	return true
 end
 
+function SpellService:CastProjectileExplode(player, character, root, abilityName, definition, aimPosition)
+	local origin = root.Position + Vector3.new(0, 2.4, 0)
+	local targetPoint, direction = self:GetClampedAimPoint(root, origin, aimPosition, definition.Range)
+	local projectile = self:CreateProjectile(origin, direction, definition)
+	local speed = definition.ProjectileSpeed or 90
+	local maxDistance = definition.Range or 100
+	local traveled = 0
+	local position = origin
+	local hitPosition = targetPoint
+	local hit = false
+	local params = self:MakeRaycastParams(character, projectile)
+
+	while projectile.Parent and traveled < maxDistance and not hit do
+		local dt = task.wait()
+		local stepDistance = math.min(speed * dt, maxDistance - traveled)
+		local nextPosition = position + direction * stepDistance
+		local result = Workspace:Raycast(position, nextPosition - position, params)
+		if result then
+			hit = true
+			hitPosition = result.Position
+		else
+			hitPosition = nextPosition
+		end
+
+		position = hitPosition
+		traveled += stepDistance
+		projectile.CFrame = CFrame.lookAt(position, position + direction)
+	end
+
+	if projectile.Parent then
+		projectile:Destroy()
+	end
+
+	self:ExplodeAt(player, character, abilityName, definition, hitPosition)
+	return true
+end
+
 function SpellService:CastSelfArea(player, character, root, abilityName, definition)
 	local radius = definition.Radius or definition.Range or 20
-	local origin = root.Position
+	self:DamageCharactersInRadius(player, character, root.Position, radius, definition.Damage or 0, abilityName, definition)
+	self:ShowAreaEffect(root.Position, radius, definition)
+	return true
+end
+
+function SpellService:CastDelayedSelfArea(player, character, root, abilityName, definition)
+	local radius = definition.Radius or definition.Range or 24
+	local duration = definition.SpreadDuration or 1.4
+	local steps = definition.SpreadSteps or 7
 	local hitCharacters = {}
 
-	for _, part in ipairs(Workspace:GetPartBoundsInRadius(origin, radius)) do
-		local targetCharacter, targetHumanoid = CombatService:GetHumanoidModelFromPart(part)
-		if targetCharacter and targetHumanoid and targetHumanoid.Health > 0 and targetCharacter ~= character and not hitCharacters[targetCharacter] then
-			hitCharacters[targetCharacter] = true
-		end
-	end
+	task.spawn(function()
+		for step = 1, steps do
+			if not character.Parent or not root.Parent then
+				return
+			end
 
-	local hitSomething = false
-	for targetCharacter in pairs(hitCharacters) do
-		local damaged = CombatService:DamageCharacter(player, targetCharacter, definition.Damage or 0, abilityName)
-		if damaged then
-			hitSomething = true
-			self:ApplyAbilityEffects(player, targetCharacter, definition)
+			local currentRadius = radius * (step / steps)
+			self:DamageCharactersInRadius(player, character, root.Position, currentRadius, definition.Damage or 0, abilityName, definition, hitCharacters)
+			self:ShowIceNovaStep(root.Position, currentRadius, step, definition)
+			task.wait(duration / steps)
 		end
-	end
+	end)
 
-	self:ShowAreaEffect(origin, radius, definition)
-	return hitSomething
+	return true
+end
+
+function SpellService:CastLineWave(player, character, root, abilityName, definition, aimPosition)
+	local origin = root.Position + Vector3.new(0, 0.6, 0)
+	local _, direction = self:GetClampedAimPoint(root, origin, aimPosition, definition.Range)
+	local range = definition.Range or 75
+	local width = definition.Width or 8
+	local duration = definition.TravelDuration or 1.8
+	local steps = definition.WaveSteps or 10
+	local hitCharacters = {}
+
+	task.spawn(function()
+		for step = 1, steps do
+			if not character.Parent or not root.Parent then
+				return
+			end
+
+			local distance = range * (step / steps)
+			local position = origin + direction * distance
+			self:DamageCharactersInRadius(player, character, position, width, definition.Damage or 0, abilityName, definition, hitCharacters)
+			self:ShowLineWaveStep(position, direction, step, definition)
+			task.wait(duration / steps)
+		end
+	end)
+
+	return true
+end
+
+function SpellService:CastTargetedArea(player, character, root, abilityName, definition, aimPosition)
+	local origin = root.Position + Vector3.new(0, 2, 0)
+	local targetPoint = self:GetClampedAimPoint(root, origin, aimPosition, definition.Range)
+	local delaySeconds = definition.Delay or 0.45
+	local radius = definition.Radius or 18
+	self:ShowTargetWarning(targetPoint, radius, definition, delaySeconds)
+
+	task.delay(delaySeconds, function()
+		if character.Parent then
+			self:DamageCharactersInRadius(player, character, targetPoint, radius, definition.Damage or 0, abilityName, definition)
+			self:ShowAreaEffect(targetPoint, radius, definition)
+		end
+	end)
+
+	return true
 end
 
 function SpellService:CastSelfBuff(player, character, abilityName, definition)
@@ -196,17 +311,6 @@ function SpellService:CastSpell(player, spellName)
 	return self:CastAbility(player, spellName)
 end
 
-function SpellService:GetAimDirection(root, origin, aimPosition)
-	if typeof(aimPosition) == "Vector3" then
-		local aimOffset = aimPosition - origin
-		if aimOffset.Magnitude > 0.01 then
-			return aimOffset.Unit
-		end
-	end
-
-	return root.CFrame.LookVector
-end
-
 function SpellService:CastUnsupportedAbility(player, abilityName, definition)
 	warn(("Ability %s has unsupported targeting mode %s."):format(abilityName, tostring(definition.Targeting)))
 	return false
@@ -214,14 +318,57 @@ end
 
 function SpellService:ApplyAbilityEffects(attackerPlayer, targetCharacter, definition)
 	for _, effect in ipairs(definition.Effects or {}) do
-		-- Effects are intentionally data-first. A future StatusEffectService can
-		-- consume this table for burn, slow, bleed, shields, knockback, and more.
 		targetCharacter:SetAttribute("LastAbilityEffect", effect.Type or "Effect")
 		targetCharacter:SetAttribute("LastAbilityEffectSourceUserId", attackerPlayer.UserId)
 	end
 end
 
-function SpellService:ShowSpellEffect(origin, endPosition, definition)
+function SpellService:DamageCharactersInRadius(attackerPlayer, casterCharacter, position, radius, damage, abilityName, definition, hitCharacters)
+	hitCharacters = hitCharacters or {}
+	local hitSomething = false
+
+	for _, part in ipairs(Workspace:GetPartBoundsInRadius(position, radius)) do
+		local targetCharacter, targetHumanoid = CombatService:GetHumanoidModelFromPart(part)
+		if targetCharacter and targetHumanoid and targetHumanoid.Health > 0 and targetCharacter ~= casterCharacter and not hitCharacters[targetCharacter] then
+			hitCharacters[targetCharacter] = true
+			local damaged = CombatService:DamageCharacter(attackerPlayer, targetCharacter, damage, abilityName)
+			if damaged then
+				hitSomething = true
+				self:ApplyAbilityEffects(attackerPlayer, targetCharacter, definition)
+			end
+		end
+	end
+
+	return hitSomething
+end
+
+function SpellService:CreateProjectile(origin, direction, definition)
+	local visual = definition.Visual or {}
+	local size = visual.ProjectileSize or Vector3.new(2.2, 2.2, 2.2)
+	local projectile = Instance.new("Part")
+	projectile.Name = (definition.DisplayName or "Ability") .. " Projectile"
+	projectile.Anchored = true
+	projectile.CanCollide = false
+	projectile.CanQuery = false
+	projectile.CanTouch = false
+	projectile.CastShadow = false
+	projectile.Shape = Enum.PartType.Ball
+	projectile.Material = visual.Material or Enum.Material.Neon
+	projectile.Color = definition.Color or Color3.fromRGB(255, 255, 255)
+	projectile.Size = size
+	projectile.CFrame = CFrame.lookAt(origin, origin + direction)
+	projectile.Parent = Workspace
+	Debris:AddItem(projectile, (definition.Range or 100) / (definition.ProjectileSpeed or 90) + 1)
+	return projectile
+end
+
+function SpellService:ExplodeAt(player, character, abilityName, definition, position)
+	local radius = definition.ExplosionRadius or definition.Radius or 12
+	self:DamageCharactersInRadius(player, character, position, radius, definition.Damage or 0, abilityName, definition)
+	self:ShowExplosionEffect(position, radius, definition)
+end
+
+function SpellService:ShowRayEffect(origin, endPosition, definition)
 	local distance = (endPosition - origin).Magnitude
 	local midpoint = origin:Lerp(endPosition, 0.5)
 	local visual = definition.Visual or {}
@@ -231,7 +378,7 @@ function SpellService:ShowSpellEffect(origin, endPosition, definition)
 	local shape = visual.Shape or "Beam"
 
 	local bolt = Instance.new("Part")
-	bolt.Name = definition.DisplayName .. " Effect"
+	bolt.Name = (definition.DisplayName or "Ability") .. " Ray Effect"
 	bolt.Anchored = true
 	bolt.CanCollide = false
 	bolt.Material = material
@@ -249,7 +396,7 @@ function SpellService:ShowSpellEffect(origin, endPosition, definition)
 		bolt.CFrame = CFrame.new(endPosition)
 	elseif shape == "Lightning" then
 		local secondary = Instance.new("Part")
-		secondary.Name = definition.DisplayName .. " Secondary Effect"
+		secondary.Name = (definition.DisplayName or "Ability") .. " Secondary Ray"
 		secondary.Anchored = true
 		secondary.CanCollide = false
 		secondary.Material = material
@@ -262,7 +409,7 @@ function SpellService:ShowSpellEffect(origin, endPosition, definition)
 
 	if visual.SecondaryColor and shape ~= "Lightning" then
 		local core = Instance.new("Part")
-		core.Name = definition.DisplayName .. " Core Effect"
+		core.Name = (definition.DisplayName or "Ability") .. " Ray Core"
 		core.Anchored = true
 		core.CanCollide = false
 		core.Material = Enum.Material.Neon
@@ -276,10 +423,32 @@ function SpellService:ShowSpellEffect(origin, endPosition, definition)
 	Debris:AddItem(bolt, lifetime)
 end
 
+function SpellService:ShowExplosionEffect(position, radius, definition)
+	local visual = definition.Visual or {}
+	local blast = Instance.new("Part")
+	blast.Name = (definition.DisplayName or "Ability") .. " Explosion"
+	blast.Anchored = true
+	blast.CanCollide = false
+	blast.Shape = Enum.PartType.Ball
+	blast.Material = visual.Material or Enum.Material.Neon
+	blast.Color = definition.Color or Color3.fromRGB(255, 255, 255)
+	blast.Transparency = visual.ExplosionTransparency or 0.42
+	blast.Size = Vector3.new(1, 1, 1)
+	blast.CFrame = CFrame.new(position)
+	blast.Parent = Workspace
+
+	TweenService:Create(blast, TweenInfo.new(visual.ExplosionLifetime or 0.32, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = Vector3.new(radius * 2, radius * 2, radius * 2),
+		Transparency = 1,
+	}):Play()
+
+	Debris:AddItem(blast, visual.ExplosionLifetime or 0.36)
+end
+
 function SpellService:ShowAreaEffect(origin, radius, definition)
 	local visual = definition.Visual or {}
 	local ring = Instance.new("Part")
-	ring.Name = definition.DisplayName .. " Area Effect"
+	ring.Name = (definition.DisplayName or "Ability") .. " Area Effect"
 	ring.Anchored = true
 	ring.CanCollide = false
 	ring.Shape = Enum.PartType.Cylinder
@@ -290,22 +459,93 @@ function SpellService:ShowAreaEffect(origin, radius, definition)
 	ring.CFrame = CFrame.new(origin + Vector3.new(0, 0.15, 0)) * CFrame.Angles(0, 0, math.rad(90))
 	ring.Parent = Workspace
 
-	if visual.SecondaryColor then
-		local inner = Instance.new("Part")
-		inner.Name = definition.DisplayName .. " Inner Area Effect"
-		inner.Anchored = true
-		inner.CanCollide = false
-		inner.Shape = Enum.PartType.Cylinder
-		inner.Material = Enum.Material.Neon
-		inner.Color = visual.SecondaryColor
-		inner.Transparency = math.clamp((visual.Transparency or 0.45) + 0.2, 0, 1)
-		inner.Size = Vector3.new((visual.Height or 0.35) * 0.7, radius * 1.15, radius * 1.15)
-		inner.CFrame = ring.CFrame
-		inner.Parent = Workspace
-		Debris:AddItem(inner, visual.Lifetime or 0.25)
+	TweenService:Create(ring, TweenInfo.new(visual.Lifetime or 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Transparency = 1,
+	}):Play()
+
+	Debris:AddItem(ring, visual.Lifetime or 0.3)
+end
+
+function SpellService:ShowIceNovaStep(origin, radius, step, definition)
+	local visual = definition.Visual or {}
+	local ring = Instance.new("Part")
+	ring.Name = (definition.DisplayName or "Ice Nova") .. " Spreading Ring"
+	ring.Anchored = true
+	ring.CanCollide = false
+	ring.Shape = Enum.PartType.Cylinder
+	ring.Material = Enum.Material.Ice
+	ring.Color = definition.Color or Color3.fromRGB(170, 230, 255)
+	ring.Transparency = 0.45
+	ring.Size = Vector3.new(0.16, radius * 2, radius * 2)
+	ring.CFrame = CFrame.new(origin - Vector3.new(0, 2.4, 0)) * CFrame.Angles(0, 0, math.rad(90))
+	ring.Parent = Workspace
+	Debris:AddItem(ring, 0.35)
+
+	local spikeCount = math.clamp(4 + step, 5, 12)
+	for index = 1, spikeCount do
+		local angle = (math.pi * 2 / spikeCount) * index + step * 0.35
+		local spikePosition = origin + Vector3.new(math.cos(angle) * radius, -2, math.sin(angle) * radius)
+		self:ShowIceSpike(spikePosition, 2.5 + (index % 3), visual.SecondaryColor or Color3.fromRGB(225, 250, 255))
+	end
+end
+
+function SpellService:ShowLineWaveStep(position, direction, step, definition)
+	local visual = definition.Visual or {}
+	local side = direction:Cross(Vector3.yAxis)
+	if side.Magnitude < 0.01 then
+		side = Vector3.xAxis
+	else
+		side = side.Unit
 	end
 
-	Debris:AddItem(ring, visual.Lifetime or 0.25)
+	local color = visual.SecondaryColor or definition.Color or Color3.fromRGB(200, 245, 255)
+	self:ShowIceSpike(position, 3.5 + step * 0.25, color)
+	self:ShowIceSpike(position + side * 3.5, 2.5 + step * 0.12, color)
+	self:ShowIceSpike(position - side * 3.5, 2.5 + step * 0.12, color)
+end
+
+function SpellService:ShowIceSpike(position, height, color)
+	local spike = Instance.new("Part")
+	spike.Name = "Ice Spike"
+	spike.Anchored = true
+	spike.CanCollide = false
+	spike.Material = Enum.Material.Ice
+	spike.Color = color
+	spike.Transparency = 0.15
+	spike.Size = Vector3.new(1.4, 0.2, 1.4)
+	spike.CFrame = CFrame.new(position)
+	spike.Parent = Workspace
+
+	TweenService:Create(spike, TweenInfo.new(0.18, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		Size = Vector3.new(1.4, height, 1.4),
+		CFrame = CFrame.new(position + Vector3.new(0, height * 0.5, 0)) * CFrame.Angles(math.rad(math.random(-10, 10)), math.rad(math.random(0, 180)), math.rad(math.random(-10, 10))),
+	}):Play()
+
+	task.delay(0.65, function()
+		if spike.Parent then
+			TweenService:Create(spike, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+				Transparency = 1,
+				Size = Vector3.new(0.5, 0.2, 0.5),
+			}):Play()
+		end
+	end)
+
+	Debris:AddItem(spike, 0.95)
+end
+
+function SpellService:ShowTargetWarning(position, radius, definition, delaySeconds)
+	local warning = Instance.new("Part")
+	warning.Name = (definition.DisplayName or "Ability") .. " Target Warning"
+	warning.Anchored = true
+	warning.CanCollide = false
+	warning.Shape = Enum.PartType.Cylinder
+	warning.Material = Enum.Material.Neon
+	warning.Color = definition.Color or Color3.fromRGB(255, 255, 255)
+	warning.Transparency = 0.65
+	warning.Size = Vector3.new(0.12, radius * 2, radius * 2)
+	warning.CFrame = CFrame.new(position - Vector3.new(0, 2.4, 0)) * CFrame.Angles(0, 0, math.rad(90))
+	warning.Parent = Workspace
+	Debris:AddItem(warning, delaySeconds + 0.1)
 end
 
 function SpellService:ShowBuffEffect(character, definition)
@@ -316,7 +556,7 @@ function SpellService:ShowBuffEffect(character, definition)
 
 	local visual = definition.Visual or {}
 	local aura = Instance.new("Part")
-	aura.Name = definition.DisplayName .. " Buff Effect"
+	aura.Name = (definition.DisplayName or "Ability") .. " Buff Effect"
 	aura.Anchored = true
 	aura.CanCollide = false
 	aura.Shape = Enum.PartType.Ball
@@ -329,7 +569,7 @@ function SpellService:ShowBuffEffect(character, definition)
 
 	if visual.SecondaryColor then
 		local core = Instance.new("Part")
-		core.Name = definition.DisplayName .. " Buff Core Effect"
+		core.Name = (definition.DisplayName or "Ability") .. " Buff Core Effect"
 		core.Anchored = true
 		core.CanCollide = false
 		core.Shape = Enum.PartType.Ball

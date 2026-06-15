@@ -112,12 +112,16 @@ The game currently has three selectable combat classes.
 
 Abilities are data-driven through `AbilityDefinitions`.
 
-- `AbilityType` describes the broad behavior category, such as projectile, melee, dash, trap, summon, or shield.
-- `Targeting` describes how the ability finds targets. Current supported targeting modes are `ForwardRay`, `SelfArea`, and `SelfBuff`.
-- `ForwardRay` uses the player's pointer/camera aim position when available, then the server clamps the ray to the ability range.
+- `AbilityType` describes the broad behavior category, such as projectile, raycast, wave, targeted area, melee, dash, trap, summon, or shield.
+- `Targeting` describes how the ability finds targets. Current supported targeting modes are `Raycast`, `ProjectileExplode`, `SelfArea`, `DelayedSelfArea`, `LineWave`, `TargetedArea`, and `SelfBuff`.
+- `Raycast` uses the player's pointer/camera aim position when available, then the server clamps the ray to the ability range.
+- `ProjectileExplode` creates a server-owned projectile that travels forward, collides with the world, then damages valid targets in an explosion radius.
+- `DelayedSelfArea` spreads outward from the caster over time instead of damaging the full radius instantly.
+- `LineWave` grows forward from the caster toward the aimed direction, applying damage along the path as the wave advances.
+- `TargetedArea` marks an aimed point, waits briefly, then damages valid targets in that area.
 - Desktop mouse aiming uses the cursor position.
 - Touch and gamepad aiming use the center of the camera view.
-- Selected `ForwardRay` abilities show a local destination marker at the aimed point, clamped to ability range.
+- Selected aimed abilities show a local destination marker at the aimed point, clamped to ability range.
 - The destination marker scales down for close targets so aiming at nearby cover does not create an oversized preview.
 - Selected `SelfArea` abilities do not show a world preview because they fire around the player.
 - Selected `SelfBuff` abilities do not show a world target preview.
@@ -132,14 +136,18 @@ Abilities are data-driven through `AbilityDefinitions`.
 
 Current Fire Caster abilities:
 
-- Fireball
+- Fireball: moving projectile that explodes on impact.
 - Flame Burst: area burst around the caster.
 - Ignite
 
 Current Ice Mage abilities:
 
-- Ice Shard
-- Frost Bolt
+- Ice Shard: instant raycast shard.
+- Frost Bolt: moving projectile that bursts on impact.
+- Ice Nova: delayed spreading area around the caster with growing ice spikes.
+- Glacier Spike: heavier instant raycast spike.
+- Glacier Path: forward ice wave that grows from the caster toward the target direction.
+- Hail Crash: delayed targeted area burst.
 - Ice Armor: temporary self shield.
 
 Current Lightning Mage abilities:
@@ -198,7 +206,7 @@ Planned expansion:
 - `ServerScriptService/ClassService.lua`: player class attributes, ability lists, and starter ability tools.
 - `ServerScriptService/MageService.lua`: compatibility alias for `ClassService`.
 - `ServerScriptService/PlayerLifecycleService.lua`: home base assignment, respawn placement, respawn protection, and kill/death stats.
-- `ServerScriptService/SpellService.lua`: ability casting, cooldowns, raycasts, and effects.
+- `ServerScriptService/SpellService.lua`: ability casting, cooldowns, targeting behaviors, projectiles, and effects.
 - `ServerScriptService/AbilityService.lua`: compatibility alias for the ability service path.
 - `ServerScriptService/MobService.lua`: subway mob spawning, chase, attack, and respawn.
 - `ServerScriptService/BossService.lua`: timed boss spawning, boss AI, and rewards.

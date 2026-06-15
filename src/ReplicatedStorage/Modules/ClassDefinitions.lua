@@ -22,9 +22,9 @@ local ClassDefinitions = {
 		Archetype = "Mage",
 		Element = "Ice",
 		Role = "Control and survival",
-		Description = "Defensive mage with steady damage and future control effects.",
+		Description = "Defensive mage with spreading ice, projectile bursts, and ground control.",
 		Selectable = true,
-		StarterAbilities = { "Ice Shard", "Frost Bolt", "Ice Armor" },
+		StarterAbilities = { "Ice Shard", "Frost Bolt", "Ice Nova", "Glacier Spike", "Glacier Path", "Hail Crash", "Ice Armor" },
 	},
 }
 

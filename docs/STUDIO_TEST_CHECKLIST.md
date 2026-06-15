@@ -22,8 +22,8 @@ Status key:
 - [ ] First-time player sees class selection before normal combat use.
 - [ ] Clicking outside the class selection does not auto-select a class.
 - [ ] Selecting Fire Caster grants Fireball, Flame Burst, and Ignite.
-- [ ] Selecting Ice Mage grants Ice Shard, Frost Bolt, Glacier Spike, and Ice Armor.
-- [ ] Selecting Lightning Mage grants Lightning Bolt, Spark Shot, Storm Lance, and Blink Surge.
+- [ ] Selecting Ice Mage grants Ice Shard, Frost Bolt, Ice Nova, Glacier Spike, Glacier Path, Hail Crash, and Ice Armor.
+- [ ] Selecting Lightning Mage grants Lightning Bolt, Spark Shot, and Blink Surge.
 - [ ] Player can change class while inside a safe zone.
 - [ ] Player cannot change class outside a safe zone.
 
@@ -41,9 +41,10 @@ Status key:
 
 ## Aiming Preview
 
-- [ ] Forward-ray abilities show a destination marker at the aimed point.
+- [ ] Aimed abilities show a destination marker at the aimed point.
 - [ ] Self-area abilities do not show a world targeting preview.
 - [ ] Self-buff abilities do not show a world targeting preview.
+- [ ] Projectile, raycast, line-wave, and targeted-area abilities show a destination marker.
 - [ ] Preview does not block raycasts or movement.
 - [ ] Preview disappears or updates correctly after class changes.
 

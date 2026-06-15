@@ -100,7 +100,12 @@ Status key:
 - [x] Add server ability service alias for future code.
 - [x] Add ability metadata fields: `AbilityType`, `Targeting`, `Effects`, and `Tags`.
 - [x] Add data-driven ability visual metadata.
-- [x] Add distinct forward-ray visuals for beam, shard, spark, and lightning abilities.
+- [x] Add reusable `Raycast` ability behavior.
+- [x] Add reusable `ProjectileExplode` ability behavior.
+- [x] Add reusable `DelayedSelfArea` ability behavior.
+- [x] Add reusable `LineWave` ability behavior.
+- [x] Add reusable `TargetedArea` ability behavior.
+- [x] Add distinct raycast visuals for beam, shard, spark, and lightning abilities.
 - [x] Add distinct area visuals for self-area abilities.
 - [x] Add distinct aura visuals for self-buff abilities.
 - [x] Add `SelfArea` ability targeting behavior.
@@ -124,11 +129,16 @@ Status key:
 - [x] Validate casts against the player's active spell list.
 - [x] Validate casts against the player's active ability list.
 - [x] Implement Fireball.
+- [x] Change Fireball to projectile explosion.
 - [x] Implement Flame Burst.
 - [x] Change Flame Burst to self-area damage.
 - [x] Implement Ignite.
 - [x] Implement Ice Shard.
 - [x] Implement Frost Bolt.
+- [x] Change Frost Bolt to projectile explosion.
+- [x] Implement Ice Nova delayed spreading self-area.
+- [x] Implement Glacier Path forward line wave.
+- [x] Implement Hail Crash targeted area.
 - [x] Implement Glacier Spike.
 - [x] Implement Ice Armor self-buff.
 - [x] Implement Lightning Bolt.

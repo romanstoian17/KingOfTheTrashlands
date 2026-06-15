@@ -195,7 +195,11 @@ local function updateAbilityPreview()
 		return
 	end
 
-	if definition.Targeting == "ForwardRay" then
+	if definition.Targeting == "ForwardRay"
+		or definition.Targeting == "Raycast"
+		or definition.Targeting == "ProjectileExplode"
+		or definition.Targeting == "LineWave"
+		or definition.Targeting == "TargetedArea" then
 		updateForwardRayPreview(character, definition)
 	else
 		setPreviewVisible(false)
