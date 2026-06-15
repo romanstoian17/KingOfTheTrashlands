@@ -11,14 +11,14 @@ Players spawn in outer safe bases, choose a combat class, run into the Trashland
 1. A player joins the server.
 2. The server assigns them a home base.
 3. Roblox spawns them at that home base.
-4. The player chooses Fire Caster, Ice Mage, or Lightning Mage.
+4. The player chooses one of the currently available combat classes.
 5. The player receives starter ability tools for that class.
 6. Bases protect players from damage.
 7. The player leaves the base and enters the central arena.
 8. Player abilities can damage other players only when both attacker and target are outside safe zones.
 9. The player can enter the subway under the arena to fight mobs.
-10. A boss appears periodically in the central arena.
-11. Players who damage and defeat mobs or the boss receive placeholder currency.
+10. A boss appears periodically in the central arena or subway.
+11. Players who damage and defeat mobs or the boss receive prototype currency rewards.
 12. When a player dies, they respawn back at their assigned home base.
 
 ## Map
@@ -31,7 +31,10 @@ The current map is generated at runtime by `MapService`.
 - The center contains the main PvP arena.
 - Red neon boundaries mark the central arena area.
 - Scrap cover pieces provide simple line-of-sight blockers and obstacles.
+- A tall arena landmark and `ARENA` sign make the center easier to find.
+- Yellow neon path strips and signs lead from bases toward the arena.
 - Two marked subway entrance pads in the central arena teleport players down to the underground monster layer.
+- Subway signs mark the arena entrances.
 - Two marked subway exit pads in the underground layer teleport players back to the central arena.
 - The subway contains walls, cover, a broken train car, a larger monster layer floor, and mob spawn points.
 
@@ -42,6 +45,7 @@ Planned map direction:
 - Keep bases around the outside, but explore a better base layout than the current simple circle.
 - If a better base layout is not ready, keep the outer ring and improve it later.
 - Add strong navigation language: visible landmarks, signs, lights, arrows, and route clarity from bases to arena and subway.
+- The current city pass keeps a large open central arena, adds roads and trash-city buildings around it, and keeps the 16 bases in the outer ring until a better base layout is designed.
 
 ## Safe Zones
 
@@ -94,10 +98,10 @@ Player death and respawn behavior is managed by `PlayerLifecycleService`.
 
 ## Classes And Abilities
 
-The game currently has three selectable combat classes.
+The game currently has ten selectable combat classes.
 
 - First-time players must choose a class before receiving ability tools.
-- Available mage classes: Fire Caster, Ice Mage, and Lightning Mage.
+- Available classes: Fire Caster, Ice Mage, Lightning Mage, Scrap Knight, Tech Warrior, Toxic Scavenger, Junk Engineer, Shadow Duelist, Stone Guardian, and Wind Runner.
 - Class selection is icon-first: each card shows a large element icon and the class name.
 - Players can change class later while inside a base safe zone.
 - Class switching has a short server-side cooldown.
@@ -112,6 +116,8 @@ The game currently has three selectable combat classes.
 - Tool activation is intentionally disabled for now; the custom hotbar owns player ability input.
 - The default Roblox backpack UI is hidden so ability tools do not compete with the custom hotbar.
 - Players also get a custom ability hotbar that reads `AbilityList`.
+- Players get a simple objective guide that points them toward class selection, the arena, subway entrances, and subway exits.
+- A `HELP` panel explains controls, safe zones, class switching, and rewards.
 - Keyboard slots use `1` through `0` to select an ability.
 - Mouse users cast the selected ability with left click.
 - Mobile users tap a hotbar slot to select an ability, then tap the world to cast it.
@@ -144,6 +150,7 @@ Abilities are data-driven through `AbilityDefinitions`.
 - `Tags` describe themes and mechanics, such as magic, fire, ranged, tech, melee, or defensive.
 - `Visual` describes the temporary server-created cast effect, including shape, width, lifetime, material, and secondary color.
 - `Audio` describes simple client-side cast and impact sounds for ability feedback.
+- `UseDifficulty` and `DeviceNotes` describe how easy an ability is to use on mouse, touch, and controller.
 - `CastAbility` is the new remote/service path. `CastSpell` remains for compatibility.
 
 Current Fire Caster abilities:
@@ -168,6 +175,16 @@ Current Lightning Mage abilities:
 - Lightning Bolt
 - Spark Shot
 - Blink Surge: temporary speed buff.
+
+Additional prototype classes:
+
+- Scrap Knight: tanky scrap brawler with shields, slams, tosses, and ground waves.
+- Tech Warrior: gadget fighter with shots, rockets, mines, drone buddy, and tech fields.
+- Toxic Scavenger: area-control fighter with sludge, toxic clouds, waste waves, and traps.
+- Junk Engineer: builder-style class with turret, fixer bot, traps, fields, and utility.
+- Shadow Duelist: fast duelist with shadow bolts, clones, slashes, and dark bursts.
+- Stone Guardian: defensive earth fighter with rocks, shields, ground pounds, and boulders.
+- Wind Runner: mobile air fighter with gusts, dashes, wind walls, and wide air attacks.
 
 Planned expansion:
 
@@ -202,10 +219,12 @@ Research-informed priorities:
 Subway mobs are managed by `MobService`.
 
 - Mobs spawn from `Workspace.MobSpawns` in the underground monster layer.
-- Mobs chase nearby players outside safe zones.
+- Mobs have beginner, normal, and elite variants.
+- Mobs patrol near their spawn, chase nearby players outside safe zones, and leash back instead of chasing forever.
 - Mobs are intentionally slow enough for younger players to escape.
 - Mobs have a leash radius and return toward their spawn area instead of chasing forever.
 - Mobs show a short attack windup before contact damage lands.
+- Mobs show a simple hit reaction when damaged.
 - Mobs attack nearby players with simple contact-range damage.
 - Mobs can be damaged by player abilities.
 - Mobs respawn after death.
@@ -220,19 +239,42 @@ The boss is managed by `BossService`.
 - First boss spawn happens after 60 seconds for testing.
 - Later boss spawns use a random 5-10 minute timer.
 - A boss warning appears before spawn.
-- The current boss spawns at the center arena.
+- Bosses can spawn in the center arena or underground subway arena.
+- Current boss types include Trash Titan, Junk Colossus, and Subway Horror.
+- Boss health scales with server player count.
 - The boss has health, chases nearby players, and attacks players outside safe zones.
-- Players who contributed damage receive placeholder `TrashCoins` when the boss dies.
+- Boss attacks show a danger marker before damage lands.
+- Players who contributed damage receive the prototype boss reward bundle when the boss dies.
+- Current boss contribution reward: `TrashCoins` and `ScrapCores`.
 - Boss contributors receive a reward popup when the boss dies.
 - The boss has an overhead health bar.
 - The boss also has a top-screen health UI while active.
 
 Planned expansion:
 
-- Multiple boss spawn locations.
-- Underground boss spawns.
-- Boss types, abilities, phases, and encounter warnings.
+- More boss abilities, phases, and encounter warnings.
 - Better rewards and loot tables.
+
+## Progression
+
+Current progression is a lightweight prototype foundation.
+
+- Core currencies: `TrashCoins`, `ScrapCores`, and `RoyalShards`.
+- Players receive a simple session daily reward for testing.
+- `ProgressionDefinitions` contains beginner goals, reward tuning, passive definitions, class unlock notes, spell tree notes, and loot tables.
+- All classes remain available during prototype testing.
+- Later versions can persist rewards and unlocks with DataStores.
+
+## Analytics
+
+`AnalyticsService` tracks lightweight in-server playtest counters.
+
+- Player joins.
+- Class choices.
+- Ability casts.
+- Ability hits and total damage.
+- Player deaths and death positions.
+- Debug logging can be toggled from the service.
 
 ## Current Technical Structure
 
@@ -241,6 +283,8 @@ Planned expansion:
 - `ServerScriptService/SafeZoneService.lua`: reusable safe-zone and exit-protection checks.
 - `ServerScriptService/CombatService.lua`: server-side damage validation.
 - `ServerScriptService/ClassService.lua`: player class attributes, ability lists, and starter ability tools.
+- `ServerScriptService/ProgressionService.lua`: currencies and simple daily reward.
+- `ServerScriptService/AnalyticsService.lua`: lightweight playtest counters.
 - `ServerScriptService/MageService.lua`: compatibility alias for `ClassService`.
 - `ServerScriptService/PlayerLifecycleService.lua`: home base assignment, respawn placement, respawn protection, and kill/death stats.
 - `ServerScriptService/SpellService.lua`: ability casting, cooldowns, targeting behaviors, projectiles, summons, and effects.
@@ -253,8 +297,10 @@ Planned expansion:
 - `StarterPlayer/StarterPlayerScripts/AbilityHotbar.client.lua`: custom ability slots, keyboard/touch selection, selected-ability casting, aiming previews, and cooldown overlays.
 - `StarterPlayer/StarterPlayerScripts/BossAlert.client.lua`: boss warning, spawn, and defeated banners.
 - `StarterPlayer/StarterPlayerScripts/ClassSelection.client.lua`: first-time class selection and safe-zone class changing.
+- `StarterPlayer/StarterPlayerScripts/OnboardingGuide.client.lua`: objective prompts and help panel.
 - `ReplicatedStorage/Modules/Config.lua`: shared tuning values.
 - `ReplicatedStorage/Modules/ClassDefinitions.lua`: primary class definitions.
 - `ReplicatedStorage/Modules/AbilityDefinitions.lua`: primary ability definitions.
+- `ReplicatedStorage/Modules/ProgressionDefinitions.lua`: economy, goals, passives, class unlock notes, spell tree notes, and loot tables.
 - `ReplicatedStorage/Modules/MageDefinitions.lua`: compatibility alias for `ClassDefinitions`.
 - `ReplicatedStorage/Modules/SpellDefinitions.lua`: compatibility alias for `AbilityDefinitions`.

@@ -15,17 +15,24 @@ Status key:
 - [ ] Start a local server with at least two players when testing PvP.
 - [ ] Confirm the Output window has no startup errors.
 - [ ] Confirm `Workspace` contains generated folders: `Bases`, `Arena`, `Subway`, `SafeZones`, `ExitProtectionZones`, `MobSpawns`, and `BossSpawns`.
+- [ ] Arena has a visible landmark/sign.
+- [ ] Bases have visible path strips/signs toward the arena.
+- [ ] Subway entrances have visible signs.
 
 ## Join And Class Selection
 
 - [ ] Player spawns at one of the 16 outer bases.
+- [ ] Objective guide appears and tells the player to choose a class.
 - [ ] First-time player sees class selection before normal combat use.
 - [ ] Clicking outside the class selection does not auto-select a class.
 - [ ] Selecting Fire Caster grants Fireball, Flame Burst, and Ignite.
 - [ ] Selecting Ice Mage grants Ice Shard, Frost Bolt, Ice Nova, Glacier Spike, Glacier Path, Hail Crash, Ice Armor, and Ice Warden.
 - [ ] Selecting Lightning Mage grants Lightning Bolt, Spark Shot, and Blink Surge.
+- [ ] Class selection shows all ten available classes.
+- [ ] Selecting each new prototype class grants eight abilities.
 - [ ] Player can change class while inside a safe zone.
 - [ ] Player cannot change class outside a safe zone.
+- [ ] Help panel opens and explains controls, safe zones, class switching, and rewards.
 
 ## Hotbar And Ability Input
 
@@ -79,6 +86,9 @@ Status key:
 - [ ] Validated damage shows floating damage numbers.
 - [ ] Fireball is large and easy to read while flying.
 - [ ] Ice Shard fires three readable shards in a small spread.
+- [ ] Projectile explosions include a stronger readable burst.
+- [ ] Raycast hits show a readable impact spark.
+- [ ] Area effects visibly expand instead of only appearing already full-size.
 - [ ] Low-health warning appears when the local player is badly hurt.
 - [ ] Attacker sees hit marker after damaging a target.
 - [ ] Impact pulse appears on damaged targets.
@@ -93,10 +103,12 @@ Status key:
 - [ ] Both underground exit pads teleport the player back to the central arena.
 - [ ] Underground monster layer has enough visible floor space to fight mobs.
 - [ ] Subway mobs spawn at underground spawn points.
+- [ ] Subway has beginner, normal, and elite mob variants.
 - [ ] Mobs chase nearby players outside safe zones.
 - [ ] Mobs move slowly enough for young players to escape.
 - [ ] Mobs return toward their spawn area instead of chasing forever.
 - [ ] Mobs show attack windup before damage lands.
+- [ ] Mobs show a hit reaction when damaged.
 - [ ] Mobs damage nearby players outside safe zones.
 - [ ] Mobs do not chase players into bases.
 - [ ] Player abilities damage mobs.
@@ -108,11 +120,14 @@ Status key:
 
 - [ ] Boss warning appears before the first boss spawn.
 - [ ] Boss spawns in the center arena.
+- [ ] Later bosses can spawn in the underground arena.
+- [ ] Boss type can vary between available boss types.
 - [ ] Boss has an overhead health bar.
 - [ ] Player abilities damage the boss.
 - [ ] Boss attacks nearby players outside safe zones.
+- [ ] Boss attack danger marker appears before contact damage.
 - [ ] Boss does not damage players inside bases.
-- [ ] Boss contributors receive `TrashCoins` after boss death.
+- [ ] Boss contributors receive `TrashCoins` and `ScrapCores` after boss death.
 - [ ] Boss defeated banner appears after death.
 
 ## Respawn And Stats
@@ -125,6 +140,9 @@ Status key:
 - [ ] Player respawns at assigned home base.
 - [ ] Ability cooldowns reset after respawn.
 - [ ] `TrashCoins` exists in `leaderstats`.
+- [ ] `ScrapCores` exists in `leaderstats`.
+- [ ] `RoyalShards` exists in `leaderstats`.
+- [ ] Player receives the simple session daily reward.
 
 ## Notes
 

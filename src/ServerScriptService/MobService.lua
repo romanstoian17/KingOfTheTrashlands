@@ -5,6 +5,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local Workspace = game:GetService("Workspace")
 
 local Config = require(ReplicatedStorage.Modules.Config)
+local AnalyticsService = require(ServerScriptService.AnalyticsService)
 local CombatService = require(ServerScriptService.CombatService)
 local NPCFactory = require(ServerScriptService.NPCFactory)
 local SafeZoneService = require(ServerScriptService.SafeZoneService)
@@ -31,14 +32,24 @@ function MobService:Init()
 end
 
 function MobService:SpawnMob(index, spawnPart)
-	local model, humanoid = NPCFactory:CreateHumanoidNPC("Subway Scrapper " .. index, spawnPart.CFrame + Vector3.new(0, 2.5, 0), Color3.fromRGB(155, 93, 255), Config.Mobs.MaxHealth, 1)
+	local definition = self:GetMobDefinition(index)
+	local model, humanoid = NPCFactory:CreateHumanoidNPC(definition.Name .. " " .. index, spawnPart.CFrame + Vector3.new(0, 2.5, 0), definition.Color, definition.MaxHealth, definition.Scale)
 	model:SetAttribute("IsMob", true)
+	model:SetAttribute("RewardCurrency", definition.RewardCurrency)
 	model.Parent = self.MobsFolder
-	humanoid.WalkSpeed = Config.Mobs.WalkSpeed
+	humanoid.WalkSpeed = definition.WalkSpeed
 
 	local lastAttack = 0
+	local lastHealth = humanoid.Health
 	local alive = true
 	local attackWindingUp = false
+
+	humanoid.HealthChanged:Connect(function(health)
+		if health < lastHealth then
+			self:ShowHitReaction(model)
+		end
+		lastHealth = health
+	end)
 
 	humanoid.Died:Connect(function()
 		alive = false
@@ -64,14 +75,14 @@ function MobService:SpawnMob(index, spawnPart)
 			end
 
 			local distanceFromSpawn = (mobRoot.Position - spawnPart.Position).Magnitude
-			local targetPlayer = distanceFromSpawn <= Config.Mobs.LeashRadius and self:FindTarget(mobRoot.Position) or nil
+			local targetPlayer = distanceFromSpawn <= definition.LeashRadius and self:FindTarget(mobRoot.Position, definition.DetectRadius) or nil
 			if targetPlayer and targetPlayer.Character then
 				local targetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
 				if targetRoot then
 					humanoid:MoveTo(targetRoot.Position)
 
 					local distance = (targetRoot.Position - mobRoot.Position).Magnitude
-					if distance <= Config.Mobs.AttackRadius and not attackWindingUp and os.clock() - lastAttack >= Config.Mobs.AttackCooldown then
+					if distance <= definition.AttackRadius and not attackWindingUp and os.clock() - lastAttack >= definition.AttackCooldown then
 						lastAttack = os.clock()
 						attackWindingUp = true
 						self:ShowAttackWindup(model)
@@ -82,19 +93,73 @@ function MobService:SpawnMob(index, spawnPart)
 							end
 
 							local currentTargetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
-							if currentTargetRoot and (currentTargetRoot.Position - model.PrimaryPart.Position).Magnitude <= Config.Mobs.AttackRadius + 1 then
-								CombatService:DamagePlayerFromNPC(targetPlayer, Config.Mobs.ContactDamage)
+							if currentTargetRoot and (currentTargetRoot.Position - model.PrimaryPart.Position).Magnitude <= definition.AttackRadius + 1 then
+								CombatService:DamagePlayerFromNPC(targetPlayer, definition.ContactDamage)
 							end
 						end)
 					end
 				end
 			else
-				humanoid:MoveTo(spawnPart.Position)
+				humanoid:MoveTo(self:GetPatrolPoint(spawnPart.Position, index))
 			end
 
 			task.wait(0.35)
 		end
 	end)
+end
+
+function MobService:GetMobDefinition(index)
+	if index <= 3 then
+		return {
+			Name = "Subway Nibbler",
+			Color = Color3.fromRGB(105, 170, 255),
+			MaxHealth = 55,
+			ContactDamage = 6,
+			DetectRadius = 58,
+			AttackRadius = 6,
+			AttackCooldown = 1.9,
+			LeashRadius = 75,
+			WalkSpeed = 6,
+			RewardCurrency = 5,
+			Scale = 0.78,
+		}
+	end
+
+	if index % 4 == 0 then
+		return {
+			Name = "Scrap Brute",
+			Color = Color3.fromRGB(205, 90, 80),
+			MaxHealth = 145,
+			ContactDamage = 14,
+			DetectRadius = 72,
+			AttackRadius = 8,
+			AttackCooldown = 2.2,
+			LeashRadius = 90,
+			WalkSpeed = 5.5,
+			RewardCurrency = 14,
+			Scale = 1.25,
+		}
+	end
+
+	return {
+		Name = "Subway Scrapper",
+		Color = Color3.fromRGB(155, 93, 255),
+		MaxHealth = Config.Mobs.MaxHealth,
+		ContactDamage = Config.Mobs.ContactDamage,
+		DetectRadius = Config.Mobs.DetectRadius,
+		AttackRadius = Config.Mobs.AttackRadius,
+		AttackCooldown = Config.Mobs.AttackCooldown,
+		LeashRadius = Config.Mobs.LeashRadius,
+		WalkSpeed = Config.Mobs.WalkSpeed,
+		RewardCurrency = Config.Mobs.RewardCurrency,
+		Scale = 1,
+	}
+end
+
+function MobService:GetPatrolPoint(spawnPosition, index)
+	local angle = os.clock() * 0.28 + index
+	local radius = 8 + (index % 3) * 4
+	return spawnPosition + Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
 end
 
 function MobService:ShowAttackWindup(model)
@@ -117,13 +182,34 @@ function MobService:ShowAttackWindup(model)
 	Debris:AddItem(warning, Config.Mobs.AttackWindupSeconds)
 end
 
+function MobService:ShowHitReaction(model)
+	local root = model.PrimaryPart
+	if not root then
+		return
+	end
+
+	local flash = Instance.new("Part")
+	flash.Name = "Mob Hit Reaction"
+	flash.Anchored = true
+	flash.CanCollide = false
+	flash.Shape = Enum.PartType.Ball
+	flash.Material = Enum.Material.Neon
+	flash.Color = Color3.fromRGB(255, 245, 160)
+	flash.Transparency = 0.35
+	flash.Size = Vector3.new(4, 4, 4)
+	flash.CFrame = root.CFrame
+	flash.Parent = Workspace
+	Debris:AddItem(flash, 0.14)
+end
+
 function MobService:RewardContributors(mobModel)
 	local ledger = CombatService:GetDamageLedger(mobModel)
-	local reward = Config.Mobs.RewardCurrency or 0
+	local reward = mobModel:GetAttribute("RewardCurrency") or Config.Mobs.RewardCurrency or 0
 	if reward <= 0 then
 		return
 	end
 
+	local rewardedContributor = false
 	for userId, damage in pairs(ledger) do
 		if damage > 0 then
 			local player = Players:GetPlayerByUserId(userId)
@@ -131,17 +217,22 @@ function MobService:RewardContributors(mobModel)
 			local currency = leaderstats and leaderstats:FindFirstChild("TrashCoins")
 			if currency then
 				currency.Value += reward
+				rewardedContributor = true
 				if self.CombatFeedback then
 					self.CombatFeedback:FireClient(player, "Reward", reward, "Mob defeated")
 				end
 			end
 		end
 	end
+
+	if rewardedContributor then
+		AnalyticsService:RecordEvent("MobDefeated")
+	end
 end
 
-function MobService:FindTarget(position)
+function MobService:FindTarget(position, detectRadius)
 	local bestPlayer = nil
-	local bestDistance = Config.Mobs.DetectRadius
+	local bestDistance = detectRadius or Config.Mobs.DetectRadius
 
 	for _, player in ipairs(Players:GetPlayers()) do
 		if not SafeZoneService:IsPlayerInSafeZone(player) and not SafeZoneService:IsPlayerExitProtected(player) and player.Character then

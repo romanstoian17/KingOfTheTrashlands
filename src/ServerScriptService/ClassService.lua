@@ -4,6 +4,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local Config = require(ReplicatedStorage.Modules.Config)
 local ClassDefinitions = require(ReplicatedStorage.Modules.ClassDefinitions)
+local AnalyticsService = require(ServerScriptService.AnalyticsService)
 local SafeZoneService = require(ServerScriptService.SafeZoneService)
 local AbilityService = require(ServerScriptService.AbilityService)
 
@@ -85,6 +86,20 @@ function ClassService:SetupLeaderstats(player)
 		currency.Value = 0
 		currency.Parent = leaderstats
 	end
+
+	if not leaderstats:FindFirstChild("ScrapCores") then
+		local currency = Instance.new("IntValue")
+		currency.Name = "ScrapCores"
+		currency.Value = 0
+		currency.Parent = leaderstats
+	end
+
+	if not leaderstats:FindFirstChild("RoyalShards") then
+		local currency = Instance.new("IntValue")
+		currency.Name = "RoyalShards"
+		currency.Value = 0
+		currency.Parent = leaderstats
+	end
 end
 
 function ClassService:SelectClass(player, className)
@@ -115,6 +130,7 @@ function ClassService:SelectClass(player, className)
 	if isSwitchingClass then
 		self:CleanupClassState(player)
 		player:SetAttribute("ClassSwitchCooldownEndsAt", os.clock() + Config.ClassSwitchCooldownSeconds)
+		AnalyticsService:RecordEvent("ClassSwitched")
 	end
 
 	player:SetAttribute("CombatClass", className)
@@ -123,6 +139,7 @@ function ClassService:SelectClass(player, className)
 	player:SetAttribute("MageTypeSelected", true)
 	AbilityService:ResetPlayerCooldowns(player)
 	self:GiveAbilityTools(player)
+	AnalyticsService:RecordClassChoice(className)
 	self:SendSelectionStatus(player, true, "Selected " .. classDefinition.DisplayName .. ".")
 	return true
 end

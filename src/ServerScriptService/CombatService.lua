@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local Config = require(ReplicatedStorage.Modules.Config)
+local AnalyticsService = require(ServerScriptService.AnalyticsService)
 local SafeZoneService = require(ServerScriptService.SafeZoneService)
 
 local CombatService = {
@@ -86,6 +87,7 @@ function CombatService:DamageCharacter(attackerPlayer, targetCharacter, amount, 
 	self:RecordPlayerDamage(attackerPlayer, targetCharacter)
 	self:RecordDamage(attackerPlayer, targetCharacter, damageAmount, sourceName)
 	humanoid:TakeDamage(amount)
+	AnalyticsService:RecordAbilityDamage(sourceName or "Damage", damageAmount)
 	self:PublishDamageFeedback(attackerPlayer, targetCharacter, damageAmount, sourceName)
 	return true
 end

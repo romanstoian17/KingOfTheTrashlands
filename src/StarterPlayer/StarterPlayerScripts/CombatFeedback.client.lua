@@ -272,7 +272,7 @@ local function showImpactPulse(targetCharacter, sourceName)
 	billboard.AlwaysOnTop = true
 	billboard.LightInfluence = 0
 	billboard.MaxDistance = 180
-	billboard.Size = UDim2.fromOffset(32, 32)
+	billboard.Size = UDim2.fromOffset(44, 44)
 	billboard.StudsOffsetWorldSpace = Vector3.new(0, 2.1, 0)
 	billboard.Parent = screenGui
 
@@ -290,7 +290,7 @@ local function showImpactPulse(targetCharacter, sourceName)
 	corner.Parent = pulse
 
 	TweenService:Create(pulse, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-		Size = UDim2.fromOffset(38, 38),
+		Size = UDim2.fromOffset(52, 52),
 		BackgroundTransparency = 1,
 	}):Play()
 
@@ -309,7 +309,7 @@ local function showDamageNumber(targetCharacter, amount)
 	billboard.AlwaysOnTop = true
 	billboard.LightInfluence = 0
 	billboard.MaxDistance = 220
-	billboard.Size = UDim2.fromOffset(80, 34)
+	billboard.Size = UDim2.fromOffset(104, 42)
 	billboard.StudsOffsetWorldSpace = Vector3.new(math.random(-2, 2), 4, 0)
 	billboard.Parent = screenGui
 
@@ -319,7 +319,7 @@ local function showDamageNumber(targetCharacter, amount)
 	label.Font = Enum.Font.GothamBlack
 	label.Text = tostring(amount)
 	label.TextColor3 = Color3.fromRGB(255, 235, 105)
-	label.TextSize = 24
+	label.TextSize = 30
 	label.TextStrokeColor3 = Color3.fromRGB(30, 24, 20)
 	label.TextStrokeTransparency = 0.2
 	label.Parent = billboard

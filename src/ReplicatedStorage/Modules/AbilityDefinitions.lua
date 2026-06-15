@@ -12,6 +12,8 @@ local AbilityDefinitions = {
 		Visual = {
 			Shape = "Fireball",
 			ProjectileSize = Vector3.new(4.6, 4.6, 4.6),
+			LightRange = 18,
+			LightBrightness = 2.2,
 			ExplosionLifetime = 0.34,
 			ExplosionTransparency = 0.38,
 			Material = Enum.Material.Neon,
@@ -25,6 +27,8 @@ local AbilityDefinitions = {
 			Pitch = 0.9,
 		},
 		Effects = {},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Large projectile and explosion are forgiving on mouse, touch, and controller.",
 		Tags = { "Magic", "Fire", "Projectile", "Area" },
 	},
 	["Flame Burst"] = {
@@ -32,8 +36,8 @@ local AbilityDefinitions = {
 		AbilityType = "Area",
 		Targeting = "SelfArea",
 		Damage = 16,
-		Radius = 22,
-		Range = 22,
+		Radius = 26,
+		Range = 26,
 		Cooldown = 2.4,
 		Color = Color3.fromRGB(255, 140, 55),
 		Visual = {
@@ -51,6 +55,8 @@ local AbilityDefinitions = {
 			Pitch = 0.85,
 		},
 		Effects = {},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Self-area ability needs no precise aim.",
 		Tags = { "Magic", "Fire", "Area" },
 	},
 	["Ignite"] = {
@@ -63,7 +69,7 @@ local AbilityDefinitions = {
 		Color = Color3.fromRGB(255, 62, 36),
 		Visual = {
 			Shape = "Beam",
-			Width = 0.85,
+			Width = 1.15,
 			Lifetime = 0.28,
 			Material = Enum.Material.Neon,
 			SecondaryColor = Color3.fromRGB(120, 20, 12),
@@ -76,6 +82,8 @@ local AbilityDefinitions = {
 			Pitch = 0.75,
 		},
 		Effects = {},
+		UseDifficulty = "Medium",
+		DeviceNotes = "Aimed raycast uses pointer or camera-center aim.",
 		Tags = { "Magic", "Fire", "Raycast" },
 	},
 	["Ice Shard"] = {
@@ -104,6 +112,8 @@ local AbilityDefinitions = {
 			Pitch = 1.25,
 		},
 		Effects = {},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Three-shard spread helps touch and controller players hit moving targets.",
 		Tags = { "Magic", "Ice", "Raycast", "Spread" },
 	},
 	["Frost Bolt"] = {
@@ -112,13 +122,15 @@ local AbilityDefinitions = {
 		Targeting = "ProjectileExplode",
 		Damage = 16,
 		Range = 105,
-		ExplosionRadius = 10,
+		ExplosionRadius = 13,
 		Cooldown = 1.45,
 		Color = Color3.fromRGB(95, 190, 255),
 		ProjectileSpeed = 105,
 		Visual = {
 			Shape = "IceBolt",
-			ProjectileSize = Vector3.new(2.2, 2.2, 2.2),
+			ProjectileSize = Vector3.new(3, 3, 3),
+			LightRange = 14,
+			LightBrightness = 1.7,
 			ExplosionLifetime = 0.28,
 			ExplosionTransparency = 0.45,
 			Material = Enum.Material.Ice,
@@ -132,6 +144,8 @@ local AbilityDefinitions = {
 			Pitch = 1.05,
 		},
 		Effects = {},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Projectile burst gives some forgiveness on missed direct hits.",
 		Tags = { "Magic", "Ice", "Projectile", "Area" },
 	},
 	["Ice Nova"] = {
@@ -139,7 +153,7 @@ local AbilityDefinitions = {
 		AbilityType = "Area",
 		Targeting = "DelayedSelfArea",
 		Damage = 22,
-		Radius = 30,
+		Radius = 34,
 		Cooldown = 4.5,
 		SpreadDuration = 1.35,
 		SpreadSteps = 7,
@@ -156,6 +170,8 @@ local AbilityDefinitions = {
 			Pitch = 0.85,
 		},
 		Effects = {},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Self-area spread needs positioning, not fine aiming.",
 		Tags = { "Magic", "Ice", "Area", "Self" },
 	},
 	["Glacier Spike"] = {
@@ -168,7 +184,7 @@ local AbilityDefinitions = {
 		Color = Color3.fromRGB(195, 245, 255),
 		Visual = {
 			Shape = "Shard",
-			Width = 1.2,
+			Width = 1.45,
 			Lifetime = 0.22,
 			Material = Enum.Material.Ice,
 			SecondaryColor = Color3.fromRGB(235, 255, 255),
@@ -181,6 +197,8 @@ local AbilityDefinitions = {
 			Pitch = 0.75,
 		},
 		Effects = {},
+		UseDifficulty = "Medium",
+		DeviceNotes = "Single aimed spike rewards aim but has a wider visual hit line.",
 		Tags = { "Magic", "Ice", "Raycast" },
 	},
 	["Glacier Path"] = {
@@ -189,7 +207,7 @@ local AbilityDefinitions = {
 		Targeting = "LineWave",
 		Damage = 24,
 		Range = 82,
-		Width = 8,
+		Width = 10,
 		Cooldown = 4,
 		TravelDuration = 1.9,
 		WaveSteps = 11,
@@ -206,6 +224,8 @@ local AbilityDefinitions = {
 			Pitch = 0.75,
 		},
 		Effects = {},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Wide forward wave is friendly for camera-center aiming.",
 		Tags = { "Magic", "Ice", "Wave", "Ground" },
 	},
 	["Hail Crash"] = {
@@ -214,7 +234,7 @@ local AbilityDefinitions = {
 		Targeting = "TargetedArea",
 		Damage = 28,
 		Range = 100,
-		Radius = 16,
+		Radius = 19,
 		Delay = 0.65,
 		Cooldown = 5,
 		Color = Color3.fromRGB(210, 250, 255),
@@ -233,6 +253,8 @@ local AbilityDefinitions = {
 			Pitch = 0.95,
 		},
 		Effects = {},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Target marker and delayed burst make it readable before impact.",
 		Tags = { "Magic", "Ice", "Area", "Targeted" },
 	},
 	["Ice Armor"] = {
@@ -261,6 +283,8 @@ local AbilityDefinitions = {
 		Effects = {
 			{ Type = "Shield", Amount = 18, Duration = 5 },
 		},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Self-buff does not require aiming.",
 		Tags = { "Magic", "Ice", "Self", "Defensive" },
 	},
 	["Ice Warden"] = {
@@ -277,8 +301,8 @@ local AbilityDefinitions = {
 		SummonDamage = 9,
 		SummonScale = 0.85,
 		SummonWalkSpeed = 13,
-		SummonDetectRadius = 70,
-		SummonAttackRadius = 8,
+		SummonDetectRadius = 78,
+		SummonAttackRadius = 10,
 		SummonAttackCooldown = 1.25,
 		Visual = {
 			Shape = "SummonCircle",
@@ -291,6 +315,8 @@ local AbilityDefinitions = {
 			Pitch = 0.7,
 		},
 		Effects = {},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Target a place, then the summon handles nearby enemies.",
 		Tags = { "Magic", "Ice", "Summon", "Ally" },
 	},
 	["Lightning Bolt"] = {
@@ -303,7 +329,7 @@ local AbilityDefinitions = {
 		Color = Color3.fromRGB(255, 245, 95),
 		Visual = {
 			Shape = "Lightning",
-			Width = 0.45,
+			Width = 0.8,
 			Lifetime = 0.12,
 			Material = Enum.Material.Neon,
 			SecondaryColor = Color3.fromRGB(255, 255, 255),
@@ -316,13 +342,18 @@ local AbilityDefinitions = {
 			Pitch = 1.35,
 		},
 		Effects = {},
+		UseDifficulty = "Medium",
+		DeviceNotes = "Long range raycast; wider visual makes the path clearer.",
 		Tags = { "Magic", "Lightning", "Raycast" },
 	},
 	["Spark Shot"] = {
 		DisplayName = "Spark Shot",
-		AbilityType = "Raycast",
-		Targeting = "Raycast",
+		AbilityType = "MultiRaycast",
+		Targeting = "MultiRaycast",
 		Damage = 15,
+		DamagePerRay = 5,
+		RayCount = 3,
+		SpreadDegrees = 6,
 		Range = 115,
 		Cooldown = 0.55,
 		Color = Color3.fromRGB(255, 255, 150),
@@ -341,7 +372,9 @@ local AbilityDefinitions = {
 			Pitch = 1.6,
 		},
 		Effects = {},
-		Tags = { "Magic", "Lightning", "Raycast" },
+		UseDifficulty = "Easy",
+		DeviceNotes = "Fast three-spark spread helps players land hits while moving.",
+		Tags = { "Magic", "Lightning", "Raycast", "Spread" },
 	},
 	["Storm Lance"] = {
 		DisplayName = "Storm Lance",
@@ -353,7 +386,7 @@ local AbilityDefinitions = {
 		Color = Color3.fromRGB(178, 210, 255),
 		Visual = {
 			Shape = "Lightning",
-			Width = 0.7,
+			Width = 1,
 			Lifetime = 0.14,
 			Material = Enum.Material.Neon,
 			SecondaryColor = Color3.fromRGB(235, 245, 255),
@@ -366,6 +399,8 @@ local AbilityDefinitions = {
 			Pitch = 1.15,
 		},
 		Effects = {},
+		UseDifficulty = "Medium",
+		DeviceNotes = "Long range aimed lance with a wider readable bolt.",
 		Tags = { "Magic", "Lightning", "Raycast" },
 	},
 	["Blink Surge"] = {
@@ -394,9 +429,150 @@ local AbilityDefinitions = {
 		Effects = {
 			{ Type = "Speed", Multiplier = 1.45, Duration = 3 },
 		},
+		UseDifficulty = "Easy",
+		DeviceNotes = "Self-buff movement ability does not require aiming.",
 		Tags = { "Magic", "Lightning", "Self", "Mobility" },
 	},
 }
+
+local function addAbility(name, abilityType, targeting, damage, range, cooldown, color, extra)
+	local visual = {
+		Shape = extra.Shape or "Beam",
+		Width = extra.Width or 0.95,
+		Lifetime = extra.Lifetime or 0.18,
+		Material = extra.Material or Enum.Material.Neon,
+		SecondaryColor = extra.SecondaryColor or color:Lerp(Color3.new(1, 1, 1), 0.35),
+		ProjectileSize = extra.ProjectileSize,
+		ExplosionLifetime = extra.ExplosionLifetime,
+		ExplosionTransparency = extra.ExplosionTransparency,
+		SummonRadius = extra.SummonRadius,
+		Transparency = extra.Transparency,
+		Height = extra.Height,
+		Size = extra.Size,
+	}
+
+	local definition = {
+		DisplayName = name,
+		AbilityType = abilityType,
+		Targeting = targeting,
+		Damage = damage,
+		Range = range,
+		Cooldown = cooldown,
+		Color = color,
+		Visual = visual,
+		Audio = {
+			CastSoundId = extra.CastSoundId or "rbxasset://sounds/electronicpingshort.wav",
+			ImpactSoundId = extra.ImpactSoundId or "rbxasset://sounds/collide.wav",
+			CastVolume = extra.CastVolume or 0.45,
+			ImpactVolume = extra.ImpactVolume or 0.4,
+			Pitch = extra.Pitch or 1,
+		},
+		Effects = extra.Effects or {},
+		UseDifficulty = extra.UseDifficulty or "Easy",
+		DeviceNotes = extra.DeviceNotes or "Uses forgiving targeting for mouse, touch, and controller.",
+		Tags = extra.Tags or {},
+	}
+
+	for key, value in pairs(extra) do
+		if definition[key] == nil and key ~= "Tags" and key ~= "Effects" then
+			definition[key] = value
+		end
+	end
+
+	AbilityDefinitions[name] = definition
+end
+
+local function addClassAbilitySet(theme, color, abilities)
+	for _, ability in ipairs(abilities) do
+		addAbility(
+			ability[1],
+			ability[2],
+			ability[3],
+			ability[4],
+			ability[5],
+			ability[6],
+			color,
+			ability[7] or { Tags = { theme } }
+		)
+	end
+end
+
+addClassAbilitySet("Scrap", Color3.fromRGB(190, 145, 80), {
+	{ "Scrap Slam", "Area", "SelfArea", 18, 0, 2.2, { Radius = 24, Tags = { "Scrap", "Area", "Melee" }, Shape = "AreaRing" } },
+	{ "Rusty Shield", "Buff", "SelfBuff", 0, 0, 8, { Duration = 5, HealthShield = 22, Tags = { "Scrap", "Self", "Defensive" }, Shape = "Aura", Size = Vector3.new(8, 8, 8) } },
+	{ "Junk Toss", "Projectile", "ProjectileExplode", 17, 95, 1.6, { ExplosionRadius = 12, ProjectileSpeed = 80, ProjectileSize = Vector3.new(3.4, 3.4, 3.4), Tags = { "Scrap", "Projectile", "Area" } } },
+	{ "Magnet Pull", "Raycast", "Raycast", 20, 95, 2.4, { Width = 1.2, Tags = { "Scrap", "Raycast", "Utility" } } },
+	{ "Armor Up", "Buff", "SelfBuff", 0, 0, 10, { Duration = 6, HealthShield = 30, Tags = { "Scrap", "Self", "Defensive" }, Shape = "Aura", Size = Vector3.new(9, 9, 9) } },
+	{ "Scrap Quake", "Area", "DelayedSelfArea", 24, 0, 5, { Radius = 32, SpreadDuration = 1.1, SpreadSteps = 6, Tags = { "Scrap", "Area", "Ground" } } },
+	{ "Guard Breaker", "Raycast", "MultiRaycast", 21, 88, 1.7, { DamagePerRay = 7, RayCount = 3, SpreadDegrees = 8, Tags = { "Scrap", "Raycast", "Spread" } } },
+	{ "Trash Charge", "Wave", "LineWave", 22, 72, 4, { Width = 11, TravelDuration = 1.2, WaveSteps = 8, Tags = { "Scrap", "Wave", "Melee" } } },
+})
+
+addClassAbilitySet("Tech", Color3.fromRGB(80, 210, 255), {
+	{ "Pulse Shot", "Raycast", "MultiRaycast", 18, 120, 0.9, { DamagePerRay = 6, RayCount = 3, SpreadDegrees = 5, Tags = { "Tech", "Raycast", "Spread" } } },
+	{ "Rocket Pop", "Projectile", "ProjectileExplode", 20, 110, 2.2, { ExplosionRadius = 15, ProjectileSpeed = 95, ProjectileSize = Vector3.new(3.6, 3.6, 3.6), Tags = { "Tech", "Projectile", "Area" } } },
+	{ "Static Mine", "Area", "TargetedArea", 24, 80, 4.5, { Radius = 17, Delay = 0.75, Tags = { "Tech", "Area", "Targeted" } } },
+	{ "Drone Buddy", "Summon", "Summon", 0, 65, 12, { Duration = 16, SummonName = "Drone Buddy", SummonHealth = 100, SummonDamage = 8, SummonScale = 0.65, SummonWalkSpeed = 14, Tags = { "Tech", "Summon", "Ally" } } },
+	{ "Overclock", "Buff", "SelfBuff", 0, 0, 8, { Duration = 4, WalkSpeedMultiplier = 1.35, Tags = { "Tech", "Self", "Mobility" }, Shape = "Aura" } },
+	{ "Laser Sweep", "Wave", "LineWave", 23, 90, 3.2, { Width = 9, TravelDuration = 1.1, WaveSteps = 9, Tags = { "Tech", "Wave", "Ranged" } } },
+	{ "Gadget Burst", "Area", "SelfArea", 18, 0, 3, { Radius = 24, Tags = { "Tech", "Area", "Self" } } },
+	{ "Repair Patch", "Buff", "SelfBuff", 0, 0, 9, { Duration = 4, HealthShield = 18, Tags = { "Tech", "Self", "Support" }, Shape = "Aura" } },
+})
+
+addClassAbilitySet("Toxic", Color3.fromRGB(120, 235, 90), {
+	{ "Sludge Lob", "Projectile", "ProjectileExplode", 17, 100, 1.7, { ExplosionRadius = 14, ProjectileSpeed = 82, ProjectileSize = Vector3.new(3.8, 3.8, 3.8), Tags = { "Toxic", "Projectile", "Area" } } },
+	{ "Toxic Cloud", "Area", "TargetedArea", 21, 85, 4.2, { Radius = 22, Delay = 0.55, Tags = { "Toxic", "Area", "Targeted" } } },
+	{ "Acid Splash", "Raycast", "MultiRaycast", 18, 90, 1.1, { DamagePerRay = 6, RayCount = 3, SpreadDegrees = 9, Tags = { "Toxic", "Raycast", "Spread" } } },
+	{ "Gas Mask", "Buff", "SelfBuff", 0, 0, 9, { Duration = 5, HealthShield = 20, Tags = { "Toxic", "Self", "Defensive" }, Shape = "Aura" } },
+	{ "Waste Wave", "Wave", "LineWave", 24, 82, 3.8, { Width = 12, TravelDuration = 1.4, WaveSteps = 8, Tags = { "Toxic", "Wave", "Ground" } } },
+	{ "Poison Needle", "Raycast", "Raycast", 28, 120, 1.8, { Width = 0.9, Tags = { "Toxic", "Raycast", "Ranged" } } },
+	{ "Muck Trap", "Area", "TargetedArea", 24, 80, 5, { Radius = 18, Delay = 0.8, Tags = { "Toxic", "Area", "Control" } } },
+	{ "Scavenger Rush", "Buff", "SelfBuff", 0, 0, 7, { Duration = 3, WalkSpeedMultiplier = 1.35, Tags = { "Toxic", "Self", "Mobility" }, Shape = "Aura" } },
+})
+
+addClassAbilitySet("Junk", Color3.fromRGB(230, 190, 95), {
+	{ "Mini Turret", "Summon", "Summon", 0, 70, 13, { Duration = 18, SummonName = "Mini Turret", SummonHealth = 115, SummonDamage = 8, SummonScale = 0.75, SummonWalkSpeed = 10, Tags = { "Junk", "Summon", "Ally" } } },
+	{ "Wrench Toss", "Projectile", "ProjectileExplode", 18, 100, 1.5, { ExplosionRadius = 11, ProjectileSpeed = 100, ProjectileSize = Vector3.new(3, 3, 3), Tags = { "Junk", "Projectile" } } },
+	{ "Scrap Wall", "Area", "TargetedArea", 16, 75, 5, { Radius = 16, Delay = 0.35, Tags = { "Junk", "Area", "Utility" } } },
+	{ "Fixer Bot", "Summon", "Summon", 0, 55, 14, { Duration = 16, SummonName = "Fixer Bot", SummonHealth = 125, SummonDamage = 7, SummonScale = 0.7, Tags = { "Junk", "Summon", "Support" } } },
+	{ "Bolt Burst", "Raycast", "MultiRaycast", 18, 100, 1, { DamagePerRay = 6, RayCount = 3, SpreadDegrees = 7, Tags = { "Junk", "Raycast", "Spread" } } },
+	{ "Trap Box", "Area", "TargetedArea", 23, 85, 4.5, { Radius = 18, Delay = 0.7, Tags = { "Junk", "Area", "Targeted" } } },
+	{ "Power Field", "Area", "SelfArea", 18, 0, 3.2, { Radius = 25, Tags = { "Junk", "Area", "Self" } } },
+	{ "Overbuild", "Buff", "SelfBuff", 0, 0, 9, { Duration = 5, HealthShield = 24, Tags = { "Junk", "Self", "Defensive" }, Shape = "Aura" } },
+})
+
+addClassAbilitySet("Shadow", Color3.fromRGB(95, 75, 150), {
+	{ "Shadow Bolt", "Projectile", "ProjectileExplode", 18, 110, 1.3, { ExplosionRadius = 12, ProjectileSpeed = 115, ProjectileSize = Vector3.new(3, 3, 3), Tags = { "Shadow", "Projectile", "Area" } } },
+	{ "Dark Step", "Buff", "SelfBuff", 0, 0, 7, { Duration = 3, WalkSpeedMultiplier = 1.5, Tags = { "Shadow", "Self", "Mobility" }, Shape = "Aura" } },
+	{ "Night Slash", "Wave", "LineWave", 24, 76, 2.8, { Width = 9, TravelDuration = 1, WaveSteps = 8, Tags = { "Shadow", "Wave", "Melee" } } },
+	{ "Shade Clone", "Summon", "Summon", 0, 55, 12, { Duration = 14, SummonName = "Shade Clone", SummonHealth = 95, SummonDamage = 9, SummonScale = 0.8, Tags = { "Shadow", "Summon", "Ally" } } },
+	{ "Gloom Burst", "Area", "SelfArea", 20, 0, 3.4, { Radius = 24, Tags = { "Shadow", "Area", "Self" } } },
+	{ "Void Needle", "Raycast", "Raycast", 30, 125, 2, { Width = 1, Tags = { "Shadow", "Raycast", "Ranged" } } },
+	{ "Duel Mark", "Area", "TargetedArea", 24, 95, 4.3, { Radius = 17, Delay = 0.55, Tags = { "Shadow", "Area", "Targeted" } } },
+	{ "Blackout", "Area", "DelayedSelfArea", 24, 0, 5.2, { Radius = 30, SpreadDuration = 1, SpreadSteps = 6, Tags = { "Shadow", "Area", "Control" } } },
+})
+
+addClassAbilitySet("Earth", Color3.fromRGB(150, 120, 80), {
+	{ "Rock Toss", "Projectile", "ProjectileExplode", 18, 95, 1.5, { ExplosionRadius = 13, ProjectileSpeed = 85, ProjectileSize = Vector3.new(3.8, 3.8, 3.8), Tags = { "Earth", "Projectile", "Area" } } },
+	{ "Stone Wall", "Buff", "SelfBuff", 0, 0, 9, { Duration = 5, HealthShield = 28, Tags = { "Earth", "Self", "Defensive" }, Shape = "Aura" } },
+	{ "Ground Pound", "Area", "SelfArea", 22, 0, 3.4, { Radius = 28, Tags = { "Earth", "Area", "Self" } } },
+	{ "Pebble Spray", "Raycast", "MultiRaycast", 20, 95, 1.2, { DamagePerRay = 5, RayCount = 4, SpreadDegrees = 8, Tags = { "Earth", "Raycast", "Spread" } } },
+	{ "Guardian Shell", "Buff", "SelfBuff", 0, 0, 10, { Duration = 6, HealthShield = 34, Tags = { "Earth", "Self", "Defensive" }, Shape = "Aura" } },
+	{ "Fault Line", "Wave", "LineWave", 26, 88, 4, { Width = 12, TravelDuration = 1.5, WaveSteps = 9, Tags = { "Earth", "Wave", "Ground" } } },
+	{ "Boulder Drop", "Area", "TargetedArea", 30, 90, 5.2, { Radius = 19, Delay = 0.8, Tags = { "Earth", "Area", "Targeted" } } },
+	{ "Earth Anchor", "Area", "DelayedSelfArea", 24, 0, 5, { Radius = 32, SpreadDuration = 1.2, SpreadSteps = 7, Tags = { "Earth", "Area", "Control" } } },
+})
+
+addClassAbilitySet("Air", Color3.fromRGB(185, 240, 255), {
+	{ "Gust Shot", "Raycast", "MultiRaycast", 18, 120, 0.95, { DamagePerRay = 6, RayCount = 3, SpreadDegrees = 7, Tags = { "Air", "Raycast", "Spread" } } },
+	{ "Air Dash", "Buff", "SelfBuff", 0, 0, 6, { Duration = 3, WalkSpeedMultiplier = 1.55, Tags = { "Air", "Self", "Mobility" }, Shape = "Aura" } },
+	{ "Cyclone Spin", "Area", "SelfArea", 20, 0, 3.2, { Radius = 27, Tags = { "Air", "Area", "Self" } } },
+	{ "Wind Wall", "Buff", "SelfBuff", 0, 0, 8, { Duration = 4, HealthShield = 20, Tags = { "Air", "Self", "Defensive" }, Shape = "Aura" } },
+	{ "Feather Burst", "Projectile", "ProjectileExplode", 16, 105, 1.4, { ExplosionRadius = 12, ProjectileSpeed = 115, ProjectileSize = Vector3.new(3, 3, 3), Tags = { "Air", "Projectile", "Area" } } },
+	{ "Sky Lance", "Raycast", "Raycast", 29, 150, 1.8, { Width = 1, Tags = { "Air", "Raycast", "Ranged" } } },
+	{ "Tailwind", "Wave", "LineWave", 22, 92, 3.5, { Width = 13, TravelDuration = 1.1, WaveSteps = 9, Tags = { "Air", "Wave", "Mobility" } } },
+	{ "Storm Ring", "Area", "DelayedSelfArea", 24, 0, 4.8, { Radius = 34, SpreadDuration = 1.1, SpreadSteps = 7, Tags = { "Air", "Area", "Self" } } },
+})
 
 -- Current reusable targeting/behavior types:
 -- Raycast, MultiRaycast, ProjectileExplode, SelfArea, DelayedSelfArea, LineWave,

@@ -32,92 +32,92 @@ Use this section to decide what to build next. The detailed category backlog bel
 
 ### Phase 2 - Make Combat Easier And More Fun For Kids
 
-- [ ] Add kid-friendly combat tuning pass so abilities are easier to hit with.
+- [x] Add kid-friendly combat tuning pass so abilities are easier to hit with.
 - [x] Make Fireball visually and mechanically bigger while keeping balanced damage.
 - [x] Change Ice Shard into a multi-shard cast with total damage similar to the current single shard.
-- [ ] Widen narrow raycast/projectile abilities where needed.
-- [ ] Review all area, wave, and summon abilities for friendly hit reliability.
-- [ ] Add per-ability difficulty rating for aiming and kid-friendly tuning.
-- [ ] Add per-ability device notes for mouse, touch, and controller.
-- [ ] Make ability special effects feel cool, impressive, and readable.
-- [ ] Add richer projectile, area, summon, and impact VFX.
-- [ ] Add stronger cast animations or motion beats for major abilities.
+- [x] Widen narrow raycast/projectile abilities where needed.
+- [x] Review all area, wave, and summon abilities for friendly hit reliability.
+- [x] Add per-ability difficulty rating for aiming and kid-friendly tuning.
+- [x] Add per-ability device notes for mouse, touch, and controller.
+- [x] Make ability special effects feel cool, impressive, and readable.
+- [x] Add richer projectile, area, summon, and impact VFX.
+- [x] Add stronger cast animations or motion beats for major abilities.
 - [x] Add low-health warning feedback.
-- [ ] Add target hit readability pass for mobile screens.
+- [x] Add target hit readability pass for mobile screens.
 
 ### Phase 3 - Make The World Easier To Understand
 
-- [ ] Add simple objective prompts after class selection.
-- [ ] Add first-session tutorial prompts for class selection, safe zones, arena, subway, and boss.
+- [x] Add simple objective prompts after class selection.
+- [x] Add first-session tutorial prompts for class selection, safe zones, arena, subway, and boss.
 - [ ] Add a short practice area or training dummy inside/near bases.
-- [ ] Add clear signs, arrows, lights, or paths from bases to the center arena.
-- [ ] Add clear signs, arrows, lights, or paths from the center arena to subway entrances.
-- [ ] Add a first-time arrow/path from player base to central arena.
-- [ ] Add a first-time arrow/path from central arena to subway entrance.
-- [ ] Add visual landmarks so players can quickly understand where they are.
+- [x] Add clear signs, arrows, lights, or paths from bases to the center arena.
+- [x] Add clear signs, arrows, lights, or paths from the center arena to subway entrances.
+- [x] Add a first-time arrow/path from player base to central arena.
+- [x] Add a first-time arrow/path from central arena to subway entrance.
+- [x] Add visual landmarks so players can quickly understand where they are.
 - [ ] Add boss spawn map indicator.
 - [ ] Add minimap or simple world direction indicators for base, arena, subway, and boss.
-- [ ] Add a help panel that explains controls, safe zones, class switching, and rewards.
+- [x] Add a help panel that explains controls, safe zones, class switching, and rewards.
 
 ### Phase 4 - Rebuild The Map Into A City
 
-- [ ] Rebuild the city map layout around a large central fighting space.
-- [ ] Add buildings and structures around the central arena.
+- [x] Rebuild the city map layout around a large central fighting space.
+- [x] Add buildings and structures around the central arena.
 - [ ] Redesign how the 16 bases are located around the city.
 - [ ] Explore better base placement than the current simple outer ring.
-- [ ] Keep the current outer base ring if no better layout is ready yet.
-- [ ] Add underground boss spawn option.
+- [x] Keep the current outer base ring if no better layout is ready yet.
+- [x] Add underground boss spawn option.
 
 ### Phase 5 - Expand Classes And Abilities
 
-- [ ] Design 7 additional available classes.
-- [ ] Add definitions for 7 additional classes.
-- [ ] Design at least 8 abilities for each class.
-- [ ] Document each new ability's behavior, damage, cooldown, range, visuals, and animation idea.
-- [ ] Add ability category tags for projectile, area, summon, movement, defense, and utility.
-- [ ] Add class role tags such as easy, tanky, mobile, ranged, support, and builder.
-- [ ] Implement ability definitions for the new classes.
-- [ ] Add placeholder visuals and animations for the new class abilities.
+- [x] Design 7 additional available classes.
+- [x] Add definitions for 7 additional classes.
+- [x] Design at least 8 abilities for each class.
+- [x] Document each new ability's behavior, damage, cooldown, range, visuals, and animation idea.
+- [x] Add ability category tags for projectile, area, summon, movement, defense, and utility.
+- [x] Add class role tags such as easy, tanky, mobile, ranged, support, and builder.
+- [x] Implement ability definitions for the new classes.
+- [x] Add placeholder visuals and animations for the new class abilities.
 - [ ] Add class preview/demo moments in class selection.
 - [ ] Add class switch confirmation when changing away from the current class.
 
 ### Phase 6 - Improve Enemies And Bosses
 
-- [ ] Add mob hit reaction and clear attack animation.
-- [ ] Add easier beginner mob type.
-- [ ] Add better mob models.
-- [ ] Add mob patrol points.
-- [ ] Add multiple mob types.
-- [ ] Add stronger elite mob type for later subway depth.
-- [ ] Add boss attack windups and telegraphs.
-- [ ] Add boss arena danger markers before large attacks.
-- [ ] Add boss participation reward rules that are clear and fair.
-- [ ] Add boss scaling by server player count.
-- [ ] Add multiple boss types.
+- [x] Add mob hit reaction and clear attack animation.
+- [x] Add easier beginner mob type.
+- [x] Add better mob models.
+- [x] Add mob patrol points.
+- [x] Add multiple mob types.
+- [x] Add stronger elite mob type for later subway depth.
+- [x] Add boss attack windups and telegraphs.
+- [x] Add boss arena danger markers before large attacks.
+- [x] Add boss participation reward rules that are clear and fair.
+- [x] Add boss scaling by server player count.
+- [x] Add multiple boss types.
 
 ### Phase 7 - Progression, Economy, And Retention
 
-- [ ] Define core currencies: common, uncommon, and rare.
-- [ ] Add reward tuning table for mobs, bosses, PvP, quests, and daily play.
-- [ ] Add beginner goals that reward trying arena, subway, and boss content.
-- [ ] Add simple daily reward or first-win bonus.
-- [ ] Add economy balance spreadsheet or data table.
-- [ ] Add anti-grind tuning review so rewards feel good without becoming too fast.
-- [ ] Add passive ability framework later.
-- [ ] Add class unlock framework later, while keeping all classes available for now.
-- [ ] Add spell tree data structure.
-- [ ] Add first unlockable spell upgrade.
-- [ ] Add real loot/reward table.
+- [x] Define core currencies: common, uncommon, and rare.
+- [x] Add reward tuning table for mobs, bosses, PvP, quests, and daily play.
+- [x] Add beginner goals that reward trying arena, subway, and boss content.
+- [x] Add simple daily reward or first-win bonus.
+- [x] Add economy balance spreadsheet or data table.
+- [x] Add anti-grind tuning review so rewards feel good without becoming too fast.
+- [x] Add passive ability framework later.
+- [x] Add class unlock framework later, while keeping all classes available for now.
+- [x] Add spell tree data structure.
+- [x] Add first unlockable spell upgrade.
+- [x] Add real loot/reward table.
 
 ### Phase 8 - Analytics, Performance, And Polish
 
-- [ ] Add lightweight server analytics counters for class choice, deaths, kills, mob defeats, boss participation, and class switching.
+- [x] Add lightweight server analytics counters for class choice, deaths, kills, mob defeats, boss participation, and class switching.
 - [ ] Add funnel events for join, class selected, first arena entry, first damage dealt, first death, first mob defeated, and first boss encounter.
-- [ ] Track ability hit rate, average damage, and casts per ability during tests.
-- [ ] Track where players die most often.
+- [x] Track ability hit rate, average damage, and casts per ability during tests.
+- [x] Track where players die most often.
 - [ ] Track if players fail to find the subway or boss.
-- [ ] Add combat balance debug logging that can be toggled off.
-- [ ] Add VFX performance budget for particles, lights, tweens, and temporary parts.
+- [x] Add combat balance debug logging that can be toggled off.
+- [x] Add VFX performance budget for particles, lights, tweens, and temporary parts.
 - [ ] Pool or throttle short-lived effect parts if performance drops.
 - [ ] Add shared VFX helper module if ability effects keep growing.
 - [ ] Add shared AI helper module if mobs, bosses, and summons duplicate logic.
@@ -148,15 +148,15 @@ Use this section to decide what to build next. The detailed category backlog bel
 - [x] Add central PvP arena.
 - [x] Add visual boundary markers for the arena.
 - [x] Add simple arena obstacles and cover.
-- [ ] Rebuild the city map layout around a large central fighting space.
-- [ ] Add buildings and structures around the central arena.
+- [x] Rebuild the city map layout around a large central fighting space.
+- [x] Add buildings and structures around the central arena.
 - [ ] Redesign how the 16 bases are located around the city.
 - [ ] Explore better base placement than the current simple outer ring.
-- [ ] Keep the current outer base ring if no better layout is ready yet.
-- [ ] Add clear signs, arrows, lights, or paths from bases to the center arena.
-- [ ] Add clear signs, arrows, lights, or paths from the center arena to subway entrances.
+- [x] Keep the current outer base ring if no better layout is ready yet.
+- [x] Add clear signs, arrows, lights, or paths from bases to the center arena.
+- [x] Add clear signs, arrows, lights, or paths from the center arena to subway entrances.
 - [ ] Add minimap or simple world direction indicators for base, arena, subway, and boss.
-- [ ] Add visual landmarks so players can quickly understand where they are.
+- [x] Add visual landmarks so players can quickly understand where they are.
 - [x] Add underground subway arena.
 - [x] Add subway entrance ramp.
 - [x] Add two clear subway entrance teleport pads.
@@ -203,25 +203,25 @@ Use this section to decide what to build next. The detailed category backlog bel
 - [x] Add basic hit impact pulse effects.
 - [x] Add dedicated boss health UI.
 - [ ] Add stronger custom hit sounds and impact effects.
-- [ ] Make ability special effects feel cool, impressive, and readable.
-- [ ] Add stronger cast animations or motion beats for major abilities.
-- [ ] Add richer projectile, area, summon, and impact VFX.
+- [x] Make ability special effects feel cool, impressive, and readable.
+- [x] Add stronger cast animations or motion beats for major abilities.
+- [x] Add richer projectile, area, summon, and impact VFX.
 - [ ] Add player health bars or nameplate polish.
 - [x] Add low-health warning feedback.
 - [x] Add clear ability-ready feedback when cooldown ends.
 - [x] Add blocked-damage feedback when safe zones prevent a hit.
-- [ ] Add target hit readability pass for mobile screens.
-- [ ] Add VFX performance budget for particles, lights, tweens, and temporary parts.
+- [x] Add target hit readability pass for mobile screens.
+- [x] Add VFX performance budget for particles, lights, tweens, and temporary parts.
 - [ ] Pool or throttle short-lived effect parts if performance drops.
 
 ## Onboarding And UX
 
-- [ ] Add first-session tutorial prompts for class selection, safe zones, arena, subway, and boss.
+- [x] Add first-session tutorial prompts for class selection, safe zones, arena, subway, and boss.
 - [ ] Add a short practice area or training dummy inside/near bases.
-- [ ] Add simple objective prompts after class selection.
-- [ ] Add a first-time arrow/path from player base to central arena.
-- [ ] Add a first-time arrow/path from central arena to subway entrance.
-- [ ] Add a help panel that explains controls, safe zones, class switching, and rewards.
+- [x] Add simple objective prompts after class selection.
+- [x] Add a first-time arrow/path from player base to central arena.
+- [x] Add a first-time arrow/path from central arena to subway entrance.
+- [x] Add a help panel that explains controls, safe zones, class switching, and rewards.
 - [ ] Add mobile-first ability button sizing review.
 - [ ] Add controller/gamepad navigation review for class selection and hotbar.
 - [ ] Add readable UI text sizing pass for small screens.
@@ -330,37 +330,37 @@ Use this section to decide what to build next. The detailed category backlog bel
 - [x] Destroy old class summons when switching class.
 - [x] Reset ability cooldowns when switching class.
 - [x] Ensure every current class is available for now.
-- [ ] Add kid-friendly combat tuning pass so abilities are easier to hit with.
+- [x] Add kid-friendly combat tuning pass so abilities are easier to hit with.
 - [x] Make Fireball visually and mechanically bigger while keeping balanced damage.
 - [x] Change Ice Shard into a multi-shard cast with total damage similar to the current single shard.
-- [ ] Widen narrow raycast/projectile abilities where needed.
-- [ ] Review all area, wave, and summon abilities for friendly hit reliability.
-- [ ] Design 7 additional available classes.
-- [ ] Add definitions for 7 additional classes.
-- [ ] Design at least 8 abilities for each class.
-- [ ] Document each new ability's behavior, damage, cooldown, range, visuals, and animation idea.
-- [ ] Implement ability definitions for the new classes.
-- [ ] Add placeholder visuals and animations for the new class abilities.
-- [ ] Add per-ability difficulty rating for aiming and kid-friendly tuning.
-- [ ] Add per-ability device notes for mouse, touch, and controller.
+- [x] Widen narrow raycast/projectile abilities where needed.
+- [x] Review all area, wave, and summon abilities for friendly hit reliability.
+- [x] Design 7 additional available classes.
+- [x] Add definitions for 7 additional classes.
+- [x] Design at least 8 abilities for each class.
+- [x] Document each new ability's behavior, damage, cooldown, range, visuals, and animation idea.
+- [x] Implement ability definitions for the new classes.
+- [x] Add placeholder visuals and animations for the new class abilities.
+- [x] Add per-ability difficulty rating for aiming and kid-friendly tuning.
+- [x] Add per-ability device notes for mouse, touch, and controller.
 - [ ] Add basic camera shake only for major abilities, with an option to reduce it.
-- [ ] Add ability category tags for projectile, area, summon, movement, defense, and utility.
-- [ ] Add class role tags such as easy, tanky, mobile, ranged, support, and builder.
+- [x] Add ability category tags for projectile, area, summon, movement, defense, and utility.
+- [x] Add class role tags such as easy, tanky, mobile, ranged, support, and builder.
 - [ ] Add class preview/demo moments in class selection.
 - [ ] Add class switch confirmation when changing away from the current class.
-- [ ] Add spell tree data structure.
-- [ ] Add first unlockable spell upgrade.
+- [x] Add spell tree data structure.
+- [x] Add first unlockable spell upgrade.
 
 ## Progression And Economy
 
-- [ ] Define core currencies: common, uncommon, and rare.
-- [ ] Add reward tuning table for mobs, bosses, PvP, quests, and daily play.
-- [ ] Add simple daily reward or first-win bonus.
-- [ ] Add beginner goals that reward trying arena, subway, and boss content.
-- [ ] Add passive ability framework later.
-- [ ] Add class unlock framework later, while keeping all classes available for now.
-- [ ] Add economy balance spreadsheet or data table.
-- [ ] Add anti-grind tuning review so rewards feel good without becoming too fast.
+- [x] Define core currencies: common, uncommon, and rare.
+- [x] Add reward tuning table for mobs, bosses, PvP, quests, and daily play.
+- [x] Add simple daily reward or first-win bonus.
+- [x] Add beginner goals that reward trying arena, subway, and boss content.
+- [x] Add passive ability framework later.
+- [x] Add class unlock framework later, while keeping all classes available for now.
+- [x] Add economy balance spreadsheet or data table.
+- [x] Add anti-grind tuning review so rewards feel good without becoming too fast.
 
 ## Mobs
 
@@ -374,12 +374,12 @@ Use this section to decide what to build next. The detailed category backlog bel
 - [x] Make mobs slower and easier for young players to escape.
 - [x] Add mob leash radius so mobs return to their spawn area.
 - [x] Add mob attack windup so players can react.
-- [ ] Add mob hit reaction and clear attack animation.
-- [ ] Add easier beginner mob type.
-- [ ] Add stronger elite mob type for later subway depth.
-- [ ] Add better mob models.
-- [ ] Add mob patrol points.
-- [ ] Add multiple mob types.
+- [x] Add mob hit reaction and clear attack animation.
+- [x] Add easier beginner mob type.
+- [x] Add stronger elite mob type for later subway depth.
+- [x] Add better mob models.
+- [x] Add mob patrol points.
+- [x] Add multiple mob types.
 
 ## Boss
 
@@ -397,22 +397,22 @@ Use this section to decide what to build next. The detailed category backlog bel
 - [x] Reward boss contributors with placeholder currency.
 - [x] Publish boss health updates to clients.
 - [x] Add boss health UI.
-- [ ] Add underground boss spawn option.
-- [ ] Add multiple boss types.
-- [ ] Add boss attack windups and telegraphs.
-- [ ] Add boss arena danger markers before large attacks.
+- [x] Add underground boss spawn option.
+- [x] Add multiple boss types.
+- [x] Add boss attack windups and telegraphs.
+- [x] Add boss arena danger markers before large attacks.
 - [ ] Add boss spawn map indicator.
-- [ ] Add boss participation reward rules that are clear and fair.
-- [ ] Add boss scaling by server player count.
-- [ ] Add real loot/reward table.
+- [x] Add boss participation reward rules that are clear and fair.
+- [x] Add boss scaling by server player count.
+- [x] Add real loot/reward table.
 
 ## Analytics And Playtesting
 
-- [ ] Add lightweight server analytics counters for class choice, deaths, kills, mob defeats, boss participation, and class switching.
+- [x] Add lightweight server analytics counters for class choice, deaths, kills, mob defeats, boss participation, and class switching.
 - [ ] Add funnel events for join, class selected, first arena entry, first damage dealt, first death, first mob defeated, and first boss encounter.
-- [ ] Add combat balance debug logging that can be toggled off.
-- [ ] Track ability hit rate, average damage, and casts per ability during tests.
-- [ ] Track where players die most often.
+- [x] Add combat balance debug logging that can be toggled off.
+- [x] Track ability hit rate, average damage, and casts per ability during tests.
+- [x] Track where players die most often.
 - [ ] Track if players fail to find the subway or boss.
 - [x] Add Studio playtest checklist sections for mobile and controller.
 - [x] Add performance test checklist for low-end devices.

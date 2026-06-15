@@ -81,8 +81,9 @@ function MapService:Init()
 	makePart(map, "Trashlands Ground", Vector3.new(620, 2, 620), CFrame.new(0, -1.2, 0), Color3.fromRGB(76, 83, 66), 0, Enum.Material.Ground)
 
 	self:CreateArena(arena, bossSpawns)
+	self:CreateCityStructures(map)
 	self:CreateBases(bases, safeZones, exitProtectionZones)
-	self:CreateSubway(subway, mobSpawns)
+	self:CreateSubway(subway, mobSpawns, bossSpawns)
 	self:CreateSubwayEntrances(arena, subway)
 	self:CreateRemotes()
 end
@@ -90,6 +91,8 @@ end
 function MapService:CreateArena(arena, bossSpawns)
 	local arenaSize = Config.Map.ArenaSize
 	makePart(arena, "Central PvP Arena", arenaSize, CFrame.new(0, 0, 0), Color3.fromRGB(95, 92, 85), 0, Enum.Material.Concrete)
+	makePart(arena, "Arena Landmark Tower", Vector3.new(12, 48, 12), CFrame.new(0, 24, 0), Color3.fromRGB(255, 72, 58), 0.15, Enum.Material.Neon)
+	makeLabel(arena, "ARENA", CFrame.new(0, 34, -18) * CFrame.Angles(0, 0, 0))
 
 	local borderColor = Color3.fromRGB(190, 45, 45)
 	makePart(arena, "North Arena Boundary", Vector3.new(arenaSize.X, 3, 3), CFrame.new(0, 1.5, -arenaSize.Z / 2), borderColor, 0, Enum.Material.Neon)
@@ -105,9 +108,42 @@ function MapService:CreateArena(arena, bossSpawns)
 	end
 
 	makePart(arena, "Subway Entrance Ramp", Vector3.new(24, 3, 70), CFrame.new(-55, -12, 30) * CFrame.Angles(math.rad(-22), 0, 0), Color3.fromRGB(45, 45, 48), 0, Enum.Material.Asphalt)
+	makeLabel(arena, "SUBWAY", CFrame.new(-64, 13, 80) * CFrame.Angles(0, math.rad(180), 0))
+	makeLabel(arena, "SUBWAY", CFrame.new(64, 13, -80))
 
 	local spawn = makePart(bossSpawns, "CenterBossSpawn", Vector3.new(8, 1, 8), CFrame.new(0, 2, 0), Color3.fromRGB(255, 70, 70), 0.25, Enum.Material.Neon)
 	spawn:SetAttribute("BossSpawn", true)
+	spawn:SetAttribute("LocationName", "Center Arena")
+end
+
+function MapService:CreateCityStructures(map)
+	makePart(map, "North City Road", Vector3.new(420, 0.4, 18), CFrame.new(0, -0.05, -142), Color3.fromRGB(50, 53, 50), 0, Enum.Material.Asphalt)
+	makePart(map, "South City Road", Vector3.new(420, 0.4, 18), CFrame.new(0, -0.05, 142), Color3.fromRGB(50, 53, 50), 0, Enum.Material.Asphalt)
+	makePart(map, "East City Road", Vector3.new(18, 0.4, 420), CFrame.new(142, -0.05, 0), Color3.fromRGB(50, 53, 50), 0, Enum.Material.Asphalt)
+	makePart(map, "West City Road", Vector3.new(18, 0.4, 420), CFrame.new(-142, -0.05, 0), Color3.fromRGB(50, 53, 50), 0, Enum.Material.Asphalt)
+
+	for i = 1, 20 do
+		local angle = (math.pi * 2 / 20) * i
+		local radius = 145 + (i % 3) * 18
+		local x = math.cos(angle) * radius
+		local z = math.sin(angle) * radius
+		local width = 20 + (i % 4) * 5
+		local depth = 18 + (i % 3) * 6
+		local height = 24 + (i % 5) * 9
+		local color = Color3.fromRGB(54 + (i % 4) * 12, 52 + (i % 3) * 10, 48 + (i % 5) * 8)
+		local building = makePart(map, "Trash City Building " .. i, Vector3.new(width, height, depth), CFrame.lookAt(Vector3.new(x, height / 2, z), Vector3.new(0, height / 2, 0)), color, 0, Enum.Material.Concrete)
+
+		if i % 2 == 0 then
+			makePart(building, "Neon Window Strip", Vector3.new(width * 0.72, 2, 0.3), building.CFrame * CFrame.new(0, height * 0.2, -depth / 2 - 0.2), Color3.fromRGB(255, 210, 90), 0.2, Enum.Material.Neon)
+		end
+	end
+
+	for i = 1, 8 do
+		local angle = (math.pi * 2 / 8) * i + math.rad(22)
+		local radius = 116
+		local position = Vector3.new(math.cos(angle) * radius, 2.3, math.sin(angle) * radius)
+		makePart(map, "City Direction Light " .. i, Vector3.new(5, 5, 5), CFrame.new(position), Color3.fromRGB(255, 220, 95), 0.08, Enum.Material.Neon)
+	end
 end
 
 function MapService:CreateSubwayEntrances(arena, subway)
@@ -183,6 +219,8 @@ function MapService:CreateBases(bases, safeZones, exitProtectionZones)
 
 		local baseCFrame = CFrame.lookAt(Vector3.new(x, 0, z), Vector3.new(0, 0, 0))
 		makePart(baseFolder, "Base " .. i .. " Floor", size, baseCFrame, Color3.fromRGB(58, 82, 64), 0, Enum.Material.Concrete)
+		makePart(baseFolder, "Base " .. i .. " Arena Path", Vector3.new(10, 0.35, 120), baseCFrame * CFrame.new(0, 0.05, -95), Color3.fromRGB(130, 120, 70), 0.15, Enum.Material.Neon)
+		makeLabel(baseFolder, "ARENA THIS WAY", baseCFrame * CFrame.new(0, 10, -size.Z / 2 - 16) * CFrame.Angles(0, math.pi, 0))
 		makePart(baseFolder, "Back Wall", Vector3.new(size.X, 18, 4), baseCFrame * CFrame.new(0, 9, size.Z / 2 - 2), Color3.fromRGB(44, 55, 48), 0, Enum.Material.Brick)
 		makePart(baseFolder, "Left Wall", Vector3.new(4, 18, size.Z), baseCFrame * CFrame.new(-size.X / 2 + 2, 9, 0), Color3.fromRGB(44, 55, 48), 0, Enum.Material.Brick)
 		makePart(baseFolder, "Right Wall", Vector3.new(4, 18, size.Z), baseCFrame * CFrame.new(size.X / 2 - 2, 9, 0), Color3.fromRGB(44, 55, 48), 0, Enum.Material.Brick)
@@ -202,7 +240,7 @@ function MapService:CreateBases(bases, safeZones, exitProtectionZones)
 	end
 end
 
-function MapService:CreateSubway(subway, mobSpawns)
+function MapService:CreateSubway(subway, mobSpawns, bossSpawns)
 	local y = Config.Map.SubwayDepth
 	makePart(subway, "Subway Monster Layer Floor", Vector3.new(220, 2, 220), CFrame.new(0, y, 0), Color3.fromRGB(38, 41, 45), 0, Enum.Material.Asphalt)
 	makePart(subway, "Subway North Wall", Vector3.new(220, 24, 4), CFrame.new(0, y + 12, -110), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
@@ -216,6 +254,9 @@ function MapService:CreateSubway(subway, mobSpawns)
 	makePart(subway, "Scrap Tunnel Cover A", Vector3.new(18, 9, 18), CFrame.new(-20, y + 5.5, 74), Color3.fromRGB(75, 66, 58), 0, Enum.Material.CorrodedMetal)
 	makePart(subway, "Scrap Tunnel Cover B", Vector3.new(18, 9, 18), CFrame.new(22, y + 5.5, -74), Color3.fromRGB(75, 66, 58), 0, Enum.Material.CorrodedMetal)
 	makePart(subway, "Monster Layer Center Marker", Vector3.new(34, 1, 34), CFrame.new(0, y + 0.6, 0), Color3.fromRGB(160, 70, 255), 0.45, Enum.Material.Neon)
+	local undergroundBossSpawn = makePart(bossSpawns, "UndergroundBossSpawn", Vector3.new(10, 1, 10), CFrame.new(0, y + 2, 0), Color3.fromRGB(180, 70, 255), 0.25, Enum.Material.Neon)
+	undergroundBossSpawn:SetAttribute("BossSpawn", true)
+	undergroundBossSpawn:SetAttribute("LocationName", "Subway")
 
 	for i = 1, Config.Mobs.Count do
 		local angle = (math.pi * 2 / Config.Mobs.Count) * i

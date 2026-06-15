@@ -6,6 +6,8 @@ local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 
 local AbilityDefinitions = require(ReplicatedStorage.Modules.AbilityDefinitions)
+local Config = require(ReplicatedStorage.Modules.Config)
+local AnalyticsService = require(ServerScriptService.AnalyticsService)
 local CombatService = require(ServerScriptService.CombatService)
 local NPCFactory = require(ServerScriptService.NPCFactory)
 local SafeZoneService = require(ServerScriptService.SafeZoneService)
@@ -94,6 +96,9 @@ function SpellService:CastAbility(player, abilityName, aimPosition)
 		self.CombatFeedback:FireClient(player, "SpellCooldown", abilityName, definition.Cooldown or 1)
 		self.CombatFeedback:FireClient(player, "AbilityCast", abilityName)
 	end
+
+	AnalyticsService:RecordAbilityCast(abilityName)
+	self:ShowCastBurst(root.Position, definition)
 
 	local targeting = definition.Targeting or "Raycast"
 	if targeting == "ForwardRay" or targeting == "Raycast" then
@@ -314,6 +319,10 @@ function SpellService:CastSelfBuff(player, character, abilityName, definition)
 end
 
 function SpellService:CastSummon(player, character, root, abilityName, definition, aimPosition)
+	if (Config.VFX.MaxSimultaneousSummonsPerPlayer or 1) <= 1 then
+		self:DestroyPlayerSummons(player)
+	end
+
 	local origin = root.Position + Vector3.new(0, 2, 0)
 	local targetPoint = self:GetClampedAimPoint(root, origin, aimPosition, definition.Range)
 	local summonPosition = self:GetGroundedPosition(targetPoint)
@@ -538,6 +547,13 @@ function SpellService:CreateProjectile(origin, direction, definition)
 	projectile.Size = size
 	projectile.CFrame = CFrame.lookAt(origin, origin + direction)
 	projectile.Parent = Workspace
+
+	local light = Instance.new("PointLight")
+	light.Color = projectile.Color
+	light.Range = visual.LightRange or 12
+	light.Brightness = visual.LightBrightness or 1.2
+	light.Parent = projectile
+
 	Debris:AddItem(projectile, (definition.Range or 100) / (definition.ProjectileSpeed or 90) + 1)
 	return projectile
 end
@@ -600,6 +616,7 @@ function SpellService:ShowRayEffect(origin, endPosition, definition)
 		Debris:AddItem(core, lifetime)
 	end
 
+	self:ShowImpactSpark(endPosition, definition)
 	Debris:AddItem(bolt, lifetime)
 end
 
@@ -616,6 +633,12 @@ function SpellService:ShowExplosionEffect(position, radius, definition)
 	blast.Size = Vector3.new(1, 1, 1)
 	blast.CFrame = CFrame.new(position)
 	blast.Parent = Workspace
+
+	local light = Instance.new("PointLight")
+	light.Color = blast.Color
+	light.Range = radius * 1.8
+	light.Brightness = visual.LightBrightness or 2
+	light.Parent = blast
 
 	TweenService:Create(blast, TweenInfo.new(visual.ExplosionLifetime or 0.32, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 		Size = Vector3.new(radius * 2, radius * 2, radius * 2),
@@ -635,11 +658,12 @@ function SpellService:ShowAreaEffect(origin, radius, definition)
 	ring.Material = Enum.Material.Neon
 	ring.Color = definition.Color
 	ring.Transparency = visual.Transparency or 0.45
-	ring.Size = Vector3.new(visual.Height or 0.35, radius * 2, radius * 2)
+	ring.Size = Vector3.new(visual.Height or 0.35, 1, 1)
 	ring.CFrame = CFrame.new(origin + Vector3.new(0, 0.15, 0)) * CFrame.Angles(0, 0, math.rad(90))
 	ring.Parent = Workspace
 
 	TweenService:Create(ring, TweenInfo.new(visual.Lifetime or 0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = Vector3.new(visual.Height or 0.35, radius * 2, radius * 2),
 		Transparency = 1,
 	}):Play()
 
@@ -726,6 +750,50 @@ function SpellService:ShowTargetWarning(position, radius, definition, delaySecon
 	warning.CFrame = CFrame.new(position - Vector3.new(0, 2.4, 0)) * CFrame.Angles(0, 0, math.rad(90))
 	warning.Parent = Workspace
 	Debris:AddItem(warning, delaySeconds + 0.1)
+end
+
+function SpellService:ShowCastBurst(position, definition)
+	local visual = definition.Visual or {}
+	local burst = Instance.new("Part")
+	burst.Name = (definition.DisplayName or "Ability") .. " Cast Burst"
+	burst.Anchored = true
+	burst.CanCollide = false
+	burst.Shape = Enum.PartType.Ball
+	burst.Material = visual.Material or Enum.Material.Neon
+	burst.Color = definition.Color or Color3.fromRGB(255, 255, 255)
+	burst.Transparency = 0.45
+	burst.Size = Vector3.new(2, 2, 2)
+	burst.CFrame = CFrame.new(position + Vector3.new(0, 2, 0))
+	burst.Parent = Workspace
+
+	TweenService:Create(burst, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = Vector3.new(7, 7, 7),
+		Transparency = 1,
+	}):Play()
+
+	Debris:AddItem(burst, 0.22)
+end
+
+function SpellService:ShowImpactSpark(position, definition)
+	local visual = definition.Visual or {}
+	local spark = Instance.new("Part")
+	spark.Name = (definition.DisplayName or "Ability") .. " Impact Spark"
+	spark.Anchored = true
+	spark.CanCollide = false
+	spark.Shape = Enum.PartType.Ball
+	spark.Material = Enum.Material.Neon
+	spark.Color = visual.SecondaryColor or definition.Color or Color3.fromRGB(255, 255, 255)
+	spark.Transparency = 0.1
+	spark.Size = Vector3.new(1.2, 1.2, 1.2)
+	spark.CFrame = CFrame.new(position)
+	spark.Parent = Workspace
+
+	TweenService:Create(spark, TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = Vector3.new(4.2, 4.2, 4.2),
+		Transparency = 1,
+	}):Play()
+
+	Debris:AddItem(spark, 0.2)
 end
 
 function SpellService:ShowSummonEffect(position, definition)

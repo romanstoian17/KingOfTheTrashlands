@@ -4,6 +4,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local Workspace = game:GetService("Workspace")
 
 local Config = require(ReplicatedStorage.Modules.Config)
+local AnalyticsService = require(ServerScriptService.AnalyticsService)
 local CombatService = require(ServerScriptService.CombatService)
 local SpellService = require(ServerScriptService.SpellService)
 
@@ -73,6 +74,20 @@ function PlayerLifecycleService:SetupStats(player)
 	if not leaderstats:FindFirstChild("TrashCoins") then
 		local currency = Instance.new("IntValue")
 		currency.Name = "TrashCoins"
+		currency.Value = 0
+		currency.Parent = leaderstats
+	end
+
+	if not leaderstats:FindFirstChild("ScrapCores") then
+		local currency = Instance.new("IntValue")
+		currency.Name = "ScrapCores"
+		currency.Value = 0
+		currency.Parent = leaderstats
+	end
+
+	if not leaderstats:FindFirstChild("RoyalShards") then
+		local currency = Instance.new("IntValue")
+		currency.Name = "RoyalShards"
 		currency.Value = 0
 		currency.Parent = leaderstats
 	end
@@ -195,6 +210,7 @@ function PlayerLifecycleService:OnCharacterDied(player, character)
 	end
 
 	self:PublishDeathFeedback(player, killer, character)
+	AnalyticsService:RecordDeath(player, character and character:GetPivot().Position or nil)
 	SpellService:ResetPlayerCooldowns(player)
 end
 

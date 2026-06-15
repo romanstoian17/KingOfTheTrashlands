@@ -51,4 +51,12 @@ Config.Mobs = {
 	RewardCurrency = 8,
 }
 
+Config.VFX = {
+	MaxTemporaryEffectLifetime = 3,
+	MaxSimultaneousSummonsPerPlayer = 1,
+	UseLightsOnMajorEffects = true,
+	MobileReadableDamageNumbers = true,
+	ReduceCameraShake = false,
+}
+
 return Config
