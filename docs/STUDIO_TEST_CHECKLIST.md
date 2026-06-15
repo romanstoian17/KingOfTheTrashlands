@@ -72,6 +72,9 @@ Status key:
 ## Mobs
 
 - [ ] Subway arena is reachable from the central arena.
+- [ ] Both central arena subway entrance pads teleport the player underground.
+- [ ] Both underground exit pads teleport the player back to the central arena.
+- [ ] Underground monster layer has enough visible floor space to fight mobs.
 - [ ] Subway mobs spawn at underground spawn points.
 - [ ] Mobs chase nearby players outside safe zones.
 - [ ] Mobs damage nearby players outside safe zones.

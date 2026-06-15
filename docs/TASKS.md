@@ -21,6 +21,9 @@ Status key:
 - [x] Add simple arena obstacles and cover.
 - [x] Add underground subway arena.
 - [x] Add subway entrance ramp.
+- [x] Add two clear subway entrance teleport pads.
+- [x] Add two underground return exit teleport pads.
+- [x] Expand underground layer for monsters.
 - [x] Add mob spawn points.
 - [x] Add boss spawn point.
 

@@ -31,8 +31,9 @@ The current map is generated at runtime by `MapService`.
 - The center contains the main PvP arena.
 - Red neon boundaries mark the central arena area.
 - Scrap cover pieces provide simple line-of-sight blockers and obstacles.
-- A ramp leads down to the underground subway arena.
-- The subway contains walls, cover, a broken train car, and mob spawn points.
+- Two marked subway entrance pads in the central arena teleport players down to the underground monster layer.
+- Two marked subway exit pads in the underground layer teleport players back to the central arena.
+- The subway contains walls, cover, a broken train car, a larger monster layer floor, and mob spawn points.
 
 ## Safe Zones
 
@@ -157,7 +158,7 @@ Planned expansion:
 
 Subway mobs are managed by `MobService`.
 
-- Mobs spawn from `Workspace.MobSpawns`.
+- Mobs spawn from `Workspace.MobSpawns` in the underground monster layer.
 - Mobs chase nearby players outside safe zones.
 - Mobs attack nearby players with simple contact-range damage.
 - Mobs can be damaged by player abilities.
@@ -190,7 +191,7 @@ Planned expansion:
 ## Current Technical Structure
 
 - `ServerScriptService/GameManager.server.lua`: boots services.
-- `ServerScriptService/MapService.lua`: generates the map, bases, safe zones, exit-protection buffers, arena, subway, spawns, and remotes.
+- `ServerScriptService/MapService.lua`: generates the map, bases, safe zones, exit-protection buffers, arena, subway entrances/exits, monster layer, spawns, and remotes.
 - `ServerScriptService/SafeZoneService.lua`: reusable safe-zone and exit-protection checks.
 - `ServerScriptService/CombatService.lua`: server-side damage validation.
 - `ServerScriptService/ClassService.lua`: player class attributes, ability lists, and starter ability tools.

@@ -1,9 +1,12 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
 local Config = require(ReplicatedStorage.Modules.Config)
 
-local MapService = {}
+local MapService = {
+	TeleportCooldowns = {},
+}
 
 local function makeFolder(parent, name)
 	local existing = parent:FindFirstChild(name)
@@ -80,6 +83,7 @@ function MapService:Init()
 	self:CreateArena(arena, bossSpawns)
 	self:CreateBases(bases, safeZones, exitProtectionZones)
 	self:CreateSubway(subway, mobSpawns)
+	self:CreateSubwayEntrances(arena, subway)
 	self:CreateRemotes()
 end
 
@@ -104,6 +108,63 @@ function MapService:CreateArena(arena, bossSpawns)
 
 	local spawn = makePart(bossSpawns, "CenterBossSpawn", Vector3.new(8, 1, 8), CFrame.new(0, 2, 0), Color3.fromRGB(255, 70, 70), 0.25, Enum.Material.Neon)
 	spawn:SetAttribute("BossSpawn", true)
+end
+
+function MapService:CreateSubwayEntrances(arena, subway)
+	local y = Config.Map.SubwayDepth
+	local entranceA = CFrame.new(-64, 1, 64)
+	local entranceB = CFrame.new(64, 1, -64) * CFrame.Angles(0, math.rad(180), 0)
+	local exitA = CFrame.new(-78, y + 3, 0)
+	local exitB = CFrame.new(78, y + 3, 0) * CFrame.Angles(0, math.rad(180), 0)
+
+	local entranceAPad = self:CreateTeleportPad(arena, "Subway Entrance A", entranceA, Color3.fromRGB(70, 190, 255), exitA + Vector3.new(0, 3, 0), "ENTER SUBWAY")
+	local entranceBPad = self:CreateTeleportPad(arena, "Subway Entrance B", entranceB, Color3.fromRGB(70, 190, 255), exitB + Vector3.new(0, 3, 0), "ENTER SUBWAY")
+	local exitAPad = self:CreateTeleportPad(subway, "Subway Exit A", exitA, Color3.fromRGB(115, 255, 160), entranceA + Vector3.new(0, 3, 0), "EXIT TO ARENA")
+	local exitBPad = self:CreateTeleportPad(subway, "Subway Exit B", exitB, Color3.fromRGB(115, 255, 160), entranceB + Vector3.new(0, 3, 0), "EXIT TO ARENA")
+
+	makePart(arena, "Subway Entrance A Frame", Vector3.new(20, 12, 4), entranceA * CFrame.new(0, 6, 7), Color3.fromRGB(28, 34, 38), 0, Enum.Material.Metal)
+	makePart(arena, "Subway Entrance B Frame", Vector3.new(20, 12, 4), entranceB * CFrame.new(0, 6, 7), Color3.fromRGB(28, 34, 38), 0, Enum.Material.Metal)
+	makePart(subway, "Subway Exit A Frame", Vector3.new(20, 12, 4), exitA * CFrame.new(0, 6, 7), Color3.fromRGB(26, 42, 34), 0, Enum.Material.Metal)
+	makePart(subway, "Subway Exit B Frame", Vector3.new(20, 12, 4), exitB * CFrame.new(0, 6, 7), Color3.fromRGB(26, 42, 34), 0, Enum.Material.Metal)
+
+	entranceAPad:SetAttribute("LinkedExitName", exitAPad.Name)
+	entranceBPad:SetAttribute("LinkedExitName", exitBPad.Name)
+	exitAPad:SetAttribute("LinkedEntranceName", entranceAPad.Name)
+	exitBPad:SetAttribute("LinkedEntranceName", entranceBPad.Name)
+end
+
+function MapService:CreateTeleportPad(parent, name, cframe, color, destinationCFrame, labelText)
+	local pad = makePart(parent, name, Vector3.new(18, 1, 18), cframe, color, 0.18, Enum.Material.Neon)
+	pad:SetAttribute("TeleportPad", true)
+
+	local labelCFrame = cframe * CFrame.new(0, 8, -10) * CFrame.Angles(0, math.pi, 0)
+	makeLabel(parent, labelText, labelCFrame)
+
+	pad.Touched:Connect(function(hit)
+		self:TeleportCharacterFromPad(hit, destinationCFrame)
+	end)
+
+	return pad
+end
+
+function MapService:TeleportCharacterFromPad(hit, destinationCFrame)
+	local character = hit and hit.Parent
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	local player = character and Players:GetPlayerFromCharacter(character)
+	if not player or not humanoid or humanoid.Health <= 0 or not root then
+		return
+	end
+
+	local now = os.clock()
+	if self.TeleportCooldowns[player.UserId] and now < self.TeleportCooldowns[player.UserId] then
+		return
+	end
+
+	self.TeleportCooldowns[player.UserId] = now + 1.25
+	character:PivotTo(destinationCFrame)
+	root.AssemblyLinearVelocity = Vector3.zero
+	root.AssemblyAngularVelocity = Vector3.zero
 end
 
 function MapService:CreateBases(bases, safeZones, exitProtectionZones)
@@ -143,19 +204,22 @@ end
 
 function MapService:CreateSubway(subway, mobSpawns)
 	local y = Config.Map.SubwayDepth
-	makePart(subway, "Subway Arena Floor", Vector3.new(150, 2, 150), CFrame.new(0, y, 0), Color3.fromRGB(38, 41, 45), 0, Enum.Material.Asphalt)
-	makePart(subway, "Subway North Wall", Vector3.new(150, 24, 4), CFrame.new(0, y + 12, -75), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
-	makePart(subway, "Subway South Wall", Vector3.new(150, 24, 4), CFrame.new(0, y + 12, 75), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
-	makePart(subway, "Subway East Wall", Vector3.new(4, 24, 150), CFrame.new(75, y + 12, 0), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
-	makePart(subway, "Subway West Wall", Vector3.new(4, 24, 150), CFrame.new(-75, y + 12, 0), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
+	makePart(subway, "Subway Monster Layer Floor", Vector3.new(220, 2, 220), CFrame.new(0, y, 0), Color3.fromRGB(38, 41, 45), 0, Enum.Material.Asphalt)
+	makePart(subway, "Subway North Wall", Vector3.new(220, 24, 4), CFrame.new(0, y + 12, -110), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
+	makePart(subway, "Subway South Wall", Vector3.new(220, 24, 4), CFrame.new(0, y + 12, 110), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
+	makePart(subway, "Subway East Wall", Vector3.new(4, 24, 220), CFrame.new(110, y + 12, 0), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
+	makePart(subway, "Subway West Wall", Vector3.new(4, 24, 220), CFrame.new(-110, y + 12, 0), Color3.fromRGB(28, 29, 31), 0, Enum.Material.Concrete)
 
 	makePart(subway, "Broken Train Car", Vector3.new(70, 14, 18), CFrame.new(18, y + 8, 10), Color3.fromRGB(88, 74, 58), 0, Enum.Material.CorrodedMetal)
 	makePart(subway, "Platform Cover A", Vector3.new(24, 8, 10), CFrame.new(-42, y + 5, -38), Color3.fromRGB(64, 64, 68), 0, Enum.Material.Concrete)
 	makePart(subway, "Platform Cover B", Vector3.new(22, 8, 10), CFrame.new(45, y + 5, 42), Color3.fromRGB(64, 64, 68), 0, Enum.Material.Concrete)
+	makePart(subway, "Scrap Tunnel Cover A", Vector3.new(18, 9, 18), CFrame.new(-20, y + 5.5, 74), Color3.fromRGB(75, 66, 58), 0, Enum.Material.CorrodedMetal)
+	makePart(subway, "Scrap Tunnel Cover B", Vector3.new(18, 9, 18), CFrame.new(22, y + 5.5, -74), Color3.fromRGB(75, 66, 58), 0, Enum.Material.CorrodedMetal)
+	makePart(subway, "Monster Layer Center Marker", Vector3.new(34, 1, 34), CFrame.new(0, y + 0.6, 0), Color3.fromRGB(160, 70, 255), 0.45, Enum.Material.Neon)
 
 	for i = 1, Config.Mobs.Count do
 		local angle = (math.pi * 2 / Config.Mobs.Count) * i
-		local spawn = makePart(mobSpawns, "MobSpawn " .. i, Vector3.new(5, 1, 5), CFrame.new(math.cos(angle) * 45, y + 2, math.sin(angle) * 45), Color3.fromRGB(170, 80, 255), 0.35, Enum.Material.Neon)
+		local spawn = makePart(mobSpawns, "MobSpawn " .. i, Vector3.new(5, 1, 5), CFrame.new(math.cos(angle) * 70, y + 2, math.sin(angle) * 70), Color3.fromRGB(170, 80, 255), 0.35, Enum.Material.Neon)
 		spawn:SetAttribute("MobSpawn", true)
 	end
 end
