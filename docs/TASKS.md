@@ -146,8 +146,8 @@ Status key:
 - [x] Hide default Roblox backpack UI.
 - [x] Add cooldown overlays on ability slots.
 - [x] Add client-side aiming preview.
-- [x] Add forward-ray ability preview line.
-- [x] Add self-area ability radius preview.
+- [x] Replace forward-ray preview line with destination marker.
+- [x] Hide world aiming preview for self-area abilities.
 - [x] Hide world aiming preview for self-buff abilities.
 - [ ] Add spell tree data structure.
 - [ ] Add first unlockable spell upgrade.

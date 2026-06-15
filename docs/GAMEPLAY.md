@@ -117,8 +117,8 @@ Abilities are data-driven through `AbilityDefinitions`.
 - `ForwardRay` uses the player's pointer/camera aim position when available, then the server clamps the ray to the ability range.
 - Desktop mouse aiming uses the cursor position.
 - Touch and gamepad aiming use the center of the camera view.
-- Selected `ForwardRay` abilities show a local preview line from the player toward the current aim point.
-- Selected `SelfArea` abilities show a local radius preview around the player.
+- Selected `ForwardRay` abilities show a local destination marker at the aimed point, clamped to ability range.
+- Selected `SelfArea` abilities do not show a world preview because they fire around the player.
 - Selected `SelfBuff` abilities do not show a world target preview.
 - `SelfArea` damages valid targets around the caster through server-side combat validation.
 - `SelfBuff` applies temporary self-only buffs such as health shield or speed.

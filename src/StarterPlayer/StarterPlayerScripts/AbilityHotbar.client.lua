@@ -62,30 +62,31 @@ local previewFolder = Instance.new("Folder")
 previewFolder.Name = "LocalAbilityPreview"
 previewFolder.Parent = Workspace
 
-local previewLine = Instance.new("Part")
-previewLine.Name = "AimLine"
-previewLine.Anchored = true
-previewLine.CanCollide = false
-previewLine.CanQuery = false
-previewLine.CanTouch = false
-previewLine.CastShadow = false
-previewLine.Material = Enum.Material.Neon
-previewLine.Transparency = 1
-previewLine.Size = Vector3.new(0.25, 0.25, 1)
-previewLine.Parent = previewFolder
+local previewTarget = Instance.new("Part")
+previewTarget.Name = "TargetMarker"
+previewTarget.Anchored = true
+previewTarget.CanCollide = false
+previewTarget.CanQuery = false
+previewTarget.CanTouch = false
+previewTarget.CastShadow = false
+previewTarget.Material = Enum.Material.Neon
+previewTarget.Shape = Enum.PartType.Ball
+previewTarget.Transparency = 1
+previewTarget.Size = Vector3.new(2.8, 2.8, 2.8)
+previewTarget.Parent = previewFolder
 
-local previewArea = Instance.new("Part")
-previewArea.Name = "AreaRadius"
-previewArea.Anchored = true
-previewArea.CanCollide = false
-previewArea.CanQuery = false
-previewArea.CanTouch = false
-previewArea.CastShadow = false
-previewArea.Material = Enum.Material.Neon
-previewArea.Shape = Enum.PartType.Cylinder
-previewArea.Transparency = 1
-previewArea.Size = Vector3.new(1, 0.14, 1)
-previewArea.Parent = previewFolder
+local previewTargetRing = Instance.new("Part")
+previewTargetRing.Name = "TargetMarkerRing"
+previewTargetRing.Anchored = true
+previewTargetRing.CanCollide = false
+previewTargetRing.CanQuery = false
+previewTargetRing.CanTouch = false
+previewTargetRing.CastShadow = false
+previewTargetRing.Material = Enum.Material.Neon
+previewTargetRing.Shape = Enum.PartType.Cylinder
+previewTargetRing.Transparency = 1
+previewTargetRing.Size = Vector3.new(0.12, 5.5, 5.5)
+previewTargetRing.Parent = previewFolder
 
 local function getAimScreenPosition(camera)
 	if UserInputService.TouchEnabled and not UserInputService.MouseEnabled then
@@ -143,72 +144,55 @@ local function isPointInsideHotbar(point)
 		and point.Y <= position.Y + size.Y
 end
 
-local function setPreviewVisible(showLine, showArea)
-	previewLine.Transparency = showLine and 0.35 or 1
-	previewArea.Transparency = showArea and 0.72 or 1
+local function setPreviewVisible(showTarget)
+	previewTarget.Transparency = showTarget and 0.48 or 1
+	previewTargetRing.Transparency = showTarget and 0.68 or 1
 end
 
 local function updateForwardRayPreview(character, definition)
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
 	if not rootPart then
-		setPreviewVisible(false, false)
+		setPreviewVisible(false)
 		return
 	end
 
 	local aimPosition = getAimPosition()
 	if not aimPosition then
-		setPreviewVisible(false, false)
+		setPreviewVisible(false)
 		return
 	end
 
 	local startPosition = rootPart.Position + Vector3.new(0, 1.4, 0)
 	local rawDirection = aimPosition - startPosition
 	if rawDirection.Magnitude <= 0.1 then
-		setPreviewVisible(false, false)
+		setPreviewVisible(false)
 		return
 	end
 
 	local range = definition.Range or 80
 	local direction = rawDirection.Unit
 	local endPosition = startPosition + direction * math.min(rawDirection.Magnitude, range)
-	local midpoint = (startPosition + endPosition) * 0.5
-	local length = (endPosition - startPosition).Magnitude
-	local width = math.max((definition.Visual and definition.Visual.Width or 0.4) * 0.35, 0.16)
 
-	previewLine.Color = definition.Color or Color3.fromRGB(245, 245, 235)
-	previewLine.Size = Vector3.new(width, width, length)
-	previewLine.CFrame = CFrame.lookAt(midpoint, endPosition)
-	setPreviewVisible(true, false)
-end
-
-local function updateSelfAreaPreview(character, definition)
-	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	if not rootPart then
-		setPreviewVisible(false, false)
-		return
-	end
-
-	local radius = definition.Radius or definition.Range or 16
-	previewArea.Color = definition.Color or Color3.fromRGB(245, 245, 235)
-	previewArea.Size = Vector3.new(radius * 2, 0.14, radius * 2)
-	previewArea.CFrame = CFrame.new(rootPart.Position - Vector3.new(0, 2.75, 0))
-	setPreviewVisible(false, true)
+	local color = definition.Color or Color3.fromRGB(245, 245, 235)
+	previewTarget.Color = color
+	previewTargetRing.Color = color
+	previewTarget.CFrame = CFrame.new(endPosition)
+	previewTargetRing.CFrame = CFrame.new(endPosition - Vector3.new(0, 2.1, 0)) * CFrame.Angles(0, 0, math.rad(90))
+	setPreviewVisible(true)
 end
 
 local function updateAbilityPreview()
 	local definition = selectedAbilityName and AbilityDefinitions[selectedAbilityName]
 	local character = player.Character
 	if not definition or not character then
-		setPreviewVisible(false, false)
+		setPreviewVisible(false)
 		return
 	end
 
 	if definition.Targeting == "ForwardRay" then
 		updateForwardRayPreview(character, definition)
-	elseif definition.Targeting == "SelfArea" then
-		updateSelfAreaPreview(character, definition)
 	else
-		setPreviewVisible(false, false)
+		setPreviewVisible(false)
 	end
 end
 

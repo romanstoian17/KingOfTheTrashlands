@@ -41,8 +41,8 @@ Status key:
 
 ## Aiming Preview
 
-- [ ] Forward-ray abilities show a preview line from the player toward the aim point.
-- [ ] Self-area abilities show a radius preview around the player.
+- [ ] Forward-ray abilities show a destination marker at the aimed point.
+- [ ] Self-area abilities do not show a world targeting preview.
 - [ ] Self-buff abilities do not show a world targeting preview.
 - [ ] Preview does not block raycasts or movement.
 - [ ] Preview disappears or updates correctly after class changes.
