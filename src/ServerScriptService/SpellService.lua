@@ -7,6 +7,8 @@ local Workspace = game:GetService("Workspace")
 
 local AbilityDefinitions = require(ReplicatedStorage.Modules.AbilityDefinitions)
 local CombatService = require(ServerScriptService.CombatService)
+local NPCFactory = require(ServerScriptService.NPCFactory)
+local SafeZoneService = require(ServerScriptService.SafeZoneService)
 
 local SpellService = {
 	Cooldowns = {},
@@ -106,6 +108,8 @@ function SpellService:CastAbility(player, abilityName, aimPosition)
 		return self:CastLineWave(player, character, root, abilityName, definition, aimPosition)
 	elseif targeting == "TargetedArea" then
 		return self:CastTargetedArea(player, character, root, abilityName, definition, aimPosition)
+	elseif targeting == "Summon" then
+		return self:CastSummon(player, character, root, abilityName, definition, aimPosition)
 	elseif targeting == "SelfBuff" then
 		return self:CastSelfBuff(player, character, abilityName, definition)
 	end
@@ -307,6 +311,27 @@ function SpellService:CastSelfBuff(player, character, abilityName, definition)
 	return true
 end
 
+function SpellService:CastSummon(player, character, root, abilityName, definition, aimPosition)
+	local origin = root.Position + Vector3.new(0, 2, 0)
+	local targetPoint = self:GetClampedAimPoint(root, origin, aimPosition, definition.Range)
+	local summonPosition = self:GetGroundedPosition(targetPoint)
+	local visual = definition.Visual or {}
+	local summonName = definition.SummonName or definition.DisplayName or "Summon"
+	local model, humanoid = NPCFactory:CreateHumanoidNPC(summonName, CFrame.new(summonPosition + Vector3.new(0, 2.5, 0)), definition.Color or Color3.fromRGB(180, 235, 255), definition.SummonHealth or 120, definition.SummonScale or 0.9)
+
+	model:SetAttribute("IsSummon", true)
+	model:SetAttribute("SummonOwnerUserId", player.UserId)
+	model:SetAttribute("SummonAbility", abilityName)
+	model.Parent = self:GetSummonsFolder()
+	humanoid.WalkSpeed = definition.SummonWalkSpeed or 13
+
+	self:ShowSummonEffect(summonPosition, definition)
+	self:RunSummonAI(player, model, humanoid, abilityName, definition)
+
+	Debris:AddItem(model, definition.Duration or 18)
+	return true
+end
+
 function SpellService:CastSpell(player, spellName)
 	return self:CastAbility(player, spellName)
 end
@@ -321,6 +346,107 @@ function SpellService:ApplyAbilityEffects(attackerPlayer, targetCharacter, defin
 		targetCharacter:SetAttribute("LastAbilityEffect", effect.Type or "Effect")
 		targetCharacter:SetAttribute("LastAbilityEffectSourceUserId", attackerPlayer.UserId)
 	end
+end
+
+function SpellService:GetSummonsFolder()
+	local folder = Workspace:FindFirstChild("Summons")
+	if not folder then
+		folder = Instance.new("Folder")
+		folder.Name = "Summons"
+		folder.Parent = Workspace
+	end
+
+	return folder
+end
+
+function SpellService:GetGroundedPosition(position)
+	local result = Workspace:Raycast(position + Vector3.new(0, 35, 0), Vector3.new(0, -90, 0))
+	if result then
+		return result.Position
+	end
+
+	return position
+end
+
+function SpellService:RunSummonAI(ownerPlayer, model, humanoid, abilityName, definition)
+	local lifetime = definition.Duration or 18
+	local expiresAt = os.clock() + lifetime
+	local attackDamage = definition.SummonDamage or definition.Damage or 8
+	local attackRadius = definition.SummonAttackRadius or 8
+	local detectRadius = definition.SummonDetectRadius or 70
+	local attackCooldown = definition.SummonAttackCooldown or 1.3
+	local lastAttack = 0
+
+	task.spawn(function()
+		while ownerPlayer.Parent and model.Parent and humanoid.Health > 0 and os.clock() < expiresAt do
+			local root = model.PrimaryPart
+			if not root then
+				return
+			end
+
+			local targetCharacter, targetRoot = self:FindSummonTarget(ownerPlayer, root.Position, detectRadius)
+			if targetCharacter and targetRoot then
+				humanoid:MoveTo(targetRoot.Position)
+
+				if (targetRoot.Position - root.Position).Magnitude <= attackRadius and os.clock() - lastAttack >= attackCooldown then
+					lastAttack = os.clock()
+					local damaged = CombatService:DamageCharacter(ownerPlayer, targetCharacter, attackDamage, abilityName)
+					if damaged then
+						self:ShowSummonStrikeEffect(targetRoot.Position, definition)
+					end
+				end
+			else
+				humanoid:MoveTo(root.Position)
+			end
+
+			task.wait(0.3)
+		end
+
+		if model.Parent then
+			self:ShowSummonVanishEffect(model.PrimaryPart and model.PrimaryPart.Position or model:GetPivot().Position, definition)
+			model:Destroy()
+		end
+	end)
+end
+
+function SpellService:FindSummonTarget(ownerPlayer, position, detectRadius)
+	local bestCharacter = nil
+	local bestRoot = nil
+	local bestDistance = detectRadius
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= ownerPlayer and player.Character and not SafeZoneService:IsPlayerInSafeZone(player) and not SafeZoneService:IsPlayerExitProtected(player) then
+			local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+			local root = player.Character:FindFirstChild("HumanoidRootPart")
+			if humanoid and humanoid.Health > 0 and root then
+				local distance = (root.Position - position).Magnitude
+				if distance < bestDistance then
+					bestDistance = distance
+					bestCharacter = player.Character
+					bestRoot = root
+				end
+			end
+		end
+	end
+
+	for _, candidate in ipairs(Workspace:GetDescendants()) do
+		if candidate:IsA("Model")
+			and (candidate:GetAttribute("IsMob") or candidate:GetAttribute("IsBoss"))
+			and not candidate:GetAttribute("IsSummon") then
+			local humanoid = candidate:FindFirstChildOfClass("Humanoid")
+			local root = candidate:FindFirstChild("HumanoidRootPart")
+			if humanoid and humanoid.Health > 0 and root then
+				local distance = (root.Position - position).Magnitude
+				if distance < bestDistance then
+					bestDistance = distance
+					bestCharacter = candidate
+					bestRoot = root
+				end
+			end
+		end
+	end
+
+	return bestCharacter, bestRoot
 end
 
 function SpellService:DamageCharactersInRadius(attackerPlayer, casterCharacter, position, radius, damage, abilityName, definition, hitCharacters)
@@ -546,6 +672,60 @@ function SpellService:ShowTargetWarning(position, radius, definition, delaySecon
 	warning.CFrame = CFrame.new(position - Vector3.new(0, 2.4, 0)) * CFrame.Angles(0, 0, math.rad(90))
 	warning.Parent = Workspace
 	Debris:AddItem(warning, delaySeconds + 0.1)
+end
+
+function SpellService:ShowSummonEffect(position, definition)
+	local visual = definition.Visual or {}
+	local radius = visual.SummonRadius or 7
+	local ring = Instance.new("Part")
+	ring.Name = (definition.DisplayName or "Summon") .. " Summon Ring"
+	ring.Anchored = true
+	ring.CanCollide = false
+	ring.Shape = Enum.PartType.Cylinder
+	ring.Material = Enum.Material.Ice
+	ring.Color = definition.Color or Color3.fromRGB(180, 235, 255)
+	ring.Transparency = 0.35
+	ring.Size = Vector3.new(0.16, 1, 1)
+	ring.CFrame = CFrame.new(position + Vector3.new(0, 0.1, 0)) * CFrame.Angles(0, 0, math.rad(90))
+	ring.Parent = Workspace
+
+	TweenService:Create(ring, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		Size = Vector3.new(0.16, radius * 2, radius * 2),
+		Transparency = 0.58,
+	}):Play()
+
+	for index = 1, 7 do
+		local angle = (math.pi * 2 / 7) * index
+		self:ShowIceSpike(position + Vector3.new(math.cos(angle) * radius * 0.55, 0, math.sin(angle) * radius * 0.55), 3 + (index % 2), visual.SecondaryColor or Color3.fromRGB(235, 255, 255))
+	end
+
+	Debris:AddItem(ring, 0.8)
+end
+
+function SpellService:ShowSummonStrikeEffect(position, definition)
+	local visual = definition.Visual or {}
+	self:ShowIceSpike(position - Vector3.new(0, 2, 0), 3.2, visual.SecondaryColor or definition.Color or Color3.fromRGB(220, 250, 255))
+end
+
+function SpellService:ShowSummonVanishEffect(position, definition)
+	local mist = Instance.new("Part")
+	mist.Name = (definition.DisplayName or "Summon") .. " Vanish"
+	mist.Anchored = true
+	mist.CanCollide = false
+	mist.Shape = Enum.PartType.Ball
+	mist.Material = Enum.Material.ForceField
+	mist.Color = definition.Color or Color3.fromRGB(180, 235, 255)
+	mist.Transparency = 0.4
+	mist.Size = Vector3.new(4, 4, 4)
+	mist.CFrame = CFrame.new(position)
+	mist.Parent = Workspace
+
+	TweenService:Create(mist, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = Vector3.new(10, 10, 10),
+		Transparency = 1,
+	}):Play()
+
+	Debris:AddItem(mist, 0.35)
 end
 
 function SpellService:ShowBuffEffect(character, definition)

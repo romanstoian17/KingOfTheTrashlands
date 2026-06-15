@@ -113,12 +113,13 @@ The game currently has three selectable combat classes.
 Abilities are data-driven through `AbilityDefinitions`.
 
 - `AbilityType` describes the broad behavior category, such as projectile, raycast, wave, targeted area, melee, dash, trap, summon, or shield.
-- `Targeting` describes how the ability finds targets. Current supported targeting modes are `Raycast`, `ProjectileExplode`, `SelfArea`, `DelayedSelfArea`, `LineWave`, `TargetedArea`, and `SelfBuff`.
+- `Targeting` describes how the ability finds targets. Current supported targeting modes are `Raycast`, `ProjectileExplode`, `SelfArea`, `DelayedSelfArea`, `LineWave`, `TargetedArea`, `Summon`, and `SelfBuff`.
 - `Raycast` uses the player's pointer/camera aim position when available, then the server clamps the ray to the ability range.
 - `ProjectileExplode` creates a server-owned projectile that travels forward, collides with the world, then damages valid targets in an explosion radius.
 - `DelayedSelfArea` spreads outward from the caster over time instead of damaging the full radius instantly.
 - `LineWave` grows forward from the caster toward the aimed direction, applying damage along the path as the wave advances.
 - `TargetedArea` marks an aimed point, waits briefly, then damages valid targets in that area.
+- `Summon` creates a temporary server-owned ally near the aimed point. Summons chase valid enemies, attack through server combat validation, and avoid chasing players protected by bases or exit protection.
 - Desktop mouse aiming uses the cursor position.
 - Touch and gamepad aiming use the center of the camera view.
 - Selected aimed abilities show a local destination marker at the aimed point, clamped to ability range.
@@ -149,6 +150,7 @@ Current Ice Mage abilities:
 - Glacier Path: forward ice wave that grows from the caster toward the target direction.
 - Hail Crash: delayed targeted area burst.
 - Ice Armor: temporary self shield.
+- Ice Warden: temporary summoned ice ally that attacks nearby valid enemies.
 
 Current Lightning Mage abilities:
 
@@ -206,7 +208,7 @@ Planned expansion:
 - `ServerScriptService/ClassService.lua`: player class attributes, ability lists, and starter ability tools.
 - `ServerScriptService/MageService.lua`: compatibility alias for `ClassService`.
 - `ServerScriptService/PlayerLifecycleService.lua`: home base assignment, respawn placement, respawn protection, and kill/death stats.
-- `ServerScriptService/SpellService.lua`: ability casting, cooldowns, targeting behaviors, projectiles, and effects.
+- `ServerScriptService/SpellService.lua`: ability casting, cooldowns, targeting behaviors, projectiles, summons, and effects.
 - `ServerScriptService/AbilityService.lua`: compatibility alias for the ability service path.
 - `ServerScriptService/MobService.lua`: subway mob spawning, chase, attack, and respawn.
 - `ServerScriptService/BossService.lua`: timed boss spawning, boss AI, and rewards.

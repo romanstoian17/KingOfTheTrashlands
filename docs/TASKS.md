@@ -105,6 +105,7 @@ Status key:
 - [x] Add reusable `DelayedSelfArea` ability behavior.
 - [x] Add reusable `LineWave` ability behavior.
 - [x] Add reusable `TargetedArea` ability behavior.
+- [x] Add reusable `Summon` ability behavior.
 - [x] Add distinct raycast visuals for beam, shard, spark, and lightning abilities.
 - [x] Add distinct area visuals for self-area abilities.
 - [x] Add distinct aura visuals for self-buff abilities.
@@ -141,6 +142,7 @@ Status key:
 - [x] Implement Hail Crash targeted area.
 - [x] Implement Glacier Spike.
 - [x] Implement Ice Armor self-buff.
+- [x] Implement Ice Warden summon.
 - [x] Implement Lightning Bolt.
 - [x] Implement Spark Shot.
 - [x] Implement Storm Lance.
@@ -201,5 +203,5 @@ Status key:
 - [x] Add living task list.
 - [x] Add Studio test checklist.
 - [ ] Validate project in Roblox Studio.
-- [ ] Add Rojo serve instructions after local tooling is confirmed.
+- [x] Add Rojo serve instructions.
 - [ ] Add formatting/linting setup.

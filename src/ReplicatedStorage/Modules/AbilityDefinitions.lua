@@ -260,6 +260,36 @@ local AbilityDefinitions = {
 		},
 		Tags = { "Magic", "Ice", "Self", "Defensive" },
 	},
+	["Ice Warden"] = {
+		DisplayName = "Ice Warden",
+		AbilityType = "Summon",
+		Targeting = "Summon",
+		Damage = 0,
+		Range = 65,
+		Cooldown = 12,
+		Duration = 18,
+		Color = Color3.fromRGB(160, 230, 255),
+		SummonName = "Ice Warden",
+		SummonHealth = 130,
+		SummonDamage = 9,
+		SummonScale = 0.85,
+		SummonWalkSpeed = 13,
+		SummonDetectRadius = 70,
+		SummonAttackRadius = 8,
+		SummonAttackCooldown = 1.25,
+		Visual = {
+			Shape = "SummonCircle",
+			SummonRadius = 7,
+			SecondaryColor = Color3.fromRGB(235, 255, 255),
+		},
+		Audio = {
+			CastSoundId = "rbxasset://sounds/snap.wav",
+			CastVolume = 0.55,
+			Pitch = 0.7,
+		},
+		Effects = {},
+		Tags = { "Magic", "Ice", "Summon", "Ally" },
+	},
 	["Lightning Bolt"] = {
 		DisplayName = "Lightning Bolt",
 		AbilityType = "Raycast",
@@ -367,8 +397,7 @@ local AbilityDefinitions = {
 
 -- Current reusable targeting/behavior types:
 -- Raycast, ProjectileExplode, SelfArea, DelayedSelfArea, LineWave,
--- TargetedArea, and SelfBuff. Future types can add Dash, Trap,
--- Deployable, Summon, Channel, Chain, Cone, or Aura without changing
--- class data shape.
+-- TargetedArea, Summon, and SelfBuff. Future types can add Dash, Trap,
+-- Deployable, Channel, Chain, Cone, or Aura without changing class data shape.
 
 return AbilityDefinitions

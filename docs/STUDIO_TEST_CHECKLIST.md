@@ -22,7 +22,7 @@ Status key:
 - [ ] First-time player sees class selection before normal combat use.
 - [ ] Clicking outside the class selection does not auto-select a class.
 - [ ] Selecting Fire Caster grants Fireball, Flame Burst, and Ignite.
-- [ ] Selecting Ice Mage grants Ice Shard, Frost Bolt, Ice Nova, Glacier Spike, Glacier Path, Hail Crash, and Ice Armor.
+- [ ] Selecting Ice Mage grants Ice Shard, Frost Bolt, Ice Nova, Glacier Spike, Glacier Path, Hail Crash, Ice Armor, and Ice Warden.
 - [ ] Selecting Lightning Mage grants Lightning Bolt, Spark Shot, and Blink Surge.
 - [ ] Player can change class while inside a safe zone.
 - [ ] Player cannot change class outside a safe zone.
@@ -44,7 +44,7 @@ Status key:
 - [ ] Aimed abilities show a destination marker at the aimed point.
 - [ ] Self-area abilities do not show a world targeting preview.
 - [ ] Self-buff abilities do not show a world targeting preview.
-- [ ] Projectile, raycast, line-wave, and targeted-area abilities show a destination marker.
+- [ ] Projectile, raycast, line-wave, targeted-area, and summon abilities show a destination marker.
 - [ ] Preview does not block raycasts or movement.
 - [ ] Preview disappears or updates correctly after class changes.
 
@@ -81,6 +81,7 @@ Status key:
 - [ ] Mobs damage nearby players outside safe zones.
 - [ ] Mobs do not chase players into bases.
 - [ ] Player abilities damage mobs.
+- [ ] Ice Warden can attack nearby mobs outside safe zones.
 - [ ] Mobs respawn after death.
 - [ ] Mob contributors receive `TrashCoins` after mob death.
 

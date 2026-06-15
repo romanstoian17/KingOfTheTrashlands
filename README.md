@@ -6,6 +6,15 @@ First playable Roblox foundation for a PvP arena game with 16 safe bases, a cent
 
 This is a Rojo-style project. Sync `default.project.json` into Roblox Studio, then press Play. The server generates the test map at runtime.
 
+The project is pinned to stable Rojo `7.6.1` in `aftman.toml`.
+
+```powershell
+aftman install
+rojo serve default.project.json
+```
+
+Then open the Rojo plugin in Roblox Studio and connect to the local server.
+
 ## Current gameplay
 
 - Players spawn in one of 16 outer bases.

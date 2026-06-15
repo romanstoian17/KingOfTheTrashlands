@@ -24,7 +24,7 @@ local ClassDefinitions = {
 		Role = "Control and survival",
 		Description = "Defensive mage with spreading ice, projectile bursts, and ground control.",
 		Selectable = true,
-		StarterAbilities = { "Ice Shard", "Frost Bolt", "Ice Nova", "Glacier Spike", "Glacier Path", "Hail Crash", "Ice Armor" },
+		StarterAbilities = { "Ice Shard", "Frost Bolt", "Ice Nova", "Glacier Spike", "Glacier Path", "Hail Crash", "Ice Armor", "Ice Warden" },
 	},
 }
 
