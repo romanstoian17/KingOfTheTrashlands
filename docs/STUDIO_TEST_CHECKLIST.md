@@ -14,7 +14,7 @@ Status key:
 - [ ] Open the project through Rojo sync or the current Studio place.
 - [ ] Start a local server with at least two players when testing PvP.
 - [ ] Confirm the Output window has no startup errors.
-- [ ] Confirm `Workspace` contains generated folders: `Bases`, `Arena`, `Subway`, `SafeZones`, `MobSpawns`, and `BossSpawns`.
+- [ ] Confirm `Workspace` contains generated folders: `Bases`, `Arena`, `Subway`, `SafeZones`, `ExitProtectionZones`, `MobSpawns`, and `BossSpawns`.
 
 ## Join And Class Selection
 
@@ -50,9 +50,13 @@ Status key:
 ## Safe Zones And PvP
 
 - [ ] Safe-zone UI shows `SAFE ZONE` while inside a base.
+- [ ] Recently respawned player sees `EXIT PROTECTION` in their home base or base exit buffer.
 - [ ] Safe-zone UI shows `PVP ENABLED` outside bases.
 - [ ] Player inside a base cannot damage another player.
 - [ ] Player outside a base cannot damage a target inside a base.
+- [ ] Exit-protected player cannot damage another player.
+- [ ] Exit-protected player cannot be damaged by another player.
+- [ ] Exit protection clears after moving beyond the home base exit buffer.
 - [ ] Players outside bases can damage each other in the central arena.
 - [ ] Respawn-protected players cannot deal damage.
 - [ ] Respawn-protected players cannot receive damage.

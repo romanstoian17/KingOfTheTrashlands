@@ -35,9 +35,16 @@ Status key:
 - [x] Ignore mob and boss damage when target player is inside a safe zone.
 - [x] Ignore mob and boss damage when target player has respawn protection.
 - [x] Make mobs and bosses avoid targeting players inside safe zones.
+- [x] Add base exit-protection volumes.
+- [x] Add server-side exit-protection validation.
+- [x] Ignore PvP damage when attacker has exit protection.
+- [x] Ignore PvP damage when target has exit protection.
+- [x] Ignore mob and boss damage when target player has exit protection.
+- [x] Make mobs and bosses avoid targeting players with exit protection.
 - [x] Add server-published safe-zone state for UI feedback.
 - [x] Add visual safe-zone enter/exit feedback.
 - [x] Add `SAFE ZONE` / `PVP ENABLED` client status badge.
+- [x] Add `EXIT PROTECTION` client status badge.
 - [x] Add Studio test checklist for safe-zone damage rules.
 - [ ] Add automated tests for safe-zone damage rules.
 
@@ -72,7 +79,7 @@ Status key:
 - [x] Add recent attacker kill credit for PvP deaths.
 - [x] Add death message.
 - [x] Add respawn countdown UI.
-- [ ] Add anti-spawn-camping rules outside base exits.
+- [x] Add anti-spawn-camping rules outside base exits.
 
 ## Classes And Abilities
 

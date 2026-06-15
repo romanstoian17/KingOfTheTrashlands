@@ -27,6 +27,7 @@ The current map is generated at runtime by `MapService`.
 
 - 16 bases are arranged around the outside of the map.
 - Each base has a floor, walls, spawn point, label, and invisible safe-zone volume.
+- Each base has a visible exit-protection buffer just outside the base entrance.
 - The center contains the main PvP arena.
 - Red neon boundaries mark the central arena area.
 - Scrap cover pieces provide simple line-of-sight blockers and obstacles.
@@ -44,6 +45,9 @@ Safe zones are server-authoritative.
 - NPC damage from mobs and bosses is ignored when the target player is in a safe zone.
 - Mobs and bosses avoid selecting players who are inside safe zones.
 - Players see a top-screen status badge showing `SAFE ZONE` or `PVP ENABLED`.
+- Recently respawned players also receive temporary `EXIT PROTECTION` while they remain in their own base or base exit buffer.
+- Exit-protected players cannot deal or receive player, mob, or boss damage.
+- Exit protection ends when the player leaves their own base and exit buffer, or when the configured timer expires.
 
 ## Combat
 
@@ -72,6 +76,7 @@ Player death and respawn behavior is managed by `PlayerLifecycleService`.
 - On character spawn, the server moves the character to the assigned home base.
 - Ability cooldowns are reset when the player respawns.
 - A short respawn protection timer prevents the player from dealing or receiving damage.
+- A longer base-exit protection timer helps prevent camping immediately outside the player's home base.
 - Players have `Kills`, `Deaths`, and `TrashCoins` in `leaderstats`.
 - Deaths are counted when the character dies.
 - Kills are awarded to the recent player attacker when applicable.
@@ -185,8 +190,8 @@ Planned expansion:
 ## Current Technical Structure
 
 - `ServerScriptService/GameManager.server.lua`: boots services.
-- `ServerScriptService/MapService.lua`: generates the map, bases, arena, subway, spawns, and remotes.
-- `ServerScriptService/SafeZoneService.lua`: reusable safe-zone checks.
+- `ServerScriptService/MapService.lua`: generates the map, bases, safe zones, exit-protection buffers, arena, subway, spawns, and remotes.
+- `ServerScriptService/SafeZoneService.lua`: reusable safe-zone and exit-protection checks.
 - `ServerScriptService/CombatService.lua`: server-side damage validation.
 - `ServerScriptService/ClassService.lua`: player class attributes, ability lists, and starter ability tools.
 - `ServerScriptService/MageService.lua`: compatibility alias for `ClassService`.

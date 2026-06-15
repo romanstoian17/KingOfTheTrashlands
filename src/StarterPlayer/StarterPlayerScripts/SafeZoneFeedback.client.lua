@@ -63,8 +63,13 @@ local function tweenStatus(frameColor, strokeColor)
 	}):Play()
 end
 
-local function setStatus(inSafeZone, zoneName)
-	if inSafeZone then
+local function setStatus(inSafeZone, zoneName, statusMode)
+	if statusMode == "ExitProtection" then
+		statusLabel.Text = "EXIT PROTECTION"
+		statusLabel.TextColor3 = Color3.fromRGB(230, 242, 255)
+		subLabel.Text = zoneName or "Base exit protected"
+		tweenStatus(Color3.fromRGB(30, 34, 42), Color3.fromRGB(90, 170, 255))
+	elseif inSafeZone then
 		statusLabel.Text = "SAFE ZONE"
 		statusLabel.TextColor3 = Color3.fromRGB(230, 255, 235)
 		subLabel.Text = zoneName or "Damage disabled"

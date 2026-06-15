@@ -156,7 +156,9 @@ end
 
 function PlayerLifecycleService:ApplyRespawnProtection(player)
 	local protectedUntil = os.clock() + Config.Combat.RespawnProtectionSeconds
+	local exitProtectedUntil = os.clock() + Config.Combat.ExitProtectionSeconds
 	player:SetAttribute("RespawnProtectedUntil", protectedUntil)
+	player:SetAttribute("ExitProtectedUntil", exitProtectedUntil)
 
 	local character = player.Character
 	local forceField = character and Instance.new("ForceField")

@@ -71,13 +71,14 @@ function MapService:Init()
 	local arena = makeFolder(Workspace, "Arena")
 	local subway = makeFolder(Workspace, "Subway")
 	local safeZones = makeFolder(Workspace, "SafeZones")
+	local exitProtectionZones = makeFolder(Workspace, "ExitProtectionZones")
 	local bossSpawns = makeFolder(Workspace, "BossSpawns")
 	local mobSpawns = makeFolder(Workspace, "MobSpawns")
 
 	makePart(map, "Trashlands Ground", Vector3.new(620, 2, 620), CFrame.new(0, -1.2, 0), Color3.fromRGB(76, 83, 66), 0, Enum.Material.Ground)
 
 	self:CreateArena(arena, bossSpawns)
-	self:CreateBases(bases, safeZones)
+	self:CreateBases(bases, safeZones, exitProtectionZones)
 	self:CreateSubway(subway, mobSpawns)
 	self:CreateRemotes()
 end
@@ -105,10 +106,11 @@ function MapService:CreateArena(arena, bossSpawns)
 	spawn:SetAttribute("BossSpawn", true)
 end
 
-function MapService:CreateBases(bases, safeZones)
+function MapService:CreateBases(bases, safeZones, exitProtectionZones)
 	local baseCount = Config.Map.BaseCount
 	local radius = Config.Map.BaseRadius
 	local size = Config.Map.BaseSize
+	local exitSize = Config.Map.BaseExitProtectionSize
 
 	for i = 1, baseCount do
 		local angle = (math.pi * 2 / baseCount) * (i - 1)
@@ -131,6 +133,11 @@ function MapService:CreateBases(bases, safeZones)
 		zone.CanCollide = false
 		zone:SetAttribute("SafeZone", true)
 		zone:SetAttribute("BaseIndex", i)
+
+		local exitZone = makePart(exitProtectionZones, "Base " .. i .. " Exit Protection", exitSize, baseCFrame * CFrame.new(0, exitSize.Y / 2, -size.Z / 2 - exitSize.Z / 2), Color3.fromRGB(90, 170, 255), 0.82, Enum.Material.ForceField)
+		exitZone.CanCollide = false
+		exitZone:SetAttribute("ExitProtectionZone", true)
+		exitZone:SetAttribute("BaseIndex", i)
 	end
 end
 

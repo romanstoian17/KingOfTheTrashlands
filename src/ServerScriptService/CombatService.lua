@@ -20,6 +20,10 @@ function CombatService:IsPlayerRespawnProtected(player)
 	return typeof(protectedUntil) == "number" and os.clock() < protectedUntil
 end
 
+function CombatService:IsPlayerExitProtected(player)
+	return SafeZoneService:IsPlayerExitProtected(player)
+end
+
 function CombatService:GetHumanoidModelFromPart(part)
 	local current = part
 	while current and current ~= workspace do
@@ -46,6 +50,10 @@ function CombatService:CanPlayerDamageCharacter(attackerPlayer, targetCharacter)
 		return false, "Attacker has respawn protection"
 	end
 
+	if self:IsPlayerExitProtected(attackerPlayer) then
+		return false, "Attacker has exit protection"
+	end
+
 	local targetPlayer = Players:GetPlayerFromCharacter(targetCharacter)
 	if targetPlayer and SafeZoneService:IsPlayerInSafeZone(targetPlayer) then
 		return false, "Target is in a safe zone"
@@ -53,6 +61,10 @@ function CombatService:CanPlayerDamageCharacter(attackerPlayer, targetCharacter)
 
 	if targetPlayer and self:IsPlayerRespawnProtected(targetPlayer) then
 		return false, "Target has respawn protection"
+	end
+
+	if targetPlayer and self:IsPlayerExitProtected(targetPlayer) then
+		return false, "Target has exit protection"
 	end
 
 	return true
@@ -78,7 +90,7 @@ function CombatService:DamageCharacter(attackerPlayer, targetCharacter, amount, 
 end
 
 function CombatService:DamagePlayerFromNPC(targetPlayer, amount)
-	if not targetPlayer or SafeZoneService:IsPlayerInSafeZone(targetPlayer) or self:IsPlayerRespawnProtected(targetPlayer) then
+	if not targetPlayer or SafeZoneService:IsPlayerInSafeZone(targetPlayer) or self:IsPlayerRespawnProtected(targetPlayer) or self:IsPlayerExitProtected(targetPlayer) then
 		return false
 	end
 

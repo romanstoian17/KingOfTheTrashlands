@@ -10,6 +10,7 @@ Config.Map = {
 	BaseRadius = 260,
 	BaseSize = Vector3.new(70, 2, 70),
 	SafeZoneHeight = 36,
+	BaseExitProtectionSize = Vector3.new(56, 24, 34),
 	ArenaSize = Vector3.new(185, 2, 185),
 	SubwayDepth = -46,
 }
@@ -18,6 +19,7 @@ Config.Combat = {
 	DefaultWalkSpeed = 18,
 	PlayerMaxHealth = 100,
 	RespawnProtectionSeconds = 5,
+	ExitProtectionSeconds = 14,
 	KillCreditSeconds = 12,
 	DeathMessageSeconds = 4,
 }

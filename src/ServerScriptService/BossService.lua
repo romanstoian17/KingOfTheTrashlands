@@ -125,7 +125,7 @@ function BossService:FindTarget(position)
 	local bestDistance = 150
 
 	for _, player in ipairs(Players:GetPlayers()) do
-		if not SafeZoneService:IsPlayerInSafeZone(player) and player.Character then
+		if not SafeZoneService:IsPlayerInSafeZone(player) and not SafeZoneService:IsPlayerExitProtected(player) and player.Character then
 			local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
 			local root = player.Character:FindFirstChild("HumanoidRootPart")
 			if humanoid and humanoid.Health > 0 and root then
