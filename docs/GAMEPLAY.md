@@ -118,6 +118,7 @@ Abilities are data-driven through `AbilityDefinitions`.
 - Desktop mouse aiming uses the cursor position.
 - Touch and gamepad aiming use the center of the camera view.
 - Selected `ForwardRay` abilities show a local destination marker at the aimed point, clamped to ability range.
+- The destination marker scales down for close targets so aiming at nearby cover does not create an oversized preview.
 - Selected `SelfArea` abilities do not show a world preview because they fire around the player.
 - Selected `SelfBuff` abilities do not show a world target preview.
 - `SelfArea` damages valid targets around the caster through server-side combat validation.

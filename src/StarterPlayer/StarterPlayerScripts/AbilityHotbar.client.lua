@@ -171,13 +171,19 @@ local function updateForwardRayPreview(character, definition)
 
 	local range = definition.Range or 80
 	local direction = rawDirection.Unit
-	local endPosition = startPosition + direction * math.min(rawDirection.Magnitude, range)
+	local distance = math.min(rawDirection.Magnitude, range)
+	local endPosition = startPosition + direction * distance
+	local sizeAlpha = math.clamp(distance / 70, 0, 1)
+	local markerSize = 1.1 + sizeAlpha * 1.7
+	local ringSize = 2.4 + sizeAlpha * 3.1
 
 	local color = definition.Color or Color3.fromRGB(245, 245, 235)
 	previewTarget.Color = color
 	previewTargetRing.Color = color
+	previewTarget.Size = Vector3.new(markerSize, markerSize, markerSize)
+	previewTargetRing.Size = Vector3.new(0.08, ringSize, ringSize)
 	previewTarget.CFrame = CFrame.new(endPosition)
-	previewTargetRing.CFrame = CFrame.new(endPosition - Vector3.new(0, 2.1, 0)) * CFrame.Angles(0, 0, math.rad(90))
+	previewTargetRing.CFrame = CFrame.new(endPosition - Vector3.new(0, markerSize * 0.75, 0)) * CFrame.Angles(0, 0, math.rad(90))
 	setPreviewVisible(true)
 end
 
