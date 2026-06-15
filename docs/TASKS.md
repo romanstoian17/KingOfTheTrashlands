@@ -249,6 +249,12 @@ Use this section to decide what to build next. The detailed category backlog bel
 - [x] Add respawn countdown UI.
 - [x] Add anti-spawn-camping rules outside base exits.
 
+## Movement
+
+- [x] Add one extra air jump.
+- [x] Reset extra air jump after landing.
+- [x] Make extra air jump work from Roblox jump input across keyboard, mobile, and controller.
+
 ## Classes And Abilities
 
 - [x] Add mage definitions.

@@ -58,6 +58,14 @@ Status key:
 - [ ] Controller player can cast the selected ability.
 - [ ] Hotbar buttons are large enough to read on a small screen.
 
+## Movement
+
+- [ ] Player can perform the normal first jump from the ground.
+- [ ] Pressing jump once while airborne performs exactly one extra jump.
+- [ ] Pressing jump repeatedly while airborne does not grant more than one extra jump.
+- [ ] Extra jump resets after landing.
+- [ ] Extra jump works with keyboard, mobile jump button, and controller jump.
+
 ## Aiming Preview
 
 - [ ] Aimed abilities show a destination marker at the aimed point.

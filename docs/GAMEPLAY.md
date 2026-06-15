@@ -81,6 +81,15 @@ Safe zones are server-authoritative.
 - Boss spawns show a top-screen boss health bar while the boss is active.
 - Damage validation should stay on the server even after client UI and aiming improve.
 
+## Movement
+
+Players currently have the normal Roblox jump plus one extra air jump.
+
+- Pressing jump while already in the air triggers one additional jump.
+- The extra jump resets when the player lands, starts running, swims, or climbs.
+- The feature is configured through `Config.Movement`.
+- The current value is `ExtraAirJumps = 1`.
+
 ## Player Lifecycle
 
 Player death and respawn behavior is managed by `PlayerLifecycleService`.
@@ -298,6 +307,7 @@ Current progression is a lightweight prototype foundation.
 - `StarterPlayer/StarterPlayerScripts/AbilityHotbar.client.lua`: custom ability slots, keyboard/touch selection, selected-ability casting, aiming previews, and cooldown overlays.
 - `StarterPlayer/StarterPlayerScripts/BossAlert.client.lua`: boss warning, spawn, and defeated banners.
 - `StarterPlayer/StarterPlayerScripts/ClassSelection.client.lua`: first-time class selection and safe-zone class changing.
+- `StarterPlayer/StarterPlayerScripts/DoubleJump.client.lua`: one extra air jump, reset on landing.
 - `StarterPlayer/StarterPlayerScripts/OnboardingGuide.client.lua`: objective prompts and help panel.
 - `ReplicatedStorage/Modules/Config.lua`: shared tuning values.
 - `ReplicatedStorage/Modules/ClassDefinitions.lua`: primary class definitions.

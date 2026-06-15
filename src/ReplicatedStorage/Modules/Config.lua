@@ -28,6 +28,11 @@ Config.Combat = {
 	AllowOwnerSummonDamage = false,
 }
 
+Config.Movement = {
+	ExtraAirJumps = 1,
+	DoubleJumpPowerMultiplier = 1,
+}
+
 Config.Boss = {
 	InitialSpawnSeconds = 60,
 	WarningSeconds = 30,
