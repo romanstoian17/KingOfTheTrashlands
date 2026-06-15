@@ -44,7 +44,7 @@ Config.Mobs = {
 	AttackRadius = 7,
 	AttackCooldown = 1.4,
 	RespawnSeconds = 8,
-	WalkSpeed = 13,
+	WalkSpeed = 9,
 	RewardCurrency = 8,
 }
 
